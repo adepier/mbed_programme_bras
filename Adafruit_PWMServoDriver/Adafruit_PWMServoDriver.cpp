@@ -17,7 +17,7 @@
   Ported to mbed by Brian Dickman, mbed.org user bxd.
  ****************************************************/
 
-#include <Adafruit_PWMServoDriver/Adafruit_PWMServoDriver.h>
+#include <Adafruit_PWMServoDriver.h>
 
 Adafruit_PWMServoDriver::Adafruit_PWMServoDriver(I2C *i2c, uint8_t addr) {
   _i2c = i2c;
@@ -57,7 +57,7 @@ void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
   write8(PCA9685_MODE1, newmode); // go to sleep
   write8(PCA9685_PRESCALE, prescale); // set the prescaler
   write8(PCA9685_MODE1, oldmode);
-  wait_us(50);
+  //wait_ms(5);
   write8(PCA9685_MODE1, oldmode | 0xa1);  //  This sets the MODE1 register to turn on auto increment.
                                           // This is why the beginTransmission below was not working.
   //  Serial.print("Mode now 0x"); Serial.println(read8(PCA9685_MODE1), HEX);
@@ -66,7 +66,7 @@ void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
 void Adafruit_PWMServoDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
   //Serial.print("Setting PWM "); Serial.print(num); Serial.print(": "); Serial.print(on); Serial.print("->"); Serial.println(off);
 
-  uint8_t data[] = { LED0_ON_L + 4 * num, on, on >> 8, off, off >> 8 };
+  int data[] = { LED0_ON_L+4*num, on, on >> 8, off, off >> 8 };
   _i2c->write(_i2caddr, (const char *)data, 5);
   /*
   WIRE.beginTransmission(_i2caddr);

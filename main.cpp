@@ -58,7 +58,7 @@
       Accel accel_poignet( CH7,0x69,180,'X',calibation_poignet,'XZY');
       Accel accel_rot_poignet( CH7,0x69,180,'Z',calibation_poignet,'XZY');
       
-      Serial pc(USBTX, USBRX);
+     // Serial pc(USBTX, USBRX);
       DigitalOut myled(LED_PIN);
    
       //PID aa
@@ -90,20 +90,20 @@ int ajuste_moteur(int pin_sens, int pin_vitesse , int cmde ){
 
     if (cmde >=   -100 && cmde <=   100)
     {
-        //pc.printf("stop -- ");
+        //printf("stop -- ");
         carte_pwm.setPWM(pin_sens, 0,4096); //pour le sens on met 1
         carte_pwm.setPWM(pin_vitesse, 0,4096);
     }
     if (cmde >   100 )
     {
-         //pc.printf("montee -- ");
+         //printf("montee -- ");
          if ( cmde >   4096) { cmde =   4095; }
         carte_pwm.setPWM(pin_sens, 0,4096); //pour le sens on met 0
        carte_pwm.setPWM(pin_vitesse, 0,cmde);
     }
     if (cmde <  -100)
     {
-          //pc.printf("descente -- ");
+          //printf("descente -- ");
         if ( cmde <  -4096) { cmde =  -4095; }
         carte_pwm.setPWM(pin_sens, 4096,0); //pour le sens on met 1
         carte_pwm.setPWM(pin_vitesse, 0, -cmde);
@@ -142,7 +142,7 @@ void initial_setup(){
   // ================================================================
       // ===                      INITIAL SETUP                       ===
       // ================================================================ 
-      pc.baud(9600); //serial begin 
+     // baud(9600); //serial begin 
       i2c.start();  
 
       //PWM begin
@@ -153,7 +153,7 @@ void initial_setup(){
 
 
       accel_epaule.begin(); 
-      pc.printf(accel_epaule.testConnection() ? "MPU6050 connection successful \n" : "MPU6050 connection failed \n");
+      printf(accel_epaule.testConnection() ? "MPU6050 connection successful \n" : "MPU6050 connection failed \n");
      accel_epaule.setXAccelOffset(-1229);
      accel_epaule.setYAccelOffset(495);
      accel_epaule.setZAccelOffset(753);
@@ -161,14 +161,14 @@ void initial_setup(){
 
 
       accel_coude.begin();
-      pc.printf(accel_coude.testConnection() ? "MPU6050 connection successful \n" : "MPU6050 connection failed \n");
+      printf(accel_coude.testConnection() ? "MPU6050 connection successful \n" : "MPU6050 connection failed \n");
     accel_coude.setXAccelOffset((int16_t)-943);
      accel_coude.setYAccelOffset((int16_t)-707);
      accel_coude.setZAccelOffset((int16_t)1645);
      //AngleCoude   = accel_coude.lecture_angle() + AngleEpaule;
 
       accel_poignet.begin();
-      pc.printf(accel_poignet.testConnection() ? "MPU6050 connection successful \n" : "MPU6050 connection failed \n");
+      printf(accel_poignet.testConnection() ? "MPU6050 connection successful \n" : "MPU6050 connection failed \n");
        accel_poignet.setXAccelOffset((int16_t)1491);
      accel_poignet.setYAccelOffset((int16_t)-111);
      accel_poignet.setZAccelOffset((int16_t)507);
@@ -197,7 +197,7 @@ void initial_setup(){
 int main() {
 
     initial_setup();
-    pc.printf("AngleEpaule     AngleCoude     AnglePoignet  monte  descend   SetPointEpaule   CmdeEpaule     SetPointCoude   CmdeCoude       SetPointPoignet CmdePoignet\n" ); 
+    printf("AngleEpaule     AngleCoude     AnglePoignet  monte  descend   SetPointEpaule   CmdeEpaule     SetPointCoude   CmdeCoude       SetPointPoignet CmdePoignet\n" ); 
 //*** Boucle principale
     while(1) {  
     
@@ -209,16 +209,16 @@ int main() {
     if (val_bouton_descend > 40000){val_bouton_descend = 1;val_bouton_monte=0;} else {val_bouton_descend=0;}//si il y a plus de 4V on met 1
     
        //on lit les accéléromètres 
-        // pc.printf("AngleEpauleAbs   \n" ); 
+        // printf("AngleEpauleAbs   \n" ); 
         AngleEpauleAbs  =  accel_epaule.lecture_angle(); 
         AngleEpaule  =  AngleEpauleAbs; 
 
-        // pc.printf("AngleCoudeAbs \n " );
+        // printf("AngleCoudeAbs \n " );
         AngleCoudeAbs = accel_coude.lecture_angle(); 
         AngleCoude   =  180 + (AngleCoudeAbs - AngleEpauleAbs);
         if (AngleCoude>360){ AngleCoude = AngleCoude - 360;}
 
-        // pc.printf("AnglePoignetAbs \n " );
+        // printf("AnglePoignetAbs \n " );
         AnglePoignetAbs =   accel_poignet.lecture_angle();
         
         AnglePoignet =   180 + (AnglePoignetAbs -AngleCoudeAbs);
@@ -317,24 +317,24 @@ int main() {
     }
     else
     {
-     pc.printf("%i         ", counterA.read() );
-     pc.printf("%i         ", nb_tours );
-     pc.printf("%f      ", AngleRotPoignet );
-     pc.printf("%f      ", AngleRotEpaule );
-     pc.printf("%f      ", AngleEpaule );
-     pc.printf("%f      ", AngleCoude );
-     pc.printf("%f      ", AnglePoignet );
-     pc.printf("%i      ", val_bouton_monte);
-     pc.printf("%i      ", val_bouton_descend);
-     pc.printf("%f      ", SetPointEpaule);
-     pc.printf("%f      ", CmdeEpaule);
-     pc.printf("%f      ", SetPointCoude);
-     pc.printf("%f      ", CmdeCoude);
-     pc.printf("%f      ", SetPointPoignet);
-     pc.printf("%f      ", CmdePoignet); 
-     pc.printf("\n" ); 
-    //  pc.printf("Count so far: %d\n", counterA.read());
-    //  pc.printf("Count so far: %d\n", counterB.read());
+     printf("%i         ", counterA.read() );
+     printf("%i         ", nb_tours );
+     printf("%f      ", AngleRotPoignet );
+     printf("%f      ", AngleRotEpaule );
+     printf("%f      ", AngleEpaule );
+     printf("%f      ", AngleCoude );
+     printf("%f      ", AnglePoignet );
+     printf("%i      ", val_bouton_monte);
+     printf("%i      ", val_bouton_descend);
+     printf("%f      ", SetPointEpaule);
+     printf("%f      ", CmdeEpaule);
+     printf("%f      ", SetPointCoude);
+     printf("%f      ", CmdeCoude);
+     printf("%f      ", SetPointPoignet);
+     printf("%f      ", CmdePoignet); 
+     printf("\n" ); 
+    //  printf("Count so far: %d\n", counterA.read());
+    //  printf("Count so far: %d\n", counterB.read());
 
     }
     
@@ -345,6 +345,6 @@ int main() {
    
  
     }
- pc.printf("on sort du programme... \n");
+ printf("on sort du programme... \n");
 }
 

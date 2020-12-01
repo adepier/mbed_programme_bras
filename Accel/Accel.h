@@ -24,8 +24,7 @@ class Accel {
   char plan_X_Y_Z; 
   char orientation;
   int offset;
-  uint8_t i2c_channel;
-  Serial  debugSerial ; 
+  uint8_t i2c_channel; 
   TCA9548 multiplexer_i2c;
   int calibation[6];
 };

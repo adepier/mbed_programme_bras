@@ -4,7 +4,7 @@ TCA9548::TCA9548() : i2c(I2C_SDA,I2C_SCL) {}
 TCA9548::TCA9548(PinName i2c_sda, PinName i2c_scl) : i2c(i2c_sda,i2c_scl) {}
 
 void TCA9548::i2cWrite8(uint8_t addr, char data){
-    char packet[1] = {data & 0xFF}; 
+    char packet[1] ={static_cast<char>(data &  0xFF)}; 
     i2c.write(addr,packet,1,false); //only write address and data ~ no reg
     //wait(0.01);
 }

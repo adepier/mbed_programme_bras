@@ -7,7 +7,8 @@
 #define NB_READ 10
 
 
-Accel::Accel(uint8_t pI2c_channel , uint8_t i2c_address,int pOffset,char pPlan_X_Y_Z, int *pCalibation, char pOrientation) : i2c(I2C_SDA,I2C_SCL), accelgyro(i2c_address), multiplexer_i2c(),debugSerial(USBTX, USBRX) {
+Accel::Accel(uint8_t pI2c_channel , uint8_t i2c_address,int pOffset,char pPlan_X_Y_Z, int *pCalibation, char pOrientation) 
+        : i2c(I2C_SDA,I2C_SCL), accelgyro(i2c_address), multiplexer_i2c()  {
  
   
   plan_X_Y_Z = pPlan_X_Y_Z;

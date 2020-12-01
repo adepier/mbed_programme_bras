@@ -52,7 +52,7 @@ typedef const unsigned char prog_uchar;
 /** Default constructor, uses default I2C address.
  * @see MPU6050_DEFAULT_ADDRESS
  */
-MPU6050::MPU6050() : debugSerial(USBTX, USBRX), i2c(I2C_SDA,I2C_SCL)
+MPU6050::MPU6050() : i2c(I2C_SDA,I2C_SCL)
 { 
  
   // Arduino WIRE library takes address as 7-bit (unshifted), mbed takes 8 bit.
@@ -67,7 +67,7 @@ MPU6050::MPU6050() : debugSerial(USBTX, USBRX), i2c(I2C_SDA,I2C_SCL)
  * @see MPU6050_ADDRESS_AD0_LOW
  * @see MPU6050_ADDRESS_AD0_HIGH
  */
-MPU6050::MPU6050(  uint8_t address) : debugSerial(USBTX, USBRX), i2c(I2C_SDA,I2C_SCL)
+MPU6050::MPU6050(  uint8_t address) :  i2c(I2C_SDA,I2C_SCL)
 {
      
    _i2caddr = address;
@@ -84,7 +84,7 @@ void MPU6050::initialize()
 {
 
 #ifdef useDebugSerial
-    debugSerial.printf("MPU6050::initialize start\n");
+    printf("MPU6050::initialize start\n");
 #endif
 
     setClockSource(MPU6050_CLOCK_PLL_XGYRO);
@@ -93,7 +93,7 @@ void MPU6050::initialize()
     setSleepEnabled(false); // thanks to Jack Elston for pointing this one out!
 
 #ifdef useDebugSerial
-    debugSerial.printf("MPU6050::initialize end\n");
+    printf("MPU6050::initialize end\n");
 #endif
 }
 
@@ -104,11 +104,11 @@ void MPU6050::initialize()
 bool MPU6050::testConnection()
 {
 #ifdef useDebugSerial
-    debugSerial.printf("MPU6050::testConnection start\n");
+    printf("MPU6050::testConnection start\n");
 #endif
     uint8_t deviceId = getDeviceID();
 #ifdef useDebugSerial
-    debugSerial.printf("DeviceId = %d\n",deviceId);
+    printf("DeviceId = %d\n",deviceId);
 #endif
     return deviceId == 0x34;
 }

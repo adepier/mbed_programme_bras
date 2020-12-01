@@ -2,7 +2,7 @@
 class Counter {
 public:
     Counter(PinName pin) : _interrupt(pin) {        // create the InterruptIn on the pin specified to Counter 
-        _interrupt.rise(this, &Counter::increment); // attach increment function of this counter instance
+        _interrupt.rise(callback(this, &Counter::increment)); // attach increment function of this counter instance
     }
  
     void increment() {

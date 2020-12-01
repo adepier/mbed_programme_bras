@@ -405,7 +405,7 @@ THE SOFTWARE.
 
 class MPU6050 {
     private:
-        Serial debugSerial; 
+       // Serial debugSerial; 
         uint8_t buffer[14];
 
         I2C  i2c;
