@@ -52,11 +52,10 @@
       int calibation_coude[3] =  {   -1, -1, 1 };
       int calibation_poignet[3] = {  1, -1, 1};
 
-      Accel accel_epaule( CH6,0x68,180,'X',calibation_epaule, 'XYZ' ); 
-       
-      Accel accel_coude( CH7,0x68,180,'X',calibation_coude,'XYZ');
-      Accel accel_poignet( CH7,0x69,180,'X',calibation_poignet,'XZY');
-      Accel accel_rot_poignet( CH7,0x69,180,'Z',calibation_poignet,'XZY');
+      Accel accel_epaule( CH6,0x68,180,'X',calibation_epaule, "XYZ" ); 
+      Accel accel_coude( CH7,0x68,180,'X',calibation_coude,"XYZ");
+      Accel accel_poignet( CH7,0x69,180,'X',calibation_poignet,"XZY");
+      Accel accel_rot_poignet( CH7,0x69,180,'Z',calibation_poignet,"XZY");
       
      // Serial pc(USBTX, USBRX);
       DigitalOut myled(LED_PIN);

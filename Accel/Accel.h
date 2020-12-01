@@ -1,7 +1,7 @@
 
 #ifndef _Accel_H
 #define _Accel_H
-
+#include <string>
 #include "mbed.h"
 #include "MPU6050/MPU6050.h"
 #include "TCA9548/TCA9548.h"
@@ -10,7 +10,7 @@
 
 class Accel {
  public:
-  Accel(uint8_t pI2c_channel ,  uint8_t i2c_address,int pOffset,char pPlan_X_Y_Z, int *pCalibation, char pOrientation);
+  Accel(uint8_t pI2c_channel ,  uint8_t i2c_address,int pOffset,char pPlan_X_Y_Z, int *pCalibation, string  pOrientation);
   void begin(void); 
   double lecture_angle(void);
   bool testConnection(void);
@@ -22,7 +22,7 @@ class Accel {
   I2C i2c;
   MPU6050   accelgyro ;
   char plan_X_Y_Z; 
-  char orientation;
+  string orientation;
   int offset;
   uint8_t i2c_channel; 
   TCA9548 multiplexer_i2c;
