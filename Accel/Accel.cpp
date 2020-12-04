@@ -1,4 +1,3 @@
-#include <string>
 #include <Accel/Accel.h>
 #include "MPU6050/MPU6050.h" 
 #include "TCA9548/TCA9548.h"
@@ -7,7 +6,7 @@
 #define NB_READ 10
 
 
-Accel::Accel(uint8_t pI2c_channel , uint8_t i2c_address,int pOffset,char pPlan_X_Y_Z, int *pCalibation, string pOrientation) 
+Accel::Accel(uint8_t pI2c_channel , uint8_t i2c_address,int pOffset,char pPlan_X_Y_Z, int *pCalibation, int pOrientation) 
         : i2c(I2C_SDA,I2C_SCL), accelgyro(i2c_address), multiplexer_i2c()  {
  
   
@@ -56,8 +55,10 @@ double x_euler=0, y_euler=0, z_euler=0,   angle =0;
     // on lit NB_READ fois l'angle pour en faire la moyenne
     for (size_t i = 0; i < NB_READ; i++)
     {
-        if ( orientation ==  "XYZ") {accelgyro.getAcceleration(&ax, &ay, &az); }
-        if ( orientation ==  "XZY") {accelgyro.getAcceleration(&ax, &az, &ay); }
+        //"XYZ" =1
+        //"XZY" =2
+        if ( orientation ==  1) {accelgyro.getAcceleration(&ax, &ay, &az); }
+        if ( orientation ==  2) {accelgyro.getAcceleration(&ax, &az, &ay); }
          
 
 
