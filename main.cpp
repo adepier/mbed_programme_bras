@@ -31,7 +31,7 @@
       #define PIN_SENS_POIGNET       10
       #define PIN_VITESSE_POIGNET    11
       #define  pin_monte           PA_6        // pin monte
-      #define  pin_descend         PA_7        // pin monte
+      #define  pin_descend         PA_5        // pin monte
       #define  pin_servo_pouce       12  //pin du servo du pouce
       #define   pin_ordre            5  //rouge
       #define   pin_status           7 //blanc 
@@ -319,6 +319,8 @@ int main() {
     }
     else
     {
+ 
+
      printf("%i         ", counterA.read() );
      printf("%i         ", nb_tours );
      printf("%f      ", AngleRotPoignet );
@@ -335,9 +337,10 @@ int main() {
      printf("%f      ", SetPointPoignet);
      printf("%f      ", CmdePoignet); 
      printf("\n" ); 
+     
     //  printf("Count so far: %d\n", counterA.read());
     //  printf("Count so far: %d\n", counterB.read());
-
+      
     }
     
     
