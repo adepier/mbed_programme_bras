@@ -143,9 +143,9 @@ void Adafruit_PWMServoDriver::setPWMFreq(float freq) {
   if (freq < 1)
     freq = 1;
   if (freq > 3500)
-    freq = 3500; // Datasheet limit is 3052=50MHz/(4*4096)
+    freq = 3500; // Datasheet limit is 3052=50MHz/(4*4095)
 
-  float prescaleval = ((_oscillator_freq / (freq * 4096.0)) + 0.5) - 1;
+  float prescaleval = ((_oscillator_freq / (freq * 4095.0)) + 0.5) - 1;
   if (prescaleval < PCA9685_PRESCALE_MIN)
     prescaleval = PCA9685_PRESCALE_MIN;
   if (prescaleval > PCA9685_PRESCALE_MAX)
@@ -219,8 +219,8 @@ return read8(  PCA9685_LED0_ON_L + 4 * num );
 /*!
  *  @brief  Sets the PWM output of one of the PCA9685 pins
  *  @param  num One of the PWM output pins, from 0 to 15
- *  @param  on At what point in the 4096-part cycle to turn the PWM output ON
- *  @param  off At what point in the 4096-part cycle to turn the PWM output OFF
+ *  @param  on At what point in the 4095-part cycle to turn the PWM output ON
+ *  @param  off At what point in the 4095-part cycle to turn the PWM output OFF
  */
 void Adafruit_PWMServoDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
 #ifdef ENABLE_DEBUG_OUTPUT
@@ -252,7 +252,7 @@ char cmd[5];
  * 4095 as completely on.  Optional invert parameter supports inverting the
  * pulse for sinking to ground.
  *   @param  num One of the PWM output pins, from 0 to 15
- *   @param  val The number of ticks out of 4096 to be active, should be a value
+ *   @param  val The number of ticks out of 4095 to be active, should be a value
  * from 0 to 4095 inclusive.
  *   @param  invert If true, inverts the output, defaults to 'false'
  */
@@ -262,20 +262,20 @@ void Adafruit_PWMServoDriver::setPin(uint8_t num, uint16_t val, bool invert) {
   if (invert) {
     if (val == 0) {
       // Special value for signal fully on.
-      setPWM(num, 4096, 0);
+      setPWM(num, 4095, 0);
     } else if (val == 4095) {
       // Special value for signal fully off.
-      setPWM(num, 0, 4096);
+      setPWM(num, 0, 4095);
     } else {
       setPWM(num, 0, 4095 - val);
     }
   } else {
     if (val == 4095) {
       // Special value for signal fully on.
-      setPWM(num, 4096, 0);
+      setPWM(num, 4095, 0);
     } else if (val == 0) {
       // Special value for signal fully off.
-      setPWM(num, 0, 4096);
+      setPWM(num, 0, 4095);
     } else {
       setPWM(num, 0, val);
     }

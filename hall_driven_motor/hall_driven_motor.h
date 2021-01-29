@@ -2,6 +2,8 @@
 #include "mbed.h"
 #include <string>
 
+ 
+
 class hall_driven_motor {
 public:
   hall_driven_motor(PinName count_pin,
@@ -12,7 +14,8 @@ public:
                     int &cmde,
                     char name,
                     int cmde_flag_start,
-                    int cmde_flag_stop);
+                    int cmde_flag_stop,
+                    int motor_shield_type);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
   // interruptions
   void increment();
   void stop();
@@ -24,6 +27,7 @@ public:
   void set_coef_accel_motor(float coef_motor);
   void set_coef_decel_motor(float coef_motor);
   void set_min_motor_speed(int min_motor_speed);
+  void set_max_motor_speed(int max_motor_speed);
   void set_motor_name(char name);
   char get_motor_name();
   int get_cmde_flag_start();
@@ -35,18 +39,25 @@ private:
   Adafruit_PWMServoDriver *_pwm;
   int _backward_pin;
   int _forward_pin;
+  int _dir_pin;
+  int _pwm_pin;
   bool _sens;
   bool _flag_stop;
   volatile int _count;
   int _nb_count_by_turn;
   float _coef_accel_motor;
   float _coef_decel_motor;
-  int _min_motor_speed;
-  int speed;
+ int _min_motor_speed; 
+ int _max_motor_speed;  
   int previous_speed;
   char  _name;
   int *_cmde;
   int _cmde_flag_start;
   int _cmde_flag_stop;
+  int _motor_shield_type;
+  void  motor_run_forward(int speed);
+  void  motor_run_backward(int speed);
+  void  motor_stop();
+  int  get_speed(int target);
 
 };
