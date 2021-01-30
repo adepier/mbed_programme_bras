@@ -21,9 +21,10 @@ hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
                                      Adafruit_PWMServoDriver &pwm,
                                      int forward_pin, int backward_pin,
                                      int &cmde, char name, int cmde_flag_start,
-                                     int cmde_flag_stop, int motor_shield_type)
+                                     int cmde_flag_stop, int motor_shield_type,
+                                     EventFlags &event_flags)
     : _interrupt_count(count_pin), _interrupt_stop(stop_pin), _pwm(&pwm),
-      _cmde(&cmde) { // create the InterruptIn on the pin specified to Counter
+      _cmde(&cmde),_event_flags(&event_flags )  { // create the InterruptIn on the pin specified to Counter
   _interrupt_count.fall(callback(
       this, &hall_driven_motor::increment)); // attach increment function of
                                              // this counter instance
@@ -48,6 +49,7 @@ hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
   _name = name;
   _cmde_flag_start = cmde_flag_start;
   _cmde_flag_stop = cmde_flag_stop;
+  
 }
 
 //****************** interruptions
@@ -70,7 +72,7 @@ void hall_driven_motor::run() {
     while (*_cmde > _count) {
       // calcul de la vitesse
       int speed = get_speed(*_cmde);
-      printf("backward count:%i / speed:%i\n ", _count, speed);
+    //   printf("backward count:%i / speed:%i\n ", _count, speed);
       _sens = true; // true = forward / false = backward
       motor_run_backward(speed); 
     }
@@ -78,7 +80,7 @@ void hall_driven_motor::run() {
     while (*_cmde < _count) {
         // calcul de la vitesse
       int speed = get_speed(*_cmde);
-      printf("forward count:%i / speed:%i\n ", _count, speed);
+    //   printf("forward count:%i / speed:%i\n ", _count, speed);
       _sens = false; // true = forward / false = backward
       motor_run_forward(speed);
     }
@@ -101,7 +103,7 @@ void hall_driven_motor::init() {
   // on avance tout doucement jusqu'a 0 en mettant le sens à false
   // il deviendra true en arrivant sur stop
   while (_sens == false) {
-    // printf(" backward\n ");
+//    printf("init backward count:%i / speed:%i\n ", _count, _min_motor_speed);
     motor_run_backward(_min_motor_speed);
   }
   //   printf(" stop\n ");
@@ -133,6 +135,7 @@ void hall_driven_motor::set_motor_name(char name) { _name = name; };
 char hall_driven_motor::get_motor_name() { return _name; };
 int hall_driven_motor::get_cmde_flag_start() { return _cmde_flag_start; };
 int hall_driven_motor::get_cmde_flag_stop() { return _cmde_flag_stop; };
+EventFlags &hall_driven_motor::get_event_flags() { return *_event_flags; };
 
 
 //********************** methodes privées

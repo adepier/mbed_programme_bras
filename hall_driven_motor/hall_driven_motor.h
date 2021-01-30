@@ -15,7 +15,8 @@ public:
                     char name,
                     int cmde_flag_start,
                     int cmde_flag_stop,
-                    int motor_shield_type);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                    int motor_shield_type,
+                    EventFlags &event_flags);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
   // interruptions
   void increment();
   void stop();
@@ -32,11 +33,13 @@ public:
   char get_motor_name();
   int get_cmde_flag_start();
   int get_cmde_flag_stop();
+  EventFlags &get_event_flags();
 
 private:
   InterruptIn _interrupt_count;
   InterruptIn _interrupt_stop;
   Adafruit_PWMServoDriver *_pwm;
+  EventFlags *_event_flags;
   int _backward_pin;
   int _forward_pin;
   int _dir_pin;
