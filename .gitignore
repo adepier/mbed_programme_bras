@@ -1,7 +1,8 @@
-.build
+build
 .mbed
 projectfiles
 *.py*
 mbed-os
-BUILD
-
+cmake_build
+.mbedbuild
+.mbedbuild/mbed_config.cmake

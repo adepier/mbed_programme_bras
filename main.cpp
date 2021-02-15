@@ -1,3 +1,9 @@
+/* mbed Microcontroller Library
+ * Copyright (c) 2019 ARM Limited
+ * SPDX-License-Identifier: Apache-2.0
+ * mbed-tools compile -m NUCLEO_L432KC -t GCC_ARM -f --sterm
+ * 
+ */
 #include "adafruit_pwmservodriver/Adafruit_PWMServoDriver.h"
 #include "hall_driven_motor/hall_driven_motor.h"
 #include "mbed.h"
