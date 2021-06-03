@@ -27,7 +27,10 @@ hall_driven_motor::hall_driven_motor( PinName count_pin
                                     //  , int cmde_flag_start
                                     //  , int cmde_flag_stop
                                      , int motor_shield_type 
-                                     , EventFlags &event_flags)
+                                     , EventFlags &event_flags
+                                     ,int init_speed
+                                     ,int min_speed
+                                     ,int max_speed)
     : _interrupt_count(count_pin), _interrupt_stop(stop_pin), _pwm(&pwm),
       _target(&target),_event_flags(&event_flags )  { // create the InterruptIn on the pin specified to Counter
   _interrupt_count.fall(callback(
@@ -53,8 +56,11 @@ hall_driven_motor::hall_driven_motor( PinName count_pin
     _forward_pin = forward_pin;
     _backward_pin = backward_pin;
   }
-  _min_motor_speed = 1000; // default value
+  // _min_motor_speed = 1000; // default value
   _motor_name = motor_name;
+  _init_speed = init_speed;
+ _min_speed= min_speed;
+  _max_speed= max_speed;
   // _cmde_flag_start = cmde_flag_start;
   // _cmde_flag_stop = cmde_flag_stop;
   
@@ -106,16 +112,16 @@ void hall_driven_motor::init() {
   // si le moteur est en butée il faut tourner dans l'autre sens
   // doucement de quelque pas pour le décoler
   while (_interrupt_stop.read() == 1) {
-    motor_run_forward(_min_motor_speed);
+    motor_run_forward(_init_speed);
   }
   // on avance tout doucement jusqu'a 0 en mettant le sens à false
   // il deviendra true en arrivant sur stop
   while (_sens == false) {
 //    printf("init backward count:%i / speed:%i\n ", _count, _min_motor_speed);
-    motor_run_backward(_min_motor_speed);
+    motor_run_backward(_init_speed);
   }
   //   printf(" stop\n ");
-  previous_speed = _min_motor_speed;
+  previous_speed = _init_speed;
   _interrupt_stop.disable_irq();
   motor_stop();
   printf("fin init moteur %c  \n ", _motor_name);
@@ -132,10 +138,10 @@ void hall_driven_motor::set_coef_decel_motor(float coef_decel_motor) {
   _coef_decel_motor = coef_decel_motor;
 }
 void hall_driven_motor::set_min_motor_speed(int min_motor_speed) {
-  _min_motor_speed = min_motor_speed;
+  _min_speed = min_motor_speed;
 }
 void hall_driven_motor::set_max_motor_speed(int max_motor_speed) {
-  _max_motor_speed = max_motor_speed;
+  _max_speed = max_motor_speed;
 }
 
 void hall_driven_motor::set_motor_name(char motor_name) { _motor_name = motor_name; };
@@ -152,8 +158,8 @@ int  hall_driven_motor::get_speed(int target){
     // calcul de la vitesse
     int speed;
       speed = int(_coef_decel_motor * abs(target - _count));
-      speed = max(speed, _min_motor_speed);
-      speed = min(speed, _max_motor_speed);
+      speed = max(speed, _min_speed);
+      speed = min(speed, _max_speed);
       speed = min(speed, int(previous_speed * _coef_accel_motor));
       previous_speed = speed; 
       return speed;

@@ -14,7 +14,10 @@ public:
                     // int cmde_flag_start,
                     // int cmde_flag_stop,
                     int motor_shield_type,
-                    EventFlags &event_flags);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                    EventFlags &event_flags
+                    ,int init_speed
+                    ,int min_speed
+                    ,int max_speed);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
   // interruptions
   void increment();
   void stop();
@@ -48,11 +51,13 @@ private:
   int _nb_count_by_turn;
   float _coef_accel_motor;
   float _coef_decel_motor;
- int _min_motor_speed; 
- int _max_motor_speed;  
+ int _min_speed; 
+ int _max_speed;  
   int previous_speed;
   char  _motor_name;
   int *_target;
+   int _init_speed;
+ 
   // int _cmde_flag_start;
   // int _cmde_flag_stop;
   int _motor_shield_type;

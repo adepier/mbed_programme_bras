@@ -35,7 +35,9 @@
 #define PIN_STOP_COUDE PB_7
 #define PIN_DIR_COUDE 0
 #define PIN_PWM_COUDE 1 
-#define MAX_VAL_COUDE 7500
+#define NB_TIC_PER_DEG_COUDE 43.3 
+// #define MAX_VAL_COUDE 7500
+#define INIT_SPEED_COUDE 1500
 #define MIN_MOTOR_SPEED_COUDE 500
 #define MAX_MOTOR_SPEED_COUDE 3000
 //#####POIGNET
@@ -43,8 +45,10 @@
 #define PIN_STOP_POIGNET PB_1
 #define PIN_DIR_POIGNET 10
 #define PIN_PWM_POIGNET 11 
-#define MAX_VAL_POIGNET 2500
-#define MIN_MOTOR_SPEED_POIGNET 500
+#define NB_TIC_PER_DEG_POIGNET 38.8 
+// #define MAX_VAL_POIGNET 2500
+#define INIT_SPEED_POIGNET 2500
+#define MIN_MOTOR_SPEED_POIGNET 800
 #define MAX_MOTOR_SPEED_POIGNET 3500
 
 #define FLAG_START 1
@@ -64,9 +68,30 @@ Adafruit_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le 
 // hall_driven_motor motor_epaule(PIN_COUNT_EPAULE, PIN_STOP_EPAULE, pwm, PIN_DIR_EPAULE, PIN_PWM_EPAULE, val1, 'A', FLAG_START_EPAULE,
 //                          FLAG_STOP_EPAULE, MOTOR_SHIELD_TYPE);
 //coude
-hall_driven_motor motor_coude(PIN_COUNT_COUDE, PIN_STOP_COUDE, pwm, PIN_DIR_COUDE, PIN_PWM_COUDE, target_coude, 'B',   MOTOR_SHIELD_TYPE,event_coude);
+hall_driven_motor motor_coude(PIN_COUNT_COUDE
+                              , PIN_STOP_COUDE
+                              , pwm, PIN_DIR_COUDE
+                              , PIN_PWM_COUDE
+                              , target_coude
+                              , 'B'
+                              , MOTOR_SHIELD_TYPE
+                              , event_coude
+                              , INIT_SPEED_COUDE 
+                              , MIN_MOTOR_SPEED_COUDE 
+                              , MAX_MOTOR_SPEED_COUDE );
 //poignet
-hall_driven_motor motor_poignet(PIN_COUNT_POIGNET, PIN_STOP_POIGNET, pwm, PIN_DIR_POIGNET, PIN_PWM_POIGNET, target_poignet, 'C',   MOTOR_SHIELD_TYPE,event_poignet);
+hall_driven_motor motor_poignet(PIN_COUNT_POIGNET
+                              , PIN_STOP_POIGNET
+                              , pwm
+                              , PIN_DIR_POIGNET
+                              , PIN_PWM_POIGNET
+                              , target_poignet
+                              , 'C'
+                              , MOTOR_SHIELD_TYPE
+                              , event_poignet
+                              , INIT_SPEED_POIGNET 
+                              , MIN_MOTOR_SPEED_POIGNET 
+                              , MAX_MOTOR_SPEED_POIGNET );
 
 // hall_driven_motor motor2(PB_1,PA_8, pwm,7,
 // 6,val2,'B',FLAG_START_2,FLAG_STOP_2,MOTOR_SHIELD_TYPE);
@@ -89,14 +114,14 @@ void init() {
      pwm.setPWM(pwmnum, 0, 0);
   }
    printf("init coude\n");
-   motor_coude.set_min_motor_speed(MIN_MOTOR_SPEED_COUDE);
-  motor_coude.set_max_motor_speed(MAX_MOTOR_SPEED_COUDE); 
+  //  motor_coude.set_min_motor_speed(MIN_MOTOR_SPEED_COUDE);
+  // motor_coude.set_max_motor_speed(MAX_MOTOR_SPEED_COUDE); 
   motor_coude.set_coef_accel_motor(1.1);
   motor_coude.set_coef_decel_motor(5);
   motor_coude.init(); 
    printf("init poignet\n");
- motor_poignet.set_min_motor_speed(MIN_MOTOR_SPEED_POIGNET);
-  motor_poignet.set_max_motor_speed(MAX_MOTOR_SPEED_POIGNET); 
+//  motor_poignet.set_min_motor_speed(MIN_MOTOR_SPEED_POIGNET);
+//   motor_poignet.set_max_motor_speed(MAX_MOTOR_SPEED_POIGNET); 
   motor_poignet.set_coef_accel_motor(1.1);
   motor_poignet.set_coef_decel_motor(5);
   motor_poignet.init();
@@ -149,8 +174,8 @@ int main() {
     // motor2.run(500);
     // event_flags.wait_all(FLAG_STOP_EPAULE|FLAG_STOP_2 ); // attend que les moteurs
     // event_flags.wait_all(FLAG_STOP_EPAULE ); // attend que les moteurs
-    target_poignet = MAX_VAL_POIGNET;
-    target_coude = MAX_VAL_COUDE;
+    target_poignet = int(0 * NB_TIC_PER_DEG_POIGNET);//MAX_VAL_POIGNET;
+    target_coude = int(87 * NB_TIC_PER_DEG_COUDE) ;//7500;//MAX_VAL_COUDE;
     event_coude.set(FLAG_START ); 
      
     printf("FLAG_START_COUDE %i",event_poignet.get());
@@ -167,12 +192,12 @@ int main() {
     event_poignet.wait_all( FLAG_STOP ); // attend que les moteurs
     printf("fin1 flag %i",event_poignet.get());
 
-    ThisThread::sleep_for(chrono::milliseconds(10000));
+    ThisThread::sleep_for(chrono::milliseconds(5000));
     
     // motor1.run(0);
     // motor2.run(0);
-    target_poignet = 100;
-    target_coude = 0;
+    target_poignet = int(120 * NB_TIC_PER_DEG_POIGNET);
+    target_coude = int(197 * NB_TIC_PER_DEG_COUDE) ;
     //    val2 = 0;
    event_coude.set(FLAG_START );
     //  event_flags.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
@@ -184,6 +209,6 @@ int main() {
     event_coude.wait_all(FLAG_STOP  ); // attend que les moteurs
     event_poignet.wait_all( FLAG_STOP ); // attend que les moteurs
     printf("fin2");
-    ThisThread::sleep_for(chrono::milliseconds(10000));
+    ThisThread::sleep_for(chrono::milliseconds(5000));
   }
 }
