@@ -9,8 +9,8 @@ public:
                     Adafruit_PWMServoDriver &pwm,
                     int forward_pin,
                     int backward_pin,
-                    int &cmde,
-                    char name,
+                    int &target,
+                    char motor_name,
                     // int cmde_flag_start,
                     // int cmde_flag_stop,
                     int motor_shield_type,
@@ -27,7 +27,7 @@ public:
   void set_coef_decel_motor(float coef_motor);
   void set_min_motor_speed(int min_motor_speed);
   void set_max_motor_speed(int max_motor_speed);
-  void set_motor_name(char name);
+  void set_motor_name(char motor_name);
   char get_motor_name();
   // int get_cmde_flag_start();
   // int get_cmde_flag_stop();
@@ -51,8 +51,8 @@ private:
  int _min_motor_speed; 
  int _max_motor_speed;  
   int previous_speed;
-  char  _name;
-  int *_cmde;
+  char  _motor_name;
+  int *_target;
   // int _cmde_flag_start;
   // int _cmde_flag_stop;
   int _motor_shield_type;

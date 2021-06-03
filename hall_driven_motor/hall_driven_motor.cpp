@@ -7,8 +7,8 @@
  *  @param pwm
  *  @param forward_pin
  *  @param backward_pin
- *  @param &cmde
- *  @param name
+ *  @param &target
+ *  @param motor_name
  *  @param flag_start
  *  @param flag_stop
  *  @param
@@ -17,16 +17,19 @@
  *      - Ajouter un PID pour éviter
  *      - Ajouter une autocalibration pour avoir le min_motor_speed
  */
-hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
-                                     Adafruit_PWMServoDriver &pwm,
-                                     int forward_pin, int backward_pin,
-                                     int &cmde, char name
+hall_driven_motor::hall_driven_motor( PinName count_pin
+                                     , PinName stop_pin 
+                                     , Adafruit_PWMServoDriver &pwm 
+                                     , int forward_pin
+                                     , int backward_pin 
+                                     , int &target
+                                     , char motor_name
                                     //  , int cmde_flag_start
                                     //  , int cmde_flag_stop
-                                     , int motor_shield_type,
-                                     EventFlags &event_flags)
+                                     , int motor_shield_type 
+                                     , EventFlags &event_flags)
     : _interrupt_count(count_pin), _interrupt_stop(stop_pin), _pwm(&pwm),
-      _cmde(&cmde),_event_flags(&event_flags )  { // create the InterruptIn on the pin specified to Counter
+      _target(&target),_event_flags(&event_flags )  { // create the InterruptIn on the pin specified to Counter
   _interrupt_count.fall(callback(
       this, &hall_driven_motor::increment)); // attach increment function of
                                              // this counter instance
@@ -51,7 +54,7 @@ hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
     _backward_pin = backward_pin;
   }
   _min_motor_speed = 1000; // default value
-  _name = name;
+  _motor_name = motor_name;
   // _cmde_flag_start = cmde_flag_start;
   // _cmde_flag_stop = cmde_flag_stop;
   
@@ -73,25 +76,25 @@ void hall_driven_motor::stop() {
 //********************** methodes publiques
 
 void hall_driven_motor::run() { 
-  if ((*_cmde - _count) > 0) { 
-    while (*_cmde > _count) {
+  if ((*_target - _count) > 0) { 
+    while (*_target > _count) {
       // calcul de la vitesse
-      int speed = get_speed(*_cmde);
+      int speed = get_speed(*_target);
     //   printf("backward count:%i / speed:%i\n ", _count, speed);
       _sens = true; // true = forward / false = backward
       motor_run_backward(speed); 
     }
   } else {
-    while (*_cmde < _count) {
+    while (*_target < _count) {
         // calcul de la vitesse
-      int speed = get_speed(*_cmde);
+      int speed = get_speed(*_target);
     //   printf("forward count:%i / speed:%i\n ", _count, speed);
       _sens = false; // true = forward / false = backward
       motor_run_forward(speed);
     }
   };
    // stop quand le compteur est arrivé
-  printf("%c: count %i  \n ", _name, _count);
+  printf("%c: count %i  \n ", _motor_name, _count);
   motor_stop();
 }
 
@@ -115,7 +118,7 @@ void hall_driven_motor::init() {
   previous_speed = _min_motor_speed;
   _interrupt_stop.disable_irq();
   motor_stop();
-  printf("fin init moteur %c  \n ", _name);
+  printf("fin init moteur %c  \n ", _motor_name);
 }
 
 int hall_driven_motor::read_counter() { return _count; }
@@ -135,9 +138,9 @@ void hall_driven_motor::set_max_motor_speed(int max_motor_speed) {
   _max_motor_speed = max_motor_speed;
 }
 
-void hall_driven_motor::set_motor_name(char name) { _name = name; };
+void hall_driven_motor::set_motor_name(char motor_name) { _motor_name = motor_name; };
 
-char hall_driven_motor::get_motor_name() { return _name; };
+char hall_driven_motor::get_motor_name() { return _motor_name; };
 // int hall_driven_motor::get_cmde_flag_start() { return _cmde_flag_start; };
 // int hall_driven_motor::get_cmde_flag_stop() { return _cmde_flag_stop; };
 EventFlags &hall_driven_motor::get_event_flags() { return *_event_flags; };

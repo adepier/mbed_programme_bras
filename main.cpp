@@ -51,8 +51,8 @@
 #define FLAG_STOP 2
 #define MOTOR_SHIELD_TYPE  1 // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
 
-int val_coude = 0;
-int val_poignet = 0;
+int target_coude = 0;
+int target_poignet = 0;
 I2C i2c(I2C_SDA, I2C_SCL);
 
 EventFlags event_poignet;
@@ -64,9 +64,9 @@ Adafruit_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le 
 // hall_driven_motor motor_epaule(PIN_COUNT_EPAULE, PIN_STOP_EPAULE, pwm, PIN_DIR_EPAULE, PIN_PWM_EPAULE, val1, 'A', FLAG_START_EPAULE,
 //                          FLAG_STOP_EPAULE, MOTOR_SHIELD_TYPE);
 //coude
-hall_driven_motor motor_coude(PIN_COUNT_COUDE, PIN_STOP_COUDE, pwm, PIN_DIR_COUDE, PIN_PWM_COUDE, val_coude, 'B',   MOTOR_SHIELD_TYPE,event_coude);
+hall_driven_motor motor_coude(PIN_COUNT_COUDE, PIN_STOP_COUDE, pwm, PIN_DIR_COUDE, PIN_PWM_COUDE, target_coude, 'B',   MOTOR_SHIELD_TYPE,event_coude);
 //poignet
-hall_driven_motor motor_poignet(PIN_COUNT_POIGNET, PIN_STOP_POIGNET, pwm, PIN_DIR_POIGNET, PIN_PWM_POIGNET, val_poignet, 'C',   MOTOR_SHIELD_TYPE,event_poignet);
+hall_driven_motor motor_poignet(PIN_COUNT_POIGNET, PIN_STOP_POIGNET, pwm, PIN_DIR_POIGNET, PIN_PWM_POIGNET, target_poignet, 'C',   MOTOR_SHIELD_TYPE,event_poignet);
 
 // hall_driven_motor motor2(PB_1,PA_8, pwm,7,
 // 6,val2,'B',FLAG_START_2,FLAG_STOP_2,MOTOR_SHIELD_TYPE);
@@ -149,8 +149,8 @@ int main() {
     // motor2.run(500);
     // event_flags.wait_all(FLAG_STOP_EPAULE|FLAG_STOP_2 ); // attend que les moteurs
     // event_flags.wait_all(FLAG_STOP_EPAULE ); // attend que les moteurs
-    val_poignet = MAX_VAL_POIGNET;
-    val_coude = MAX_VAL_COUDE;
+    target_poignet = MAX_VAL_POIGNET;
+    target_coude = MAX_VAL_COUDE;
     event_coude.set(FLAG_START ); 
      
     printf("FLAG_START_COUDE %i",event_poignet.get());
@@ -171,8 +171,8 @@ int main() {
     
     // motor1.run(0);
     // motor2.run(0);
-    val_poignet = 100;
-    val_coude = 0;
+    target_poignet = 100;
+    target_coude = 0;
     //    val2 = 0;
    event_coude.set(FLAG_START );
     //  event_flags.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
