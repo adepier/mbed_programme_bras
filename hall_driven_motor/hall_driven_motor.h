@@ -11,8 +11,8 @@ public:
                     int backward_pin,
                     int &cmde,
                     char name,
-                    int cmde_flag_start,
-                    int cmde_flag_stop,
+                    // int cmde_flag_start,
+                    // int cmde_flag_stop,
                     int motor_shield_type,
                     EventFlags &event_flags);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
   // interruptions
@@ -29,8 +29,8 @@ public:
   void set_max_motor_speed(int max_motor_speed);
   void set_motor_name(char name);
   char get_motor_name();
-  int get_cmde_flag_start();
-  int get_cmde_flag_stop();
+  // int get_cmde_flag_start();
+  // int get_cmde_flag_stop();
   EventFlags &get_event_flags();
 
 private:
@@ -53,8 +53,8 @@ private:
   int previous_speed;
   char  _name;
   int *_cmde;
-  int _cmde_flag_start;
-  int _cmde_flag_stop;
+  // int _cmde_flag_start;
+  // int _cmde_flag_stop;
   int _motor_shield_type;
   void  motor_run_forward(int speed);
   void  motor_run_backward(int speed);

@@ -34,9 +34,7 @@
 #define PIN_COUNT_COUDE PB_6
 #define PIN_STOP_COUDE PB_7
 #define PIN_DIR_COUDE 0
-#define PIN_PWM_COUDE 1
-#define FLAG_START_COUDE 1
-#define FLAG_STOP_COUDE 2
+#define PIN_PWM_COUDE 1 
 #define MAX_VAL_COUDE 7500
 #define MIN_MOTOR_SPEED_COUDE 500
 #define MAX_MOTOR_SPEED_COUDE 3000
@@ -44,34 +42,31 @@
 #define PIN_COUNT_POIGNET PA_8
 #define PIN_STOP_POIGNET PB_1
 #define PIN_DIR_POIGNET 10
-#define PIN_PWM_POIGNET 11
-#define FLAG_START_POIGNET 0x5
-#define FLAG_STOP_POIGNET 0x6
+#define PIN_PWM_POIGNET 11 
 #define MAX_VAL_POIGNET 2500
 #define MIN_MOTOR_SPEED_POIGNET 500
 #define MAX_MOTOR_SPEED_POIGNET 3500
 
-// #define FLAG_START_2 3
-// #define FLAG_STOP_2 4
+#define FLAG_START 1
+#define FLAG_STOP 2
 #define MOTOR_SHIELD_TYPE  1 // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
 
 int val_coude = 0;
 int val_poignet = 0;
 I2C i2c(I2C_SDA, I2C_SCL);
+
 EventFlags event_poignet;
 EventFlags event_coude;
-Adafruit_PWMServoDriver
-    pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
+
+Adafruit_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
                     // en PWM  (adresse I2C par defaut 0x40)
 //epaule
 // hall_driven_motor motor_epaule(PIN_COUNT_EPAULE, PIN_STOP_EPAULE, pwm, PIN_DIR_EPAULE, PIN_PWM_EPAULE, val1, 'A', FLAG_START_EPAULE,
 //                          FLAG_STOP_EPAULE, MOTOR_SHIELD_TYPE);
 //coude
-hall_driven_motor motor_coude(PIN_COUNT_COUDE, PIN_STOP_COUDE, pwm, PIN_DIR_COUDE, PIN_PWM_COUDE, val_coude, 'B', FLAG_START_COUDE,
-                         FLAG_STOP_COUDE, MOTOR_SHIELD_TYPE,event_coude);
+hall_driven_motor motor_coude(PIN_COUNT_COUDE, PIN_STOP_COUDE, pwm, PIN_DIR_COUDE, PIN_PWM_COUDE, val_coude, 'B',   MOTOR_SHIELD_TYPE,event_coude);
 //poignet
-hall_driven_motor motor_poignet(PIN_COUNT_POIGNET, PIN_STOP_POIGNET, pwm, PIN_DIR_POIGNET, PIN_PWM_POIGNET, val_poignet, 'C', FLAG_START_POIGNET,
-                         FLAG_STOP_POIGNET, MOTOR_SHIELD_TYPE,event_poignet);
+hall_driven_motor motor_poignet(PIN_COUNT_POIGNET, PIN_STOP_POIGNET, pwm, PIN_DIR_POIGNET, PIN_PWM_POIGNET, val_poignet, 'C',   MOTOR_SHIELD_TYPE,event_poignet);
 
 // hall_driven_motor motor2(PB_1,PA_8, pwm,7,
 // 6,val2,'B',FLAG_START_2,FLAG_STOP_2,MOTOR_SHIELD_TYPE);
@@ -79,6 +74,10 @@ Thread thread_motor_coude;
 Thread thread_motor_poignet;
 
 
+
+//###########################
+//           INIT
+//##########################
 void init() {
   printf("init\n");
 
@@ -109,22 +108,31 @@ void init() {
   // motor2.set_coef_decel_motor(5);
   // motor2.init();
 }
-// main() runs in its own thread in the OS
-// TODO utiliser les threads pour faire tourner les moteurs en //
+
+
+//###########################
+//           THREAD
+//##########################
 
 void run_motor_in_thread(hall_driven_motor *motor) {
 
   while (true) {
        
-    motor->get_event_flags().wait_all(motor->get_cmde_flag_start()); // attend que le moteur
+    motor->get_event_flags().wait_all(FLAG_START); // attend que le moteur ai le flag de démarrage
     printf("start motor %i",motor->get_motor_name());
     motor->run();
-    motor->get_event_flags().set(motor->get_cmde_flag_stop()); // attend que le moteur
+    motor->get_event_flags().set(FLAG_STOP); // attend que le moteur renvoie le flag de stop
      printf("stop motor %i",motor->get_motor_name());
   }
 }
 
+
+
+//###########################
+//           MAIN
+//##########################
 int main() {
+
   init();
 
 //   int flag1 = 1;
@@ -143,10 +151,10 @@ int main() {
     // event_flags.wait_all(FLAG_STOP_EPAULE ); // attend que les moteurs
     val_poignet = MAX_VAL_POIGNET;
     val_coude = MAX_VAL_COUDE;
-    event_coude.set(FLAG_START_COUDE); 
+    event_coude.set(FLAG_START ); 
      
     printf("FLAG_START_COUDE %i",event_poignet.get());
-    event_poignet.set(FLAG_START_POIGNET);
+    event_poignet.set(FLAG_START );
 
     
     //     event_flags.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
@@ -155,9 +163,10 @@ int main() {
     //  event_flags.set(FLAG_START_2);
     //  event_flags.wait_all(FLAG_STOP_EPAULE|FLAG_STOP_2 ); // attend que les
     //  moteurs
-    event_coude.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
-    event_poignet.wait_all( FLAG_STOP_POIGNET); // attend que les moteurs
+    event_coude.wait_all(FLAG_STOP  ); // attend que les moteurs
+    event_poignet.wait_all( FLAG_STOP ); // attend que les moteurs
     printf("fin1 flag %i",event_poignet.get());
+
     ThisThread::sleep_for(chrono::milliseconds(10000));
     
     // motor1.run(0);
@@ -165,15 +174,15 @@ int main() {
     val_poignet = 100;
     val_coude = 0;
     //    val2 = 0;
-   event_coude.set(FLAG_START_COUDE);
+   event_coude.set(FLAG_START );
     //  event_flags.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
-    event_poignet.set(FLAG_START_POIGNET);
+    event_poignet.set(FLAG_START );
     //  event_flags.wait_all( FLAG_STOP_POIGNET); // attend que les moteurs
     // event_flags.set(FLAG_START_2);
     //    event_flags.wait_all(FLAG_STOP_EPAULE|FLAG_STOP_2 ); // attend que les
     //    moteurs
-    event_coude.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
-    event_poignet.wait_all( FLAG_STOP_POIGNET); // attend que les moteurs
+    event_coude.wait_all(FLAG_STOP  ); // attend que les moteurs
+    event_poignet.wait_all( FLAG_STOP ); // attend que les moteurs
     printf("fin2");
     ThisThread::sleep_for(chrono::milliseconds(10000));
   }

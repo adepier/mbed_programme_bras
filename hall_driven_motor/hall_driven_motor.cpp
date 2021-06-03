@@ -20,8 +20,10 @@
 hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
                                      Adafruit_PWMServoDriver &pwm,
                                      int forward_pin, int backward_pin,
-                                     int &cmde, char name, int cmde_flag_start,
-                                     int cmde_flag_stop, int motor_shield_type,
+                                     int &cmde, char name
+                                    //  , int cmde_flag_start
+                                    //  , int cmde_flag_stop
+                                     , int motor_shield_type,
                                      EventFlags &event_flags)
     : _interrupt_count(count_pin), _interrupt_stop(stop_pin), _pwm(&pwm),
       _cmde(&cmde),_event_flags(&event_flags )  { // create the InterruptIn on the pin specified to Counter
@@ -34,8 +36,11 @@ hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
   _interrupt_stop.fall(
       callback(this, &hall_driven_motor::stop)); // attach stop function of
                                                  // this counter instance
+  _interrupt_stop.rise(
+      callback(this, &hall_driven_motor::stop)); // attach stop function of
+                                                 // this counter instance                                               
   _sens = true; // true = forward / false = backward
-  _flag_stop = false;
+  // _flag_stop = false;
   _motor_shield_type = motor_shield_type;
   if (_motor_shield_type == 1) {
     _dir_pin = forward_pin;
@@ -47,8 +52,8 @@ hall_driven_motor::hall_driven_motor(PinName count_pin, PinName stop_pin,
   }
   _min_motor_speed = 1000; // default value
   _name = name;
-  _cmde_flag_start = cmde_flag_start;
-  _cmde_flag_stop = cmde_flag_stop;
+  // _cmde_flag_start = cmde_flag_start;
+  // _cmde_flag_stop = cmde_flag_stop;
   
 }
 
@@ -133,8 +138,8 @@ void hall_driven_motor::set_max_motor_speed(int max_motor_speed) {
 void hall_driven_motor::set_motor_name(char name) { _name = name; };
 
 char hall_driven_motor::get_motor_name() { return _name; };
-int hall_driven_motor::get_cmde_flag_start() { return _cmde_flag_start; };
-int hall_driven_motor::get_cmde_flag_stop() { return _cmde_flag_stop; };
+// int hall_driven_motor::get_cmde_flag_start() { return _cmde_flag_start; };
+// int hall_driven_motor::get_cmde_flag_stop() { return _cmde_flag_stop; };
 EventFlags &hall_driven_motor::get_event_flags() { return *_event_flags; };
 
 
