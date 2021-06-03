@@ -1,7 +1,5 @@
 #include "../Adafruit_PWMServoDriver/Adafruit_PWMServoDriver.h"
-#include "mbed.h"
-#include <string>
-
+#include "mbed.h" 
  
 
 class hall_driven_motor {

@@ -22,6 +22,14 @@
 #define MAX_VAL_EPAULE 2500
 #define MIN_MOTOR_SPEED_EPAULE 200
 #define MAX_MOTOR_SPEED_EPAULE 1000
+//#####EPAULE_haut - MPU6050
+#define PIN_DIR_EPAULE_HAUT 2
+#define PIN_PWM_EPAULE_HAUT 3
+#define FLAG_START_EPAULE_HAUT 0x3
+#define FLAG_STOP_EPAULE_HAUT 0x4
+#define MAX_VAL_EPAULE_HAUT 2500
+#define MIN_MOTOR_SPEED_EPAULE_HAUT 200
+#define MAX_MOTOR_SPEED_EPAULE_HAUT 1000
 //#####COUDE
 #define PIN_COUNT_COUDE PB_6
 #define PIN_STOP_COUDE PB_7
@@ -29,9 +37,9 @@
 #define PIN_PWM_COUDE 1
 #define FLAG_START_COUDE 1
 #define FLAG_STOP_COUDE 2
-#define MAX_VAL_COUDE 2500
+#define MAX_VAL_COUDE 7500
 #define MIN_MOTOR_SPEED_COUDE 500
-#define MAX_MOTOR_SPEED_COUDE 1000
+#define MAX_MOTOR_SPEED_COUDE 3000
 //#####POIGNET
 #define PIN_COUNT_POIGNET PA_8
 #define PIN_STOP_POIGNET PB_1
@@ -40,7 +48,7 @@
 #define FLAG_START_POIGNET 0x5
 #define FLAG_STOP_POIGNET 0x6
 #define MAX_VAL_POIGNET 2500
-#define MIN_MOTOR_SPEED_POIGNET 2500
+#define MIN_MOTOR_SPEED_POIGNET 500
 #define MAX_MOTOR_SPEED_POIGNET 3500
 
 // #define FLAG_START_2 3
@@ -79,7 +87,7 @@ void init() {
     pwm.setPWMFreq(100); // This is the maximum PWM frequency
                        // RAZ pwm
   for (uint8_t pwmnum = 0; pwmnum < 16; pwmnum++) {
-    pwm.setPin(pwmnum, 0, true); 
+     pwm.setPWM(pwmnum, 0, 0);
   }
    printf("init coude\n");
    motor_coude.set_min_motor_speed(MIN_MOTOR_SPEED_COUDE);
@@ -150,11 +158,11 @@ int main() {
     event_coude.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
     event_poignet.wait_all( FLAG_STOP_POIGNET); // attend que les moteurs
     printf("fin1 flag %i",event_poignet.get());
-    ThisThread::sleep_for(chrono::milliseconds(1000));
+    ThisThread::sleep_for(chrono::milliseconds(10000));
     
     // motor1.run(0);
     // motor2.run(0);
-    val_poignet = 0;
+    val_poignet = 100;
     val_coude = 0;
     //    val2 = 0;
    event_coude.set(FLAG_START_COUDE);
@@ -167,6 +175,6 @@ int main() {
     event_coude.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
     event_poignet.wait_all( FLAG_STOP_POIGNET); // attend que les moteurs
     printf("fin2");
-    ThisThread::sleep_for(chrono::milliseconds(1000));
+    ThisThread::sleep_for(chrono::milliseconds(10000));
   }
 }
