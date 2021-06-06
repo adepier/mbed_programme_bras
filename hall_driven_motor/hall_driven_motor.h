@@ -1,5 +1,6 @@
 #include "../Adafruit_PWMServoDriver/Adafruit_PWMServoDriver.h"
 #include "mbed.h" 
+#include "../PID/PID_v1.h"
  
 
 class hall_driven_motor {
@@ -9,7 +10,9 @@ public:
                     Adafruit_PWMServoDriver &pwm,
                     int forward_pin,
                     int backward_pin,
-                    int &target,
+                    double &target,
+                    double &angle,
+                    double &linked_angle,
                     char motor_name,
                     // int cmde_flag_start,
                     // int cmde_flag_stop,
@@ -17,7 +20,9 @@ public:
                     EventFlags &event_flags
                     ,int init_speed
                     ,int min_speed
-                    ,int max_speed);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                    ,int max_speed
+                    ,double nb_tic_per_deg
+                    , int linked_angle_offset);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
   // interruptions
   void increment();
   void stop();
@@ -47,23 +52,32 @@ private:
   int _pwm_pin;
   bool _sens;
   bool _flag_stop;
-  volatile int _count;
+  double _count;
+  double *_angle;
+  double *_linked_angle;
+   int _linked_angle_offset;
   int _nb_count_by_turn;
   float _coef_accel_motor;
   float _coef_decel_motor;
- int _min_speed; 
- int _max_speed;  
+  int _min_speed; 
+  int _max_speed;  
   int previous_speed;
+  double speed;
   char  _motor_name;
-  int *_target;
+  double *_target;
+  double _nb_tic_per_deg;
    int _init_speed;
- 
+   double Input;
+   double Output;
+   double Setpoint;
+    
   // int _cmde_flag_start;
   // int _cmde_flag_stop;
   int _motor_shield_type;
-  void  motor_run_forward(int speed);
-  void  motor_run_backward(int speed);
+  void  motor_run_forward(double speed);
+  void  motor_run_backward(double speed);
   void  motor_stop();
-  int  get_speed(int target);
+  int  get_speed(double target);
+  PID _PID;
 
 };

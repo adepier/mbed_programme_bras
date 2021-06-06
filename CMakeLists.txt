@@ -32,6 +32,8 @@ target_sources(${APP_TARGET}
     hall_driven_motor/hall_driven_motor.h
     adafruit_pwmservodriver/Adafruit_PWMServoDriver.cpp
     adafruit_pwmservodriver/Adafruit_PWMServoDriver.h 
+    PID/PID_v1.h
+    PID/PID_v1.cpp
 )
 
 ############################## 

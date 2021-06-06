@@ -22,7 +22,9 @@ hall_driven_motor::hall_driven_motor( PinName count_pin
                                      , Adafruit_PWMServoDriver &pwm 
                                      , int forward_pin
                                      , int backward_pin 
-                                     , int &target
+                                     , double &target_angle
+                                     , double &angle 
+                                     , double &linked_angle 
                                      , char motor_name
                                     //  , int cmde_flag_start
                                     //  , int cmde_flag_stop
@@ -30,9 +32,16 @@ hall_driven_motor::hall_driven_motor( PinName count_pin
                                      , EventFlags &event_flags
                                      ,int init_speed
                                      ,int min_speed
-                                     ,int max_speed)
+                                     ,int max_speed
+                                     ,double nb_tic_per_deg
+                                     , int linked_angle_offset)
     : _interrupt_count(count_pin), _interrupt_stop(stop_pin), _pwm(&pwm),
-      _target(&target),_event_flags(&event_flags )  { // create the InterruptIn on the pin specified to Counter
+      _target(&target_angle),_angle(&angle),_linked_angle(&linked_angle),_event_flags(&event_flags )
+      , _PID(&Input, &Output, &Setpoint, 5, 0, 0, P_ON_E, DIRECT)
+      
+        { 
+       
+          // create the InterruptIn on the pin specified to Counter
   _interrupt_count.fall(callback(
       this, &hall_driven_motor::increment)); // attach increment function of
                                              // this counter instance
@@ -61,6 +70,8 @@ hall_driven_motor::hall_driven_motor( PinName count_pin
   _init_speed = init_speed;
  _min_speed= min_speed;
   _max_speed= max_speed;
+  _nb_tic_per_deg= nb_tic_per_deg;
+  _linked_angle_offset=linked_angle_offset;
   // _cmde_flag_start = cmde_flag_start;
   // _cmde_flag_stop = cmde_flag_stop;
   
@@ -73,34 +84,37 @@ void hall_driven_motor::increment() {
   } else {
     _count--;
   };
+  *_angle = _count /_nb_tic_per_deg;
 }
 void hall_driven_motor::stop() {
   _count = 0;
+  *_angle =0;
   _sens = true;
 }
 
 //********************** methodes publiques
 
 void hall_driven_motor::run() { 
-  if ((*_target - _count) > 0) { 
-    while (*_target > _count) {
+  double target_count = *_target * _nb_tic_per_deg;
+  if ((target_count - _count) > 0) { 
+    while (target_count > _count) {
       // calcul de la vitesse
-      int speed = get_speed(*_target);
+      int speed = get_speed(target_count);
     //   printf("backward count:%i / speed:%i\n ", _count, speed);
       _sens = true; // true = forward / false = backward
       motor_run_backward(speed); 
     }
   } else {
-    while (*_target < _count) {
+    while (target_count < _count) {
         // calcul de la vitesse
-      int speed = get_speed(*_target);
+      int speed = get_speed(target_count);
     //   printf("forward count:%i / speed:%i\n ", _count, speed);
       _sens = false; // true = forward / false = backward
       motor_run_forward(speed);
     }
   };
    // stop quand le compteur est arrivé
-  printf("%c: count %i  \n ", _motor_name, _count);
+  printf("%c: count %i  \n ", _motor_name, (int) target_count);
   motor_stop();
 }
 
@@ -124,10 +138,14 @@ void hall_driven_motor::init() {
   previous_speed = _init_speed;
   _interrupt_stop.disable_irq();
   motor_stop();
+  _PID.SetOutputLimits(_min_speed, _max_speed);
+  _PID.SetMode(1); 
+
   printf("fin init moteur %c  \n ", _motor_name);
+
 }
 
-int hall_driven_motor::read_counter() { return _count; }
+int hall_driven_motor::read_counter() { return (int) _count; }
 void hall_driven_motor::set_nb_count_by_turn(int nb_count_by_turn) {
   _nb_count_by_turn = nb_count_by_turn;
 }
@@ -154,36 +172,59 @@ EventFlags &hall_driven_motor::get_event_flags() { return *_event_flags; };
 
 //********************** methodes privées
 
-int  hall_driven_motor::get_speed(int target){
+int  hall_driven_motor::get_speed(double target){
     // calcul de la vitesse
-    int speed;
-      speed = int(_coef_decel_motor * abs(target - _count));
-      speed = max(speed, _min_speed);
-      speed = min(speed, _max_speed);
-      speed = min(speed, int(previous_speed * _coef_accel_motor));
-      previous_speed = speed; 
-      return speed;
+    
+    if (*_linked_angle == *_angle)
+
+   { speed = int(_coef_decel_motor * abs(target - _count));
+      speed =(double) max((int) speed, _min_speed);
+      speed = (double) min((int) speed, _max_speed);
+      speed = (double) min((int) speed, int(previous_speed * _coef_accel_motor));
+      previous_speed = (int) speed; }
+    else
+      {
+  
+   //on calcule l'angle a suivre :(*_linked_angle + _linked_angle_offset)
+   //on calcul l'équivalent en nombre de tic : * _nb_tic_per_deg
+   //on prend la différence avec le  nombre de tic  countpour avoir le target
+   //pour ne pas dépasser la target, on s'arrange pour que la target soit toujours positive
+   if ((target - _count) > 0)
+   {Input= - (((*_linked_angle + _linked_angle_offset) * _nb_tic_per_deg)-_count);}
+   else
+   {Input= (((*_linked_angle + _linked_angle_offset) * _nb_tic_per_deg)-_count);}
+   Setpoint = 0 ; //il ne doit pas y avoir de décalage d'angle entre l'angle et le linked_angle
+  _PID.Compute(); 
+   speed = Output  ;
+   speed =(double) max((int) speed, _min_speed);
+   speed = (double) min((int) speed, _max_speed);
+
+   printf("moteur %c Output %i speed from pid %i /angle %i /_linked_angle %i  /Input: %i \n ", _motor_name, (int) Output, (int) speed,(int) *_angle,(int) (*_linked_angle + _linked_angle_offset) ,(int) Input);
+    }
+
+
+      return (int) speed;
 }
-void hall_driven_motor::motor_run_forward(int speed) {
+void hall_driven_motor::motor_run_forward(double speed) {
   if (_motor_shield_type == 1) {
-    _pwm->setPWM(_pwm_pin,0, speed) ;
+    _pwm->setPWM(_pwm_pin,0, int  (speed)) ;
     _pwm->setPWM(_dir_pin,0 ,4095);
   }
 
   if (_motor_shield_type == 2) {
-    _pwm->setPWM(_forward_pin, 0, speed);
+    _pwm->setPWM(_forward_pin, 0, int  (speed));
     _pwm->setPWM(_backward_pin, 0, 0);
   }
 }
-void hall_driven_motor::motor_run_backward(int speed) {
+void hall_driven_motor::motor_run_backward(double speed) {
   if (_motor_shield_type == 1) {
-    _pwm->setPWM(_pwm_pin, 0, speed);
+    _pwm->setPWM(_pwm_pin, 0,  int  (speed));
     _pwm->setPWM(_dir_pin, 0, 0);
   }
 
   if (_motor_shield_type == 2) {
     _pwm->setPWM(_forward_pin, 0, 0);
-    _pwm->setPWM(_backward_pin, 0, speed);
+    _pwm->setPWM(_backward_pin, 0,  int  (speed));
   }
 }
 void hall_driven_motor::motor_stop() {

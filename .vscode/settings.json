@@ -1,5 +1,12 @@
 {
     "files.associations": {
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp",
+        "algorithm": "cpp",
+        "limits": "cpp",
+        "functional": "cpp",
+        "cstdlib": "cpp"
     }
 }
