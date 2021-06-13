@@ -34,7 +34,10 @@ PID::PID(double* Input, double* Output, double* Setpoint,
     lastTime = timer.read_us()-SampleTime;
 }
  
-
+bool PID::Compute(bool restart) {
+   if(restart) outputSum = 0;
+   return Compute();
+}  
 /* Compute() **********************************************************************
  *     This, as they say, is where the magic happens.  this function should be called
  *   every time "void loop()" executes.  the function will decide for itself whether a new

@@ -7,6 +7,7 @@
         "algorithm": "cpp",
         "limits": "cpp",
         "functional": "cpp",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "cmath": "cpp"
     }
 }

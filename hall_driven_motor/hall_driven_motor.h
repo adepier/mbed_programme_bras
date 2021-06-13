@@ -16,11 +16,16 @@ public:
                     char motor_name,
                     // int cmde_flag_start,
                     // int cmde_flag_stop,
-                    int motor_shield_type,
-                    EventFlags &event_flags
+                    int motor_shield_type 
+                    ,int32_t  flag_start
+                    ,int32_t  flag_stop
                     ,int init_speed
-                    ,int min_speed
+                    ,int min_speed  
                     ,int max_speed
+                     ,double coef_accel
+                    ,double coef_Kp
+                    ,double coef_Ki 
+                    ,double coef_Kd 
                     ,double nb_tic_per_deg
                     , int linked_angle_offset);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
   // interruptions
@@ -29,38 +34,29 @@ public:
   // methodes
   void run( );
   void init();
-  int read_counter();
-  void set_nb_count_by_turn(int nb_count_by_turn);
-  void set_coef_accel_motor(float coef_motor);
-  void set_coef_decel_motor(float coef_motor);
-  void set_min_motor_speed(int min_motor_speed);
-  void set_max_motor_speed(int max_motor_speed);
-  void set_motor_name(char motor_name);
+  int read_counter(); 
   char get_motor_name();
-  // int get_cmde_flag_start();
-  // int get_cmde_flag_stop();
-  EventFlags &get_event_flags();
+  int32_t get_flag_start();
+  int32_t get_flag_stop();
+  // EventFlags &get_event_flags();
 
 private:
   InterruptIn _interrupt_count;
   InterruptIn _interrupt_stop;
   Adafruit_PWMServoDriver *_pwm;
-  EventFlags *_event_flags;
+   
   int _backward_pin;
   int _forward_pin;
   int _dir_pin;
   int _pwm_pin;
   bool _sens;
-  bool _flag_stop;
+  int32_t  _flag_start;
+  int32_t  _flag_stop;
   double _count;
   double *_angle;
   double *_linked_angle;
-   int _linked_angle_offset;
-  int _nb_count_by_turn;
-  float _coef_accel_motor;
-  float _coef_decel_motor;
-  int _min_speed; 
-  int _max_speed;  
+   int _linked_angle_offset; 
+   
   int previous_speed;
   double speed;
   char  _motor_name;
@@ -70,6 +66,12 @@ private:
    double Input;
    double Output;
    double Setpoint;
+
+  int _max_speed; 
+  int _min_speed ;  
+  double _coef_accel;
+  double _coef_Kp;
+
     
   // int _cmde_flag_start;
   // int _cmde_flag_stop;
