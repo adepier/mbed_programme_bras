@@ -9,5 +9,7 @@
         "functional": "cpp",
         "cstdlib": "cpp",
         "cmath": "cpp"
-    }
+    },
+    "stm32-for-vscode.openOCDPath": false,
+    "stm32-for-vscode.makePath": false
 }

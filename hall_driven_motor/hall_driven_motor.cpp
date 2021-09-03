@@ -19,8 +19,12 @@
  */
 hall_driven_motor::hall_driven_motor(PinName count_pin
                                     , PinName stop_pin
-                                    , Adafruit_PWMServoDriver &pwm, int forward_pin
-                                    , int backward_pin, double &target_angle, double &angle, double &linked_angle, char motor_name
+                                    , Adafruit_PWMServoDriver &pwm
+                                    , int forward_pin
+                                    , int backward_pin
+                                    , double &target_angle
+                                    , double &angle
+                                    , double &linked_angle, char motor_name
                                      //  , int cmde_flag_start
                                      //  , int cmde_flag_stop
                                      ,
@@ -29,9 +33,10 @@ hall_driven_motor::hall_driven_motor(PinName count_pin
                                       ,int32_t  flag_stop
                                      , int init_speed, int min_speed, int max_speed, double coef_accel
                                      , double coef_Kp, double coef_Ki
-                                     , double coef_Kd, double nb_tic_per_deg, int linked_angle_offset)
+                                     , double coef_Kd, double nb_tic_per_deg )
     : _interrupt_count(count_pin), _interrupt_stop(stop_pin), _pwm(&pwm),
-      _target(&target_angle), _angle(&angle), _linked_angle(&linked_angle) , _PID(&Input, &Output, &Setpoint, coef_Kp, coef_Ki, coef_Kd, P_ON_E, DIRECT)
+      _target(&target_angle), _angle(&angle), _linked_angle(&linked_angle) , _PID(&Input, &Output
+      , &Setpoint, coef_Kp, coef_Ki, coef_Kd, P_ON_E, DIRECT ) 
 
 {
 
@@ -70,7 +75,7 @@ hall_driven_motor::hall_driven_motor(PinName count_pin
   _coef_Kp = coef_Kp;
   _max_speed = max_speed;
   _nb_tic_per_deg = nb_tic_per_deg;
-  _linked_angle_offset = linked_angle_offset;
+ 
   _flag_start= flag_start;
   _flag_stop = flag_stop;
   // _cmde_flag_start = cmde_flag_start;
@@ -98,38 +103,7 @@ void hall_driven_motor::stop()
 }
 
 //********************** methodes publiques
-
-void hall_driven_motor::run()
-{
-  _PID.Compute(true) ;//restart
-  double target_count = *_target * _nb_tic_per_deg;
-  if ((target_count - _count) > 0)
-  {
-    while (target_count > _count)
-    {
-      // calcul de la vitesse
-      int speed = get_speed(target_count);
-        // printf("backward count:%i / speed:%i target_count: %i\n ",(int)  _count, speed, (int) target_count);
-      _sens = true; // true = forward / false = backward
-      motor_run_backward(speed);
-    }
-  }
-  else
-  {
-    while (target_count < _count )
-    {
-      // calcul de la vitesse
-      int speed = get_speed(target_count);
-        // printf("forward count:%i / speed:%i target_count: %i \n ", (int) _count, speed, (int) target_count);
-      _sens = false; // true = forward / false = backward
-      motor_run_forward(speed);
-    }
-  };
-  // stop quand le compteur est arrivé
-  // printf("fin target moteur %c: angle %i  \n ", _motor_name, (int)(target_count/_nb_tic_per_deg));
-  motor_stop();
-}
-
+ 
 void hall_driven_motor::init()
 {
 
@@ -150,8 +124,9 @@ void hall_driven_motor::init()
     motor_run_backward(_init_speed);
   }
   //   printf(" stop\n ");
-  previous_speed = _init_speed;
-  _interrupt_stop.disable_irq();
+  previous_speed = 0;
+  _flag_speed_sync =false;
+   _interrupt_stop.disable_irq();// --> dès qu'on arrive en butée on repart a
   motor_stop();
   _PID.SetOutputLimits(_min_speed, _max_speed);
   _PID.SetMode(1);
@@ -162,8 +137,46 @@ _PID.SetSampleTime(1);
 char hall_driven_motor::get_motor_name() { return _motor_name; };
 int32_t hall_driven_motor::get_flag_start() { return _flag_start; };
 int32_t hall_driven_motor::get_flag_stop() { return _flag_stop; };
+
+void hall_driven_motor::set_speed_sync(bool flag) {  
+   _linked_angle_offset=*_angle ;
+   _flag_speed_sync= flag;
+   printf("linked_angle_offset:%i \n ",(int) _linked_angle_offset);
+};
 // EventFlags &hall_driven_motor::get_event_flags() { return *_event_flags; };
 
+
+void hall_driven_motor::run()
+{
+  _PID.Compute(true) ;//restart
+   previous_speed =  0;
+  double target_count = *_target * _nb_tic_per_deg;
+  if ((target_count - _count) > 0)
+  {
+    while (target_count > _count)
+    {
+      // calcul de la vitesse
+      int speed = get_speed(target_count);
+        //  printf("backward count:%i / speed:%i target_count: %i\n ",(int)  _count, speed, (int) target_count);
+      _sens = true; // true = forward / false = backward
+      motor_run_backward(speed);
+    }
+  }
+  else
+  {
+    while (target_count < _count )
+    {
+      // calcul de la vitesse
+      int speed = get_speed(target_count);
+        //  printf("forward count:%i / speed:%i target_count: %i \n ", (int) _count, speed, (int) target_count);
+      _sens = false; // true = forward / false = backward
+      motor_run_forward(speed);
+    }
+  };
+  // stop quand le compteur est arrivé
+  // printf("fin target moteur %c: angle %i  \n ", _motor_name, (int)(target_count/_nb_tic_per_deg));
+  motor_stop();
+}
 //********************** methodes privées
 
 int hall_driven_motor::get_speed(double target)
@@ -193,23 +206,44 @@ int hall_driven_motor::get_speed(double target)
     //on calcul l'équivalent en nombre de tic : * _nb_tic_per_deg
     //on prend la différence avec le  nombre de tic  countpour avoir le target
     //pour ne pas dépasser la target, on s'arrange pour que la target soit toujours positive
+     double speed_coef;
     if ((target - _count) > 0)
     {
       // Input = -(((*_linked_angle + _linked_angle_offset) * _nb_tic_per_deg) - _count);
       Input = -(target - _count);
+      // calcul du coeficient de vitesse
+      // on ajuste la vitesse pour que l'erreur ne depasse pas 2deg
+      // dans le sens de la montée (l'angle augmente), si l'angle dépasse l'angle lié, il faut ralentir
+      if (*_angle > (*_linked_angle + _linked_angle_offset) && _flag_speed_sync){
+            speed_coef =  ( 1 - ((*_angle - (*_linked_angle + _linked_angle_offset))/1)   );
+            if (speed_coef < 0 ) {speed_coef = 0;} // si on dépasse 2 degrès on s'arrete
+      } else {speed_coef =1;}
+
     }
     else
     {
       // Input = (((*_linked_angle + _linked_angle_offset) * _nb_tic_per_deg) - _count);
        Input = (target - _count);
+          // calcul du coeficient de vitesse
+      // on ajuste la vitesse pour que l'erreur ne depasse pas 2deg
+      // dans le sens de la montée (l'angle augmente), si l'angle dépasse l'angle lié, il faut ralentir
+      if (*_angle < (*_linked_angle + _linked_angle_offset) && _flag_speed_sync){
+         speed_coef =  ( 1 - (((*_linked_angle + _linked_angle_offset) -*_angle )/1))  ;
+          if (speed_coef < 0 ) {speed_coef = 0;} // si on dépasse 2 degrès on s'arrete
+      } else {speed_coef =1;}
     }
 
     //  {speed=   _coef_Kp*   (((*_linked_angle + _linked_angle_offset) * _nb_tic_per_deg)-_count);}
     //  else
     //  {speed= -  _coef_Kp *  (((*_linked_angle + _linked_angle_offset) * _nb_tic_per_deg)-_count);}
     Setpoint = 0; //il ne doit pas y avoir de décalage d'angle entre l'angle et le linked_angle
-      _PID.Compute()  ;
-    speed = Output;
+      _PID.Compute() ;
+          //pour ne pas demarrer trop vite!
+     previous_speed =  speed;
+
+    speed = Output * speed_coef;
+    //if (speed > previous_speed + 100) {speed = previous_speed + 100;}
+
     // speed = (double)max((int)speed, _min_speed);
     // speed = (double)min((int)speed, _max_speed);
   // printf("%i",(int)speed);

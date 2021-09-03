@@ -1,8 +1,9 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2019 ARM Limited
  * SPDX-License-Identifier: Apache-2.0
- * mbed-tools compile -m NUCLEO_L432KC -t GCC_ARM -f --sterm
- * 
+ * mbed-tools compile -m NUCLEO_L432KC -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\Mbed Studio/mbed-os-shared-instance/mbed-os" -f --sterm
+ * mbed-tools compile -m NUCLEO_L432KC  -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os" --clean
+ *mbed-tools configure -m NUCLEO_L432KC -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os"
  */
 #include "adafruit_pwmservodriver/Adafruit_PWMServoDriver.h"
 #include "hall_driven_motor/hall_driven_motor.h"
@@ -38,11 +39,11 @@
 #define NB_TIC_PER_DEG_COUDE 43.3 
 #define INIT_SPEED_COUDE 1500
 #define MIN_MOTOR_SPEED_COUDE 0
-#define MAX_MOTOR_SPEED_COUDE 4000
+#define MAX_MOTOR_SPEED_COUDE 4500
 #define COEF_ACCEL_COUDE 0 //inutile
-#define COEF_KP_COUDE 15
-#define COEF_KI_COUDE 50000
-#define COEF_KD_COUDE 0.5
+#define COEF_KP_COUDE 1
+#define COEF_KI_COUDE 1
+#define COEF_KD_COUDE 0
 #define FLAG_START_COUDE (1UL << 0) // 00000000000000000000000000000001
 #define FLAG_STOP_COUDE (1UL << 1) // 00000000000000000000000000000010
 //#####POIGNET
@@ -53,11 +54,11 @@
 #define NB_TIC_PER_DEG_POIGNET 38.8 
 #define INIT_SPEED_POIGNET 2500
 #define MIN_MOTOR_SPEED_POIGNET 0
-#define MAX_MOTOR_SPEED_POIGNET 4000
+#define MAX_MOTOR_SPEED_POIGNET 4500
 #define COEF_ACCEL_POIGNET 1.01
-#define COEF_KP_POIGNET 12
-#define COEF_KI_POIGNET 50000
-#define COEF_KD_POIGNET 2
+#define COEF_KP_POIGNET 1
+#define COEF_KI_POIGNET 15
+#define COEF_KD_POIGNET 0
 #define FLAG_START_POIGNET (1UL << 2) // 00000000000000000000000000000100
 #define FLAG_STOP_POIGNET (1UL << 3)  // 00000000000000000000000000001000
 
@@ -72,7 +73,7 @@ double target_angle_coude = 0;
 double angle_coude;
 double angle_poignet;
 double linked_angle_coude;
-double linked_angle_poignet;
+int flag_speed_sync_coude;
 double target_angle_poignet = 0;
 I2C i2c(I2C_SDA, I2C_SCL);
 
@@ -88,9 +89,9 @@ hall_driven_motor motor_coude(PIN_COUNT_COUDE
                               , PIN_STOP_COUDE
                               , pwm, PIN_DIR_COUDE
                               , PIN_PWM_COUDE
-                              , linked_angle_coude
+                              , target_angle_coude //target
                               , angle_coude //adresse du compteur, il faut en faire une variable gloable pour l'utiliser dans les autres moteurs
-                              , linked_angle_coude //linked count :adresse du compteur lié
+                              , angle_poignet //linked count :adresse du compteur lié
                               , 'C'
                               , MOTOR_SHIELD_TYPE
                               , FLAG_START_COUDE
@@ -102,17 +103,16 @@ hall_driven_motor motor_coude(PIN_COUNT_COUDE
                               ,COEF_KP_COUDE
                               ,COEF_KI_COUDE
                               ,COEF_KD_COUDE
-                              ,NB_TIC_PER_DEG_COUDE 
-                              ,0);
+                              ,NB_TIC_PER_DEG_COUDE  );
 //poignet
 hall_driven_motor motor_poignet(PIN_COUNT_POIGNET
                               , PIN_STOP_POIGNET
                               , pwm
                               , PIN_DIR_POIGNET
                               , PIN_PWM_POIGNET
-                              , linked_angle_poignet
+                              , target_angle_poignet
                               , angle_poignet
-                              , linked_angle_poignet
+                              , angle_coude
                               , 'P'
                               , MOTOR_SHIELD_TYPE
                               , FLAG_START_POIGNET
@@ -124,8 +124,7 @@ hall_driven_motor motor_poignet(PIN_COUNT_POIGNET
                               ,COEF_KP_POIGNET
                               ,COEF_KI_POIGNET
                               ,COEF_KD_POIGNET
-                              , NB_TIC_PER_DEG_POIGNET 
-                              ,0);
+                              , NB_TIC_PER_DEG_POIGNET );
 
 // hall_driven_motor motor2(PB_1,PA_8, pwm,7,
 // 6,val2,'B',FLAG_START_2,FLAG_STOP_2,MOTOR_SHIELD_TYPE);
@@ -203,12 +202,14 @@ int main() {
   thread_motor_poignet.start(callback(run_motor_in_thread, &motor_poignet ));
   
 //on met les moteur en place pour la premiere fois
-linked_angle_coude = int(2  );//point haut poignet
- linked_angle_coude = int((2 + 87)  ) ;//+87 deg sur le coude pour être à l'horizontal
+target_angle_poignet = int(2  );//point haut poignet
+ target_angle_coude = int((2 + 87)  ) ;//+87 deg sur le coude pour être à l'horizontal
   event_flag.set(FLAGS_START) ;  
 event_flag.wait_all(FLAGS_STOP) ; // attend que les moteurs 
 printf("commande \t reponse \n");
-
+//demarreg la synchro des moteurs
+motor_coude.set_speed_sync(true);
+motor_poignet.set_speed_sync(false);
 
   while (true) {
     // motor1.run(500);
@@ -231,17 +232,20 @@ printf("commande \t reponse \n");
     //     //  linked_angle_poignet =angle_poignet_init + ( deplacement *  ( (1.0 / ( 1.0 + exp(double(-i))))));
     //      linked_angle_coude = angle_coude_init + i; //lineaire
     //      linked_angle_poignet =angle_poignet_init + i;
-      for(int i =-1000; i <= 1000; i++) {
-         linked_angle_coude = (double)angle_coude_init + ( (double)deplacement *  (((double)1.0 / ((double)1 + exp(double(-i*0.008))))));
-         linked_angle_poignet =(double)angle_poignet_init + ( (double)deplacement *  ( ((double)1.0 / ((double)1 + exp(double(-i*0.008))))));
-          // printf("descente %i linked_angle_coude %i / %i / %i \t linked_angle_poignet %i / %i / %i \n",i,(int) linked_angle_coude,(int) angle_coude,(int) target_angle_coude,(int ) linked_angle_poignet,(int) angle_poignet,(int) target_angle_poignet);
-          if (i%10==0) printf(" %i \t %i \n", (int) linked_angle_coude,(int) angle_coude);
-ThisThread::sleep_for(chrono::milliseconds((2)));
+    // linked_angle_coude = target_angle_coude;
+    // linked_angle_poignet = target_angle_poignet;
+    event_flag.set(FLAGS_START) ;  
+      // for(int i =-1000; i <= 1000; i++) {
+      //    linked_angle_coude = (double)angle_coude_init + ( (double)deplacement *  (((double)1.0 / ((double)1 + exp(double(-i*0.008))))));
+      //    linked_angle_poignet =(double)angle_poignet_init + ( (double)deplacement *  ( ((double)1.0 / ((double)1 + exp(double(-i*0.008))))));
+      // printf("descente %i angle_coude %i / %i / %i \t linked_angle_poignet %i / %i / %i \n",i,(int) linked_angle_coude,(int) angle_coude,(int) target_angle_coude,(int ) linked_angle_poignet,(int) angle_poignet,(int) target_angle_poignet);
+      //     if (i%10==0) printf(" %i \t %i \n", (int) linked_angle_coude,(int) angle_coude);
+      //     ThisThread::sleep_for(chrono::milliseconds((2)));
          
-          event_flag.set(FLAGS_START) ;  
+      //     event_flag.set(FLAGS_START) ;  
            
-        // ThisThread::sleep_for(chrono::milliseconds(1000)         );
-           }
+      //   // ThisThread::sleep_for(chrono::milliseconds(1000)         );
+      //      }
     event_flag.wait_all(FLAGS_STOP) ; // attend que les moteurs 
 
     
@@ -253,9 +257,9 @@ ThisThread::sleep_for(chrono::milliseconds((2)));
     //  event_flags.wait_all(FLAG_STOP_EPAULE|FLAG_STOP_2 ); // attend que les
     //  moteurs
     
-    // printf("fin descente S-curve " );
+      printf("fin descente \n   " );
 
-    ThisThread::sleep_for(chrono::milliseconds(5000));
+    ThisThread::sleep_for(chrono::milliseconds(1000));
     
     // motor1.run(0);
     // motor2.run(0);
@@ -267,34 +271,37 @@ ThisThread::sleep_for(chrono::milliseconds((2)));
       angle_coude_init = angle_coude;//point haut poignet
   target_angle_poignet = angle_poignet_init - deplacement ; //--> point haut le moteur fait 92->2
   target_angle_coude = angle_coude_init - deplacement   ;//--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
-
+    
+    // linked_angle_coude = target_angle_coude;
+    // linked_angle_poignet = target_angle_poignet;
+    event_flag.set(FLAGS_START) ;  
 
     // for(int i =-1000; i <= 1000; i++) {
     //      linked_angle_coude = (double)angle_coude_init - ( (double)deplacement *  (((double)1.0 / ((double)1 + exp(double(-i*0.01))))));
     //      linked_angle_poignet =(double)angle_poignet_init - ( (double)deplacement *  ( ((double)1.0 / ((double)1 + exp(double(-i*0.01))))));
-        for(int i =0; i <= 1000; i++) {
+    //     for(int i =0; i <= 1000; i++) {
        
-         linked_angle_coude = (double)angle_coude_init - ((double)deplacement * (double)i/(double)1000.0); //lineaire
-         linked_angle_poignet = (double)angle_poignet_init - ((double)deplacement * (double)i/(double)1000.0);
-                  //  printf("montee linked_angle_coude %i / %i / %i  \t linked_angle_poignet %i / %i / %i  \n",(int) linked_angle_coude,(int) angle_coude,(int) target_angle_coude,(int ) linked_angle_poignet,(int) angle_poignet,(int) target_angle_poignet);
-         if (i%10==0) printf(" %i \t %i \n", (int) linked_angle_coude,(int) angle_coude);
-    //       event_coude.set(FLAG_START);
-    // //  event_flags.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
-    // event_poignet.set(FLAG_START );
-    //     event_coude.wait_all(FLAG_STOP  ); // attend que les moteurs
-    // event_poignet.wait_all( FLAG_STOP ); // attend que les moteurs
-           event_flag.set(FLAGS_START) ;  
-         ThisThread::sleep_for(chrono::milliseconds(2));
+    //      linked_angle_coude = (double)angle_coude_init - ((double)deplacement * (double)i/(double)1000.0); //lineaire
+    //      linked_angle_poignet = (double)angle_poignet_init - ((double)deplacement * (double)i/(double)1000.0);
+    //               //  printf("montee linked_angle_coude %i / %i / %i  \t linked_angle_poignet %i / %i / %i  \n",(int) linked_angle_coude,(int) angle_coude,(int) target_angle_coude,(int ) linked_angle_poignet,(int) angle_poignet,(int) target_angle_poignet);
+    //      if (i%10==0) printf(" %i \t %i \n", (int) linked_angle_coude,(int) angle_coude);
+    // //       event_coude.set(FLAG_START);
+    // // //  event_flags.wait_all(FLAG_STOP_COUDE ); // attend que les moteurs
+    // // event_poignet.set(FLAG_START );
+    // //     event_coude.wait_all(FLAG_STOP  ); // attend que les moteurs
+    // // event_poignet.wait_all( FLAG_STOP ); // attend que les moteurs
+    //        event_flag.set(FLAGS_START) ;  
+    //      ThisThread::sleep_for(chrono::milliseconds(2));
        
-        //  ThisThread::sleep_for(chrono::milliseconds(1000));
-           }
+    //     //  ThisThread::sleep_for(chrono::milliseconds(1000));
+    //        }
    event_flag.wait_all(FLAGS_STOP) ; // attend que les moteurs 
     //  event_flags.wait_all( FLAG_STOP_POIGNET); // attend que les moteurs
     // event_flags.set(FLAG_START_2);
     //    event_flags.wait_all(FLAG_STOP_EPAULE|FLAG_STOP_2 ); // attend que les
     //    moteurs
 
-    // printf("fin descente " );
-    ThisThread::sleep_for(chrono::milliseconds(5000));
+      printf("fin montée \n" );
+    ThisThread::sleep_for(chrono::milliseconds(1000));
   }
 }

@@ -26,8 +26,8 @@ public:
                     ,double coef_Kp
                     ,double coef_Ki 
                     ,double coef_Kd 
-                    ,double nb_tic_per_deg
-                    , int linked_angle_offset);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                    ,double nb_tic_per_deg);//motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                
   // interruptions
   void increment();
   void stop();
@@ -38,6 +38,7 @@ public:
   char get_motor_name();
   int32_t get_flag_start();
   int32_t get_flag_stop();
+  void  set_speed_sync(bool flag);      
   // EventFlags &get_event_flags();
 
 private:
@@ -55,9 +56,11 @@ private:
   double _count;
   double *_angle;
   double *_linked_angle;
-   int _linked_angle_offset; 
+   int *_flag_speed_sync_coude; 
+  double _linked_angle_offset ;
+  bool _flag_speed_sync;
    
-  int previous_speed;
+  double previous_speed;
   double speed;
   char  _motor_name;
   double *_target;
