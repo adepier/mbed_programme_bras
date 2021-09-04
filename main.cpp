@@ -1,9 +1,9 @@
 /* mbed Microcontroller Library
  * Copyright (c) 2019 ARM Limited
  * SPDX-License-Identifier: Apache-2.0
- * mbed-tools compile -m NUCLEO_L432KC -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\Mbed Studio/mbed-os-shared-instance/mbed-os" -f --sterm
- * mbed-tools compile -m NUCLEO_L432KC  -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os" --clean
- *mbed-tools configure -m NUCLEO_L432KC -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os"
+ * mbed-tools compile -m NUCLEO_L432KC   -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os" -f --sterm
+ * mbed-tools compile -m NUCLEO_L432KC   -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os" --clean
+ * mbed-tools configure -m NUCLEO_L432KC -t GCC_ARM --mbed-os-path "C:\Users\adepier\Google Drive\Antoine\projets C++\MBED\mbed-os"
  */
 #include "adafruit_pwmservodriver/Adafruit_PWMServoDriver.h"
 #include "hall_driven_motor/hall_driven_motor.h"

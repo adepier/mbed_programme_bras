@@ -12,12 +12,12 @@ include(${MBED_PATH}/tools/cmake/app.cmake)
 
 project(${APP_TARGET})
 
-add_subdirectory(${MBED_PATH} ${CMAKE_CURRENT_SOURCE_DIR} ) 
+add_subdirectory(${MBED_PATH}  ${CMAKE_CURRENT_BINARY_DIR}/mbed-os )  
+ 
 
 add_executable(${APP_TARGET}
     main.cpp
-)
-
+) 
 
 ###############################Ajout lib
  
@@ -37,7 +37,7 @@ target_sources(${APP_TARGET}
 )
 
 ############################## 
-target_link_libraries(${APP_TARGET} mbed-os)
+target_link_libraries(${APP_TARGET} mbed-os )
 
 mbed_set_post_build(${APP_TARGET})
 
@@ -45,3 +45,4 @@ option(VERBOSE_BUILD "Have a verbose build process")
 if(VERBOSE_BUILD)
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
+
