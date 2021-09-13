@@ -1,39 +1,38 @@
-#include "hall_driven_motor.h" 
+#include "hall_driven_motor.h"
 
-void hall_driven_motor::displayName(FirstName const& theFirstName, LastName const& theLastName)
+void hall_driven_motor::displayName(FirstName const &theFirstName, LastName const &theLastName)
 {
   // assigning value to string s
   printf(" my name is ");
-    string s = theFirstName.get();
- 
-    int n = s.length();
- 
-    // declaring character array
-    char char_array[n + 1];
- 
-    // copying the contents of the
-    // string to char array
-    strcpy(char_array, s.c_str());
- 
-    for (int i = 0; i < n; i++)
-        printf("%c",char_array[i]);
- printf(" " );
- s = theLastName.get();
- 
-      n = s.length();
- 
-    // declaring character array
-      char_array[n + 1];
- 
-    // copying the contents of the
-    // string to char array
-    strcpy(char_array, s.c_str());
- 
-    for (int i = 0; i < n; i++)
-        printf("%c",char_array[i]);
- 
-   printf( "\n " );
-    
+  string s = theFirstName.get();
+
+  int n = s.length();
+
+  // declaring character array
+  char char_array[n + 1];
+
+  // copying the contents of the
+  // string to char array
+  strcpy(char_array, s.c_str());
+
+  for (int i = 0; i < n; i++)
+    printf("%c", char_array[i]);
+  printf(" ");
+  s = theLastName.get();
+
+  n = s.length();
+
+  // declaring character array
+  char_array[n + 1];
+
+  // copying the contents of the
+  // string to char array
+  strcpy(char_array, s.c_str());
+
+  for (int i = 0; i < n; i++)
+    printf("%c", char_array[i]);
+
+  printf("\n ");
 };
 /*!
  *  @brief constructeur
@@ -52,13 +51,32 @@ void hall_driven_motor::displayName(FirstName const& theFirstName, LastName cons
  *      - Ajouter un PID pour éviter
  *      - Ajouter une autocalibration pour avoir le min_motor_speed
  */
-hall_driven_motor::hall_driven_motor(Count_pin count_pin, PinName stop_pin, Adafruit_PWMServoDriver &pwm, int forward_or_dir_pin, int backward_or_speed_pin, double &target_angle, double &angle, double &linked_angle, char motor_name
-                                     //  , int cmde_flag_start
-                                     //  , int cmde_flag_stop
-                                     ,
-                                     int motor_shield_type, int32_t flag_start, int32_t flag_stop, int init_speed, int min_speed, int max_speed, double coef_accel, double coef_Kp, double coef_Ki, double coef_Kd, double nb_tic_per_deg)
-    : _interrupt_count(count_pin.get()), _interrupt_stop(stop_pin), _pwm(&pwm),
-      _target(&target_angle), _angle(&angle), _linked_angle(&linked_angle), _PID(&Input, &Output, &Setpoint, coef_Kp, coef_Ki, coef_Kd, P_ON_E, DIRECT)
+hall_driven_motor::hall_driven_motor(Count_pin count_pin,
+                                     Stop_pin stop_pin,
+                                     Adafruit_PWMServoDriver &pwm,
+                                     Forward_or_dir_pin forward_or_dir_pin,
+                                     Backward_or_speed_pin backward_or_speed_pin,
+                                     double &target_angle,
+                                     double &angle,
+                                     double &linked_angle,
+                                     Motor_name motor_name,
+                                     Motor_shield_type motor_shield_type,
+                                     Flag_start flag_start,
+                                     Flag_stop flag_stop,
+                                     Init_speed init_speed,
+                                     Min_speed min_speed,
+                                     Max_speed max_speed,
+                                     Coef_Kp coef_Kp,
+                                     Coef_Ki coef_Ki,
+                                     Coef_Kd coef_Kd,
+                                     Nb_tic_per_deg nb_tic_per_deg)
+    : _interrupt_count(count_pin.get()),
+     _interrupt_stop(stop_pin.get()),
+      _pwm(&pwm),
+      _target(&target_angle), 
+      _angle(&angle),
+      _linked_angle(&linked_angle),
+      _PID(&Input, &Output, &Setpoint, coef_Kp.get(), coef_Ki.get(), coef_Kd.get(), P_ON_E, DIRECT)
 
 {
 
@@ -77,29 +95,28 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin, PinName stop_pin, Adaf
                                                  // this counter instance
   _sens = true;                                  // true = forward / false = backward
   // _flag_stop = false;
-  _motor_shield_type = motor_shield_type;
+  _motor_shield_type = motor_shield_type.get();
   if (_motor_shield_type == 1)
   {
-    _dir_pin = forward_or_dir_pin;
-    _pwm_pin = backward_or_speed_pin;
+    _dir_pin = forward_or_dir_pin.get();
+    _pwm_pin = backward_or_speed_pin.get();
   }
   if (_motor_shield_type == 2)
   {
-    _forward_pin = forward_or_dir_pin;
-    _backward_pin = backward_or_speed_pin;
+    _forward_pin = forward_or_dir_pin.get();
+    _backward_pin = backward_or_speed_pin.get();
   }
   // _min_motor_speed = 1000; // default value
-  _motor_name = motor_name;
-  _init_speed = init_speed;
+  _motor_name = motor_name.get();
+  _init_speed = init_speed.get();
 
-  _min_speed = min_speed;
-  _coef_accel = coef_accel;
-  _coef_Kp = coef_Kp;
-  _max_speed = max_speed;
-  _nb_tic_per_deg = nb_tic_per_deg;
+  _min_speed = min_speed.get(); 
+  _coef_Kp = coef_Kp.get();
+  _max_speed = max_speed.get();
+  _nb_tic_per_deg = nb_tic_per_deg.get();
 
-  _flag_start = flag_start;
-  _flag_stop = flag_stop;
+  _flag_start = flag_start.get();
+  _flag_stop = flag_stop.get();
   // _cmde_flag_start = cmde_flag_start;
   // _cmde_flag_stop = cmde_flag_stop;
 }
@@ -156,7 +173,7 @@ void hall_driven_motor::init()
   printf("fin init moteur %c  \n ", _motor_name);
 }
 
-char hall_driven_motor::get_motor_name() { return _motor_name; };
+string hall_driven_motor::get_motor_name() { return _motor_name; };
 int32_t hall_driven_motor::get_flag_start() { return _flag_start; };
 int32_t hall_driven_motor::get_flag_stop() { return _flag_stop; };
 
