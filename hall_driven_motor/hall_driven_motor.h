@@ -1,21 +1,28 @@
 #include "../Adafruit_PWMServoDriver/Adafruit_PWMServoDriver.h"
 #include "mbed.h" 
+#include "named_type.hpp"
 #include "../PID/PID_v1.h"
+// #include "MotorConfig/MotorConfig.h"
  
+/*!
+ *  @brief classe pour gérer un moteur asservis par un compteur à effet Hall  
 
+ */
 class hall_driven_motor {
 public:
-  hall_driven_motor(PinName count_pin,
+
+
+void displayName(FirstName const& theFirstName, LastName const& theLastName);
+
+  hall_driven_motor(Count_pin count_pin,
                     PinName stop_pin,
                     Adafruit_PWMServoDriver &pwm,
-                    int forward_pin,
-                    int backward_pin,
+                    int forward_or_dir_pin,
+                    int backward_or_speed_pin,
                     double &target,
                     double &angle,
                     double &linked_angle,
-                    char motor_name,
-                    // int cmde_flag_start,
-                    // int cmde_flag_stop,
+                    char motor_name, 
                     int motor_shield_type 
                     ,int32_t  flag_start
                     ,int32_t  flag_stop

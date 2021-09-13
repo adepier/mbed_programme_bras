@@ -31,7 +31,7 @@ PID::PID(double* Input, double* Output, double* Setpoint,
    
    timer.start();
 
-    lastTime = timer.read_us()-SampleTime;
+    lastTime = timer.elapsed_time().count()-SampleTime;
 }
  
 bool PID::Compute(bool restart) {
@@ -47,7 +47,7 @@ bool PID::Compute(bool restart) {
 bool PID::Compute()
 {
    if(!inAuto) return false;
-   unsigned long now = timer.read_us();
+   unsigned long now = timer.elapsed_time().count();
    unsigned long timeChange = (now - lastTime);
    if(timeChange>=SampleTime)
    {

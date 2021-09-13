@@ -1,21 +1,16 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Mbed", 
+            "compilerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.07/bin/arm-none-eabi-g++.exe",
+            "intelliSenseMode": "windows-gcc-arm",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os\\**"
+                "C:/Users/adepier/Google Drive/Antoine/projets C++/MBED/mbed-os/**"
             ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "windowsSdkVersion": "10.0.17763.0",
-            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16.27023/bin/Hostx64/x64/cl.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"            
+            "compileCommands": "${workspaceFolder}/cmake_build/NUCLEO_L432KC/develop/GCC_ARM/compile_commands.json"
         }
     ],
     "version": 4

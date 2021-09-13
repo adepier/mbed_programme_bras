@@ -1,0 +1,99 @@
+{
+    "version": "2.0.0",
+    "type": "shell",
+    "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+        ],
+        "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+        }
+    },
+    "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false
+    },
+    "tasks": [
+        {
+            "label": "compile",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "compile",
+                "-m",
+                "NUCLEO_L432KC",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os"
+            ]
+        },
+        {
+            "label": "compile clean",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "compile",
+                "-m",
+                "NUCLEO_L432KC",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os",
+                "--clean",
+                ""
+            ]
+        },
+        {
+            "label": "configure",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "configure",
+                "-m",
+                "NUCLEO_L432KC",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os"
+            ]
+        },
+        {
+            "label": "compile/flash/open terminal",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "compile",
+                "-m",
+                "NUCLEO_L432KC",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os",
+                "-f",
+                "",
+                "--sterm",
+                ""
+            ]
+        },
+        {
+            "label": "open terminal",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "sterm",
+                ""
+            ]
+        } 
+    ]
+}
