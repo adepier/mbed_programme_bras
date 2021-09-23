@@ -1,11 +1,11 @@
 #include "../NamedType/include/NamedType/named_type.hpp"
 #include "PinNames.h"
 
-using FirstName = fluent::NamedType<std::string, struct FirstNameTag>;
-using LastName = fluent::NamedType<std::string, struct LastNameTag>;
+// using FirstName = fluent::NamedType<std::string, struct FirstNameTag>;
+// using LastName = fluent::NamedType<std::string, struct LastNameTag>;
 
-static const FirstName::argument firstName;
-static const LastName::argument lastName;
+// static const FirstName::argument firstName;
+// static const LastName::argument lastName;
 
 using Count_pin = fluent::NamedType<PinName, struct Count_pinTag>;                         //pin compteur de tour
 using Stop_pin = fluent::NamedType<PinName, struct Stop_pinTag>;                           //pin de fin de course

@@ -17,6 +17,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/NamedType)
 
 add_executable(${APP_TARGET}
     main.cpp
+    #test_coude.cpp
+    #test_poignet.cpp
 )  
  
  

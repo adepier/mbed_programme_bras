@@ -11,7 +11,7 @@
 class hall_driven_motor
 {
 public:
-  void displayName(FirstName const &theFirstName, LastName const &theLastName);
+ 
 
   hall_driven_motor(Count_pin count_pin,
                     Stop_pin stop_pin,
@@ -19,8 +19,7 @@ public:
                     Forward_or_dir_pin forward_or_dir_pin,
                     Backward_or_speed_pin backward_or_speed_pin,
                     double &target_angle,
-                    double &angle,
-                    double &linked_angle,
+                    double &angle, 
                     Motor_name motor_name,
                     Motor_shield_type motor_shield_type,
                     Flag_start flag_start,
@@ -36,15 +35,17 @@ public:
   // interruptions
   void increment();
   void stop();
+
   // methodes
   void run();
   void init();
   int read_counter();
   string get_motor_name();
   int32_t get_flag_start();
-  int32_t get_flag_stop();
-  void set_speed_sync(bool flag);
-  // EventFlags &get_event_flags();
+  int32_t get_flag_stop(); 
+  void set_speed_sync(double &linked_angle,bool flag); 
+  void displayName();
+  void set_debug_flag(bool flag); 
 
 private:
   InterruptIn _interrupt_count;
@@ -64,6 +65,7 @@ private:
   int *_flag_speed_sync_coude;
   double _linked_angle_offset;
   bool _flag_speed_sync;
+  bool _debug_flag;
 
   double previous_speed;
   double speed;
