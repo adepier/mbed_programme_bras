@@ -66,9 +66,9 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
   _interrupt_count.rise(callback(
       this, &hall_driven_motor::increment)); // attach increment function of
                                              // this counter instance
-  _interrupt_stop.fall(
-      callback(this, &hall_driven_motor::stop)); // attach stop function of
-                                                 // this counter instance
+  // _interrupt_stop.fall(
+  //     callback(this, &hall_driven_motor::stop)); // attach stop function of
+  //                                                // this counter instance
   _interrupt_stop.rise(
       callback(this, &hall_driven_motor::stop)); // attach stop function of
                                                  // this counter instance
@@ -260,7 +260,7 @@ int hall_driven_motor::get_speed(double target)
   // calcul du coeficient de vitesse
   // on ajuste la vitesse pour que l'erreur ne depasse pas 2deg
   double speed_coef;
-  double Nb_deg_autorise = 1;
+  double Nb_deg_autorise = 0.1;
   if (_flag_speed_sync)
   {
     if (target > _count)

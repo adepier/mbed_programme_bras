@@ -71,8 +71,8 @@ int main()
   // printf("commande \t reponse \n");
 
   //synchronise le coude avec le poinet
-  // motor_coude.set_speed_sync(angle_poignet,true);
-  //   motor_poignet.set_speed_sync(angle_coude,true);
+  motor_coude.set_speed_sync(angle_poignet,true);
+  motor_poignet.set_speed_sync(angle_coude,true);
 
   int deplacement = 90;
 
@@ -84,7 +84,7 @@ int main()
     printf("start descente \n   ");
     event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE);    // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET | FLAG_STOP_COUDE); // attend que les moteurs
-    printf("fin descente \n   ");
+    printf("fin descente \n");
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
 

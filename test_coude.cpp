@@ -24,7 +24,10 @@ void init()
 
   // init motor
   motor_coude.init();
-  motor_coude.set_debug_flag(true);
+  // motor_coude.set_debug_flag(true);
+  printf("init angle: %i\n stop 5sec...\n", (int) angle_coude);
+  // on attend un peu
+    ThisThread::sleep_for(chrono::milliseconds(5000));
 }
 
 //###########################
@@ -37,7 +40,7 @@ void run_motor_in_thread(hall_driven_motor *motor)
   {
 
     event_flag.wait_all(motor->get_flag_start()); // attend que le moteur ai le flag de démarrage
-    printf("start motor\n");
+    // printf("start motor\n");
     //  motor->displayName();
     motor->run();
     event_flag.set(motor->get_flag_stop());
@@ -59,14 +62,15 @@ int main()
 
   //on met les moteur en place pour la premiere fois
 
-  target_angle_coude = (1); //+87 deg sur le coude pour être à l'horizontal
+  target_angle_coude = (5); //+87 deg sur le coude pour être à l'horizontal
 
-  printf("mise en position initiale \n");
+  printf("mise en position initiale angle: %i\n", (int) angle_coude);
   event_flag.set(FLAG_START_COUDE); // démarre les moteurs
 
   event_flag.wait_all(FLAG_STOP_COUDE); // attend que les moteurs
-  printf("fin mise en position initiale \n");
-
+  printf("fin mise en position initiale angle: %i\n stop 5sec...\n", (int) angle_coude);
+// on attend un peu
+    ThisThread::sleep_for(chrono::milliseconds(5000));
   //pour afficher les courbes
   // printf("commande \t reponse \n");
 
@@ -80,10 +84,10 @@ int main()
 
     target_angle_coude = angle_coude + deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start descente \n   ");
+    printf("start descente angle: %i\n", (int) angle_coude);
     event_flag.set(FLAG_START_COUDE);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_COUDE); // attend que les moteurs
-    printf("fin descente \n   ");
+    printf("fin descente angle: %i\n", (int) angle_coude);
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
 
@@ -91,10 +95,10 @@ int main()
 
     target_angle_coude = angle_coude - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start montée \n   ");
+    printf("start montée angle: %i\n", (int) angle_coude);
     event_flag.set(FLAG_START_COUDE);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_COUDE); // attend que les moteurs
-    printf("fin montée \n");
+    printf("fin montée angle: %i\n", (int) angle_coude);
 
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));

@@ -35,7 +35,8 @@
                 "-t",
                 "GCC_ARM",
                 "--mbed-os-path",
-                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os"
+                "C:\\Users\\adepier\\Documents\\projets C++\\MBED\\mbed-os"
+               
             ]
         },
         {
@@ -49,7 +50,7 @@
                 "-t",
                 "GCC_ARM",
                 "--mbed-os-path",
-                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os",
+                "C:\\Users\\adepier\\Documents\\projets C++\\MBED\\mbed-os",
                 "--clean",
                 ""
             ]
@@ -65,7 +66,7 @@
                 "-t",
                 "GCC_ARM",
                 "--mbed-os-path",
-                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os"
+                "C:\\Users\\adepier\\Documents\\projets C++\\MBED\\mbed-os"
             ]
         },
         {
@@ -79,7 +80,7 @@
                 "-t",
                 "GCC_ARM",
                 "--mbed-os-path",
-                "C:\\Users\\adepier\\Google Drive\\Antoine\\projets C++\\MBED\\mbed-os",
+                "C:\\Users\\adepier\\Documents\\projets C++\\MBED\\mbed-os",
                 "-f",
                 "",
                 "--sterm",
