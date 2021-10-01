@@ -27,7 +27,7 @@ void init()
    printf("init angle: %i\n", (int) angle_poignet);
    // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(10000));
-  //  motor_poignet.set_debug_flag(true);
+    // motor_poignet.set_debug_flag(true);
 }
 
 //###########################
@@ -62,16 +62,16 @@ int main()
 
   //on met les moteur en place pour la premiere fois
 
-  target_angle_poignet = (5); //+87 deg sur le poignet pour être à l'horizontal
+  target_angle_poignet = (10); //+87 deg sur le poignet pour être à l'horizontal
 
   printf("mise en position initiale angle: %i\n", (int) angle_poignet);
   event_flag.set(FLAG_START_POIGNET); // démarre les moteurs
 
   event_flag.wait_all(FLAG_STOP_POIGNET); // attend que les moteurs
-  printf("fin mise en position initiale angle: %i\n", (int) angle_poignet);
+  printf("fin mise en position initiale angle: %i\n stop 5sec...\n", (int) angle_poignet);
 
 // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(10000));
+    ThisThread::sleep_for(chrono::milliseconds(5000));
 
   //pour afficher les courbes
   // printf("commande \t reponse \n");
@@ -79,7 +79,7 @@ int main()
   //synchronise le poignet avec le poinet
   //motor_poignet.set_speed_sync(angle_motor_poignet,false);
 
-  int deplacement = 120;
+  int deplacement = 110;
 
   while (true)
   {
@@ -89,7 +89,7 @@ int main()
     printf("start montée \n   ");
     event_flag.set(FLAG_START_POIGNET);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET); // attend que les moteurs
-    printf("fin montée angle: %i\n", (int) angle_poignet);
+    printf("fin montée angle: %i\n stop 1sec...\n", (int) angle_poignet);
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
 
@@ -100,7 +100,7 @@ int main()
     printf("start descente \n   ");
     event_flag.set(FLAG_START_POIGNET);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET); // attend que les moteurs
-    printf("fin descente angle: %i\n", (int) angle_poignet);
+    printf("fin descente angle: %i\n stop 1sec...\n", (int) angle_poignet);
 
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));

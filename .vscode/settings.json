@@ -65,5 +65,8 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "pinnamestypes.h": "c"
-    }
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "C_Cpp.intelliSenseEngine": "Tag Parser",
+   
 }

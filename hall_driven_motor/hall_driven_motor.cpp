@@ -154,7 +154,7 @@ void hall_driven_motor::init()
   motor_stop();
   _PID.SetOutputLimits(_min_speed, _max_speed);
   _PID.SetMode(1);
-  _PID.SetSampleTime(1);
+  // _PID.SetSampleTime(1);
   printf("fin init ");
   displayName();
 }
@@ -238,8 +238,8 @@ int hall_driven_motor::get_speed(double target)
   Setpoint = 0; //il ne doit pas y avoir de décalage d'angle entre l'angle et le linked_angle
   Input = -abs(target - _count);
 
-  //le PID demarre à 500 de la target.
-  if (abs(target - _count) < 500)
+  //le PID demarre à 1500 de la target.
+  if (abs(target - _count) < 1500)
   {
     _PID.Compute(); //le PID calcule la vitesse et commence a prendre en compte les valeurs pour l'intégrale
     speed = Output;
@@ -306,7 +306,12 @@ int hall_driven_motor::get_speed(double target)
   {
     speed_coef = 1;
   }
-  //PID
+  
+   //on applique le coeficient pour la synchro avec la vitesse
+  speed = speed * speed_coef;
+  
+  
+  //debug
   if (_debug_flag)
   {
     printf(" get_speed target %i", (int)target);
@@ -320,10 +325,11 @@ int hall_driven_motor::get_speed(double target)
     printf(" _linked_angle_offset %i ", (int)_linked_angle_offset);
   }
 
-  //on applique le coeficient pour la synchro avec la vitesse
-  speed = speed * speed_coef;
-  
+ 
+  //pour ne pas trembler, la vitesse ne peut pas être en dessous de la vitesse mini
+  //if (speed <_min_speed) {speed=_min_speed;}
   //pour ne pas demarrer trop vite, on n'augmente pas la vitesse de plus de 100 par cycle
+
   if (speed > previous_speed + 100)
   {
     speed = previous_speed + 100;

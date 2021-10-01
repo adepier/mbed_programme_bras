@@ -65,8 +65,8 @@ hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de t
                               init_speed = 1500,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 0.1,                   //
-                              coef_Ki = 0.5,                   //
+                              coef_Kp = 1,                   //
+                              coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 43.3          //
 );
@@ -83,10 +83,10 @@ hall_driven_motor motor_poignet(count_pin = PA_8,
                                 flag_start = FLAG_START_POIGNET,
                                 flag_stop = FLAG_STOP_POIGNET,
                                 init_speed = 3500,
-                                min_speed =100,
+                                min_speed =500,
                                 max_speed = 4095,
                                 coef_Kp = 1,  //
-                                coef_Ki = 1, //
+                                coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 38.8);
 
