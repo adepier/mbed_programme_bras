@@ -33,8 +33,7 @@ public:
                     Nb_tic_per_deg nb_tic_per_deg);
 
   // interruptions
-  void increment();
-  void stop();
+  void increment(); 
 
   // methodes
   void run();

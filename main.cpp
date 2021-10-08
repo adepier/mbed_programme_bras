@@ -74,6 +74,8 @@ int main()
   motor_coude.set_speed_sync(angle_poignet,true);
   motor_poignet.set_speed_sync(angle_coude,true);
 
+// motor_coude.set_debug_flag(true);
+
   int deplacement = 90;
 
   while (true)
@@ -81,7 +83,7 @@ int main()
     target_angle_poignet = angle_poignet + deplacement; //--> point bas le moteur fait 2->92
     target_angle_coude = angle_coude + deplacement;     //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start descente \n   ");
+    printf("start descente \n");
     event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE);    // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET | FLAG_STOP_COUDE); // attend que les moteurs
     printf("fin descente \n");
@@ -93,7 +95,7 @@ int main()
     target_angle_poignet = angle_poignet - deplacement; //--> point haut le moteur fait 92->2
     target_angle_coude = angle_coude - deplacement;     //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start montée \n   ");
+    printf("start montée \n");
     event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE);    // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET | FLAG_STOP_COUDE); // attend que les moteurs
     printf("fin montée \n");
