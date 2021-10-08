@@ -1,20 +1,5 @@
 #include "hall_driven_motor.h"
 
-void hall_driven_motor::displayName()
-{
-  // assigning value to string s
-  string s = get_motor_name();
-  int n = s.length();
-  // declaring character array
-  char char_array[n + 1];
-
-  // copying the contents of the
-  // string to char array
-  strcpy(char_array, s.c_str());
-  for (int i = 0; i < n; i++)
-    printf("%c", char_array[i]);
-  printf("\n");
-};
 /*!
  *  @brief constructeur
  *  @param count_pin
@@ -79,12 +64,10 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
     _forward_pin = forward_or_dir_pin.get();
     _backward_pin = backward_or_speed_pin.get();
   }
-  // _min_motor_speed = 1000; // default value
+  //   default value
   _motor_name = motor_name.get();
   _init_speed = init_speed.get();
-
   _min_speed = min_speed.get();
-  _coef_Kp = coef_Kp.get();
   _max_speed = max_speed.get();
   _nb_tic_per_deg = nb_tic_per_deg.get();
 
@@ -94,8 +77,6 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
   //définit la valeur par défaut
   _flag_speed_sync = false;
   _debug_flag = false;
-  // _cmde_flag_start = cmde_flag_start;
-  // _cmde_flag_stop = cmde_flag_stop;
 }
 
 //****************** interruptions
@@ -109,6 +90,7 @@ void hall_driven_motor::increment()
   {
     _count--;
   };
+  //met à jour l'angle du moteur
   *_angle = _count / _nb_tic_per_deg;
 }
 
@@ -151,7 +133,6 @@ void hall_driven_motor::init()
   displayName();
 }
 
-string hall_driven_motor::get_motor_name() { return _motor_name; };
 int32_t hall_driven_motor::get_flag_start() { return _flag_start; };
 int32_t hall_driven_motor::get_flag_stop() { return _flag_stop; };
 
@@ -179,17 +160,17 @@ void hall_driven_motor::set_speed_sync(double &linked_angle, bool flag)
 void hall_driven_motor::set_debug_flag(bool flag) { _debug_flag = flag; };
 void hall_driven_motor::run()
 {
-  _PID.Compute(true); //restart
+   
   previous_speed = 0;
 
-  double target_count = *_target * _nb_tic_per_deg;
+  double target_count = *_target * _nb_tic_per_deg; //calcul la target en nombre de tic
 
   if ((target_count - _count) > 0)
   {
     //on recule
     while (target_count > _count)
     {
-      // calcul de la vitesse
+      // calcul de la vitesse à chaque tour
       int speed = get_speed(target_count);
       if (_debug_flag)
       {
@@ -204,7 +185,7 @@ void hall_driven_motor::run()
     //on avance
     while (target_count < _count)
     {
-      // calcul de la vitesse
+      // calcul de la vitesse à chaque tour
       int speed = get_speed(target_count);
       if (_debug_flag)
       {
@@ -222,6 +203,17 @@ void hall_driven_motor::run()
   motor_stop();
 }
 //********************** methodes privées
+void hall_driven_motor::displayName()
+{
+  //pour le debug, affiche le nom du moteur
+
+  char char_array[_motor_name.length() + 1]; // declaring character array
+  strcpy(char_array, _motor_name.c_str());   // copying the contents of the string to char array
+  //print chaque lettre
+  for (int i = 0; i < _motor_name.length(); i++)
+    printf("%c", char_array[i]);
+  printf("\n");
+};
 
 int hall_driven_motor::get_speed(double target)
 {
@@ -229,7 +221,7 @@ int hall_driven_motor::get_speed(double target)
   // calcul de la vitesse avec le PID
   Setpoint = 0; //il ne doit pas y avoir de décalage d'angle entre l'angle et le linked_angle
   Input = -abs(target - _count);
-
+  double speed;
   //le PID demarre à 1500 de la target.
   if (abs(target - _count) < 1500)
   {

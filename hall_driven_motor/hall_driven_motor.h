@@ -37,13 +37,10 @@ public:
 
   // methodes
   void run();
-  void init();
-  int read_counter();
-  string get_motor_name();
+  void init();  
   int32_t get_flag_start();
   int32_t get_flag_stop(); 
-  void set_speed_sync(double &linked_angle,bool flag); 
-  void displayName();
+  void set_speed_sync(double &linked_angle,bool flag);  
   void set_debug_flag(bool flag); 
 
 private:
@@ -59,17 +56,16 @@ private:
   int32_t _flag_start;
   int32_t _flag_stop;
   double _count;
+  double *_target;
   double *_angle;
   double *_linked_angle;
-  int *_flag_speed_sync_coude;
   double _linked_angle_offset;
   bool _flag_speed_sync;
   bool _debug_flag;
 
-  double previous_speed;
-  double speed;
+  double previous_speed; 
   string _motor_name;
-  double *_target;
+  
   double _nb_tic_per_deg;
   int _init_speed;
   double Input;
@@ -77,9 +73,7 @@ private:
   double Setpoint;
 
   int _max_speed;
-  int _min_speed;
-  double _coef_accel;
-  double _coef_Kp;
+  int _min_speed; 
 
   // int _cmde_flag_start;
   // int _cmde_flag_stop;
@@ -88,5 +82,6 @@ private:
   void motor_run_backward(double speed);
   void motor_stop();
   int get_speed(double target);
+  void displayName();
   PID _PID;
 };
