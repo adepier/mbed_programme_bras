@@ -8,26 +8,14 @@
 // Nucleo L432KC
 #define I2C_SDA PA_10
 #define I2C_SCL PA_9
-//#####EPAULE
-#define PIN_COUNT_EPAULE PB_0
-#define PIN_STOP_EPAULE PA_12
-#define PIN_DIR_EPAULE 12
-#define PIN_PWM_EPAULE 13
-#define FLAG_START_EPAULE 0x1
-#define FLAG_STOP_EPAULE 0x2
-#define MAX_VAL_EPAULE 2500
-#define MIN_MOTOR_SPEED_EPAULE 200
-#define MAX_MOTOR_SPEED_EPAULE 1000
-//#####EPAULE_haut - MPU6050
-#define PIN_DIR_EPAULE_HAUT 2
-#define PIN_PWM_EPAULE_HAUT 3
-#define FLAG_START_EPAULE_HAUT 0x3
-#define FLAG_STOP_EPAULE_HAUT 0x4
-#define MAX_VAL_EPAULE_HAUT 2500
-#define MIN_MOTOR_SPEED_EPAULE_HAUT 200
-#define MAX_MOTOR_SPEED_EPAULE_HAUT 1000
-//#####COUDE
-
+ 
+//#####EPAULE_haut 
+#define FLAG_START_EPAULE_HAUT  (1UL << 6)
+#define FLAG_STOP_EPAULE_HAUT (1UL << 7) 
+//#####EPAULE_A_PLAT
+#define FLAG_START_EPAULE_A_PLAT (1UL << 4) // 00000000000000000000000000000001
+#define FLAG_STOP_EPAULE_A_PLAT (1UL << 5)  // 00000000000000000000000000000010
+//#####COUDE 
 #define FLAG_START_COUDE (1UL << 0) // 00000000000000000000000000000001
 #define FLAG_STOP_COUDE (1UL << 1)  // 00000000000000000000000000000010
 //#####POIGNET
@@ -36,9 +24,13 @@
 
 double target_angle_coude = 0;
 double target_angle_poignet = 0;
+double target_angle_epaule_a_plat = 0;
+double target_angle_epaule_haut = 0;
 
 double angle_coude;
 double angle_poignet;
+double angle_epaule_a_plat;
+double angle_epaule_haut;
 
 int flag_speed_sync_coude;
 
@@ -49,7 +41,46 @@ EventFlags event_flag;
 Adafruit_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
                                         // en PWM  (adresse I2C par defaut 0x40)
                                         //epaule
-
+//epaule à plat
+hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compteur de tour
+                              stop_pin = PA_12,               //pin de fin de course
+                              pwm,                           //carte pwm
+                              forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
+                              backward_or_speed_pin = 13,     //pin de commande de la vitesse du moteur
+                              target_angle_epaule_a_plat,            //angle cible (pointeur = variable globale)
+                              angle_epaule_a_plat,                   //angle en cours  (pointeur = variable globale), il faut en faire une variable gloable pour l'utiliser dans les autres moteurs 
+                              motor_name = "epaule_a_plat",          //nom du moteur
+                              motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                              flag_start = FLAG_START_EPAULE_A_PLAT, //
+                              flag_stop = FLAG_STOP_EPAULE_A_PLAT,   //
+                              init_speed = 1000,             //
+                              min_speed = 500,                 //
+                              max_speed = 4095,              //
+                              coef_Kp = 0.5,                   //
+                              coef_Ki = 0.005,                   //
+                              coef_Kd = 0,                   //
+                              nb_tic_per_deg = 43.3          //
+);
+//epaule haut
+hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteur de tour
+                              stop_pin = PA_11,               //pin de fin de course
+                              pwm,                           //carte pwm
+                              forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
+                              backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur
+                              target_angle_epaule_haut,            //angle cible (pointeur = variable globale)
+                              angle_epaule_haut,                   //angle en cours  (pointeur = variable globale), il faut en faire une variable gloable pour l'utiliser dans les autres moteurs 
+                              motor_name = "epaule_haut",          //nom du moteur
+                              motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
+                              flag_start = FLAG_START_EPAULE_HAUT, //
+                              flag_stop = FLAG_STOP_EPAULE_HAUT,   //
+                              init_speed = 1500,             //
+                              min_speed = 500,                 //
+                              max_speed = 4095,              //
+                              coef_Kp = 0.5,                   //
+                              coef_Ki = 0.005,                   //
+                              coef_Kd = 0,                   //
+                              nb_tic_per_deg = 59         //
+);
 //coude
 hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de tour
                               stop_pin = PB_7,               //pin de fin de course

@@ -8,14 +8,14 @@
  *  @param forward_pin
  *  @param backward_pin
  *  @param &target
+ *  @param &angle
  *  @param motor_name
+ *  @param Motor_shield_type
  *  @param flag_start
  *  @param flag_stop
+ *  @param Init_speed
  *  @param
- *  @param
- *  TODO :
- *      - Ajouter un PID pour éviter
- *      - Ajouter une autocalibration pour avoir le min_motor_speed
+  
  */
 hall_driven_motor::hall_driven_motor(Count_pin count_pin,
                                      Stop_pin stop_pin,
@@ -160,7 +160,7 @@ void hall_driven_motor::set_speed_sync(double &linked_angle, bool flag)
 void hall_driven_motor::set_debug_flag(bool flag) { _debug_flag = flag; };
 void hall_driven_motor::run()
 {
-   
+
   previous_speed = 0;
 
   double target_count = *_target * _nb_tic_per_deg; //calcul la target en nombre de tic

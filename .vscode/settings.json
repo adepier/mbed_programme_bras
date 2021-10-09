@@ -64,7 +64,8 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "pinnamestypes.h": "c"
+        "pinnamestypes.h": "c",
+        "mstd_atomic": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.intelliSenseEngine": "Tag Parser",
