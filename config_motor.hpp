@@ -4,6 +4,7 @@
 #include "adafruit_pwmservodriver/Adafruit_PWMServoDriver.h"
 #include "hall_driven_motor/hall_driven_motor.h"
 #include "mbed.h"
+#include <list>
 
 // Nucleo L432KC
 #define I2C_SDA PA_10
@@ -22,15 +23,7 @@
 #define FLAG_START_POIGNET (1UL << 2) // 00000000000000000000000000000100
 #define FLAG_STOP_POIGNET (1UL << 3)  // 00000000000000000000000000001000
 
-double target_angle_coude = 0;
-double target_angle_poignet = 0;
-double target_angle_epaule_a_plat = 0;
-double target_angle_epaule_haut = 0;
-
-double angle_coude;
-double angle_poignet;
-double angle_epaule_a_plat;
-double angle_epaule_haut;
+ 
 
 int flag_speed_sync_coude;
 
@@ -46,9 +39,7 @@ hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compt
                               stop_pin = PA_12,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
-                              backward_or_speed_pin = 13,     //pin de commande de la vitesse du moteur
-                              target_angle_epaule_a_plat,            //angle cible (pointeur = variable globale)
-                              angle_epaule_a_plat,                   //angle en cours  (pointeur = variable globale), il faut en faire une variable gloable pour l'utiliser dans les autres moteurs 
+                              backward_or_speed_pin = 13,     //pin de commande de la vitesse du moteur 
                               motor_name = "epaule_a_plat",          //nom du moteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_A_PLAT, //
@@ -59,16 +50,15 @@ hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compt
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3          //
+                              nb_tic_per_deg = 43.3 ,
+                              flag_sens = true         //
 );
 //epaule haut
 hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteur de tour
                               stop_pin = PA_11,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
-                              backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur
-                              target_angle_epaule_haut,            //angle cible (pointeur = variable globale)
-                              angle_epaule_haut,                   //angle en cours  (pointeur = variable globale), il faut en faire une variable gloable pour l'utiliser dans les autres moteurs 
+                              backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur 
                               motor_name = "epaule_haut",          //nom du moteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_HAUT, //
@@ -79,16 +69,15 @@ hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteu
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 59         //
+                              nb_tic_per_deg = 59 ,
+                              flag_sens = true            //
 );
 //coude
 hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de tour
                               stop_pin = PB_7,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
-                              backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur
-                              target_angle_coude,            //angle cible (pointeur = variable globale)
-                              angle_coude,                   //angle en cours  (pointeur = variable globale), il faut en faire une variable gloable pour l'utiliser dans les autres moteurs 
+                              backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur 
                               motor_name = "Coude",          //nom du moteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_COUDE, //
@@ -99,16 +88,15 @@ hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de t
                               coef_Kp = 1,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3          //
+                              nb_tic_per_deg = 43.3 ,
+                              flag_sens = false             //
 );
 //poignet
 hall_driven_motor motor_poignet(count_pin = PA_8,
                                 stop_pin = PB_1,
                                 pwm,
                                 forward_or_dir_pin = 10,
-                                backward_or_speed_pin = 11,
-                                target_angle_poignet,
-                                angle_poignet, 
+                                backward_or_speed_pin = 11, 
                                 motor_name = "Poignet",
                                 motor_shield_type = 1,
                                 flag_start = FLAG_START_POIGNET,
@@ -119,7 +107,8 @@ hall_driven_motor motor_poignet(count_pin = PA_8,
                                 coef_Kp = 1,  //
                                 coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
-                                nb_tic_per_deg = 38.8);
+                                nb_tic_per_deg = 38.8,
+                              flag_sens = true    );
 
 
 

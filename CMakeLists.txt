@@ -16,11 +16,14 @@ add_subdirectory(${MBED_PATH}  ${CMAKE_CURRENT_BINARY_DIR}/mbed-os )
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/NamedType)   
 
 add_executable(${APP_TARGET}
-    #main.cpp
+     main.cpp
     #test_coude.cpp
     #test_poignet.cpp
     #test_epaule_a_plat.cpp
-    test_epaule_haut.cpp
+    #test_epaule_haut.cpp
+    #test_epaule_coude_syncrho
+    #test_epaule_poignet_syncrho
+    #test_printF.cpp
 )  
  
  

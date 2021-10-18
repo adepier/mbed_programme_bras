@@ -22,8 +22,6 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
                                      Adafruit_PWMServoDriver &pwm,
                                      Forward_or_dir_pin forward_or_dir_pin,
                                      Backward_or_speed_pin backward_or_speed_pin,
-                                     double &target_angle,
-                                     double &angle,
                                      Motor_name motor_name,
                                      Motor_shield_type motor_shield_type,
                                      Flag_start flag_start,
@@ -34,12 +32,11 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
                                      Coef_Kp coef_Kp,
                                      Coef_Ki coef_Ki,
                                      Coef_Kd coef_Kd,
-                                     Nb_tic_per_deg nb_tic_per_deg)
+                                     Nb_tic_per_deg nb_tic_per_deg,
+                                     Flag_sens flag_sens)
     : _interrupt_count(count_pin.get()),
       _interrupt_stop(stop_pin.get()),
       _pwm(&pwm),
-      _target(&target_angle),
-      _angle(&angle),
       _PID(&Input, &Output, &Setpoint, coef_Kp.get(), coef_Ki.get(), coef_Kd.get(), P_ON_E, DIRECT)
 
 {
@@ -65,7 +62,7 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
     _backward_pin = backward_or_speed_pin.get();
   }
   //   default value
-  _motor_name = motor_name.get();
+  strcpy(_motor_name, motor_name.get().c_str());
   _init_speed = init_speed.get();
   _min_speed = min_speed.get();
   _max_speed = max_speed.get();
@@ -74,8 +71,9 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
   _flag_start = flag_start.get();
   _flag_stop = flag_stop.get();
 
+  _flag_sens = flag_sens.get();
+
   //définit la valeur par défaut
-  _flag_speed_sync = false;
   _debug_flag = false;
 }
 
@@ -91,15 +89,14 @@ void hall_driven_motor::increment()
     _count--;
   };
   //met à jour l'angle du moteur
-  *_angle = _count / _nb_tic_per_deg;
+  _angle = _count / _nb_tic_per_deg;
 }
 
 //********************** methodes publiques
 
 void hall_driven_motor::init()
 {
-  printf("init ");
-  displayName();
+  printf("init %s\n", _motor_name);
 
   _interrupt_stop.enable_irq(); // --> on allume la lecture de la butée
   // _interrupt_stop.read() == 1 --> en butée
@@ -121,49 +118,74 @@ void hall_driven_motor::init()
 
   //on initialise les variables
   previous_speed = 0;
+
   _flag_speed_sync = false;
   _count = 0;
-  *_angle = 0;
+  _angle = 0;
   _sens = true;
   _PID.SetOutputLimits(_min_speed, _max_speed);
   _PID.SetMode(1);
 
   // log
-  printf("fin init ");
-  displayName();
+  printf("fin init %s\n", _motor_name);
 }
 
 int32_t hall_driven_motor::get_flag_start() { return _flag_start; };
 int32_t hall_driven_motor::get_flag_stop() { return _flag_stop; };
 
-void hall_driven_motor::set_speed_sync(double &linked_angle, bool flag)
+void hall_driven_motor::set_speed_sync(hall_driven_motor *pSynchronised_motor_list[], int pNb_Motor_sync, bool pFlagEnable)
 {
-  //on récupère l'écart d'angle au moment de la synchro
+  _flag_speed_sync = pFlagEnable;
 
-  if (flag == true)
+  //  synchronised_motor_list = *pSynchronised_motor_list ;
+  Nb_Motor_sync = pNb_Motor_sync;
+  if (_debug_flag)
   {
-
-    _linked_angle = &linked_angle;
-    //on doit avoir (*_angle+ _linked_angle_offset) = (*_linked_angle )
-    //donc
-    _linked_angle_offset = *_linked_angle - *_angle;
-    _flag_speed_sync = flag;
-    printf("linked_angle_offset:%i \n ", (int)_linked_angle_offset);
+    printf("Nb_Motor_sync = %i \n", Nb_Motor_sync);
   }
-  else
+
+  //  printf("synchronised_motor_list = %i \n",sizeof(synchronised_motor_list));
+  for (int i = 0; i < Nb_Motor_sync; i++)
   {
-    _flag_speed_sync = flag;
+    synchronised_motor_list[i] = pSynchronised_motor_list[i];
+         
   }
 };
 
 //on met le flag debug pour afficher les données de debug
 void hall_driven_motor::set_debug_flag(bool flag) { _debug_flag = flag; };
+double hall_driven_motor::get_angle() { return _angle; };
+bool hall_driven_motor::get_sens() { return _flag_sens; };
+string hall_driven_motor::get_motor_name()
+{
+  string s = _motor_name;
+  return s;
+};
+void hall_driven_motor::set_target(double pTarget)
+{
+  _target = pTarget;
+};
+
 void hall_driven_motor::run()
 {
-
+  //au demarrage on calcul le deplacement pour la synchro
+  if (_debug_flag)
+  {
+    printf("  start run \n"  );
+  };
+  _deplacement = _target - _angle;
+  if (_debug_flag)
+  {
+    printf("   _deplacement: %f\n", _deplacement);
+  };
+  // on enregistre la position des moteurs liés au demarrage
+  _start_angle=_angle;
+   if (_debug_flag)
+  {
+    printf("   _start_angle: %f\n", _start_angle);
+  };
   previous_speed = 0;
-
-  double target_count = *_target * _nb_tic_per_deg; //calcul la target en nombre de tic
+  double target_count = _target * _nb_tic_per_deg; //calcul la target en nombre de tic
 
   if ((target_count - _count) > 0)
   {
@@ -196,24 +218,13 @@ void hall_driven_motor::run()
     }
   };
   // stop quand le compteur est arrivé
+  motor_stop();
   if (_debug_flag)
   {
-    printf("fin target moteur : angle %i  \n", (int)(target_count / _nb_tic_per_deg));
+    printf("fin target moteur : angle %f   \n", _angle);
   }
-  motor_stop();
 }
 //********************** methodes privées
-void hall_driven_motor::displayName()
-{
-  //pour le debug, affiche le nom du moteur
-
-  char char_array[_motor_name.length() + 1]; // declaring character array
-  strcpy(char_array, _motor_name.c_str());   // copying the contents of the string to char array
-  //print chaque lettre
-  for (int i = 0; i < _motor_name.length(); i++)
-    printf("%c", char_array[i]);
-  printf("\n");
-};
 
 int hall_driven_motor::get_speed(double target)
 {
@@ -234,56 +245,29 @@ int hall_driven_motor::get_speed(double target)
     speed = Output;     //le PID calcule la vitesse et sans a prendre en compte le temp pour l'intégrale
   }
 
-  // calcul du coeficient de vitesse pour la synchro
-  // on ajuste la vitesse pour que l'erreur ne depasse pas 2deg
-  // coef = pourcentage de l'erreur d'angle
-  //          2 deg -> 0%
-  //          1 deg -> 50%
-  //          0 deg -> 100%
-  // coef = (Nb_deg_autorisé - erreur d'angle) / Nb_deg_autorisé
-  // à 2 degrès on stop le moteur
-  double speed_coef;
-  double Nb_deg_autorise = 1;
+  double speed_coef = 1;
 
   if (_flag_speed_sync)
   {
-    speed_coef = (Nb_deg_autorise - abs((*_angle + _linked_angle_offset) - (*_linked_angle))) / Nb_deg_autorise;
-    // le coeficient ne peut pas etre negatif, cela veut dire que l'on a dépassé l'angle autorisé, donc on s'arrete
-    if (speed_coef < 0)
-    {
-      speed_coef = 0;
-    }
-
-    //backward => quand l'angle augmente et que l'angle est plus petit que l'angle lié, on est en retard -> donc pas de speed_coef
-    if (target > _count && ((*_angle + _linked_angle_offset) < (*_linked_angle)))
-    {
-      speed_coef = 1;
-    }
-    //forward => quand l'angle diminue, si l'angle est plus grand que l'angle lié, on est en retard -> donc pas de speed_coef
-    if (target < _count && ((*_angle + _linked_angle_offset) > (*_linked_angle)))
-    {
-      speed_coef = 1;
-    }
-  }
-  else
-  {
-    speed_coef = 1;
+    speed_coef = get_speed_coef(target);
   }
 
-  //on applique le coeficient pour la synchro avec la vitesse
+  //on applique le coeficient le plus petit pour la synchro avec la vitesse
+
   speed = speed * speed_coef;
 
   //debug
   if (_debug_flag)
   {
-    printf("get_speed target %i\t", (int)(target * 1000));
-    // printf("\t Input %i ", (int)Input);//-> = -count
-    printf("speed %i\t", (int)(speed * 1000));
-    printf("count %i\t", (int)(_count * 1000));
-    printf("angle %i\t", (int)(*_angle * 1000));
-    printf("speed_coef %i\t", (int)(speed_coef * 1000));
-    printf("linked_angle %i\t", (int)(*_linked_angle * 1000));
-    printf("linked_angle_offset %i\t", (int)(_linked_angle_offset * 1000));
+    printf("get_speed target %i\t", (int)(target));
+    // printf("\t Input %i ", Input);//-> = -count
+    printf("speed %i\t", (int)(speed));
+    printf("count %i\t", (int)(_count));
+    printf("angle %f\t", (_angle));
+    printf("speed_coef %f\t", (speed_coef));
+
+    // printf("_linked_angle %f\t", (*_linked_angle_1));
+    // printf("_linked_angle_offset_1 %f\t", (_linked_angle_offset_1));
   }
 
   //pour ne pas demarrer trop vite, on n'augmente pas la vitesse de plus de 100 par cycle
@@ -302,6 +286,100 @@ int hall_driven_motor::get_speed(double target)
 
   return (int)speed;
 }
+
+double hall_driven_motor::get_speed_coef(double pTarget)
+{
+  //on doit avoir (_angle + _linked_angle_offset) = (_linked_angle )*abs(deplacement)/abs(deplacement_linked_angle)
+  // donc  erreur d'angle =  abs ((_angle + _linked_angle_offset) - (_linked_angle/deplacement_linked_angle )*abs(deplacement)/abs(deplacement_linked_angle))
+  // calcul du coeficient de vitesse pour la synchro
+  // on ajuste la vitesse pour que l'erreur ne depasse pas 2deg
+  // coef = pourcentage de l'erreur d'angle
+  //          2 deg -> 0%
+  //          1 deg -> 50%
+  //          0 deg -> 100%
+  // coef = (Nb_deg_autorisé - erreur d'angle) / Nb_deg_autorisé
+  // à 2 degrès on stop le moteur
+  double speed_coef_final = 1;
+  double speed_coef = 1;
+  double Nb_deg_autorise = 1;
+  double linked_angle;
+  double linked_start_angle;
+  double move_angle_linked_motor;
+  double move_angle_current_motor;
+  double current_angle;
+  double coef_angle;
+  double err_angle;
+
+  for (int i = 0; i < Nb_Motor_sync; i++)
+  {
+    if (_debug_flag)
+      {
+        printf("%i  ", i ); 
+      };
+    if (synchronised_motor_list[i]->get_motor_name() != get_motor_name() && _deplacement != 0 && synchronised_motor_list[i]->_deplacement != 0)
+     {
+           //on doit avoir (move_angle_current_motor)  = (move_angle_linked_motor )*deplacement/linked_deplacement
+           //err_angle = (move_angle_current_motor)  - (move_angle_linked_motor )*deplacement/linked_deplacement
+      coef_angle = _deplacement / (synchronised_motor_list[i]->_deplacement);
+      // if (coef_angle < 0)
+      // {
+      //   coef_angle = -coef_angle;
+      // };
+      
+      linked_angle = synchronised_motor_list[i]->_angle;
+      linked_start_angle = synchronised_motor_list[i]->_start_angle;
+      move_angle_linked_motor = linked_angle- linked_start_angle ;
+      move_angle_current_motor=_angle -_start_angle;
+      //pour la synchro, on doit toujours avoir 
+      //(move_angle_current_motor)  = (move_angle_linked_motor )*deplacement/linked_deplacement
+      //  if (_flag_sens != synchronised_motor_list[i]->get_sens())
+      // {
+      //   //si le sens est inverse, quand l'angle diminue, on fait en sorte qu'il augmente 
+      //   linked_angle = 360 - linked_angle ;
+      // };
+      // current_angle = ((_angle + _linked_angle_offset[i]));
+      // quand l'angle augmente,si l'angle est plus petit que l'angle lié, err_angle < 0 -> donc pas de speed_coef
+      // quand l'angle diminue,si l'angle est plus grand que l'angle lié, err_angle > 0 -> donc pas de speed_coef
+      err_angle = move_angle_current_motor -((move_angle_linked_motor * coef_angle));
+
+      if (_debug_flag)
+      {
+        printf(" move_angle_linked_motor = %f ",  move_angle_linked_motor);
+        printf(" move_angle_current_motor = %f ", move_angle_current_motor); 
+        printf(" coef_angle = %f  ", coef_angle);
+        printf(" err_angle = %f  ", err_angle);
+        
+      };
+     
+ 
+       
+      //backward (pTarget > _count)  => quand l'angle augmente et que l'angle est plus petit que l'angle lié, on est en retard -> donc pas de speed_coef
+      // dans ce sens si l'erreur est positive, on ralenti, si elle est negative on ne fait rien
+
+       //forward =>  c'est l'inverse, on dit que err_angle=-err_angle pour applique la même mecanique  
+      if (pTarget < (_count)  )  {err_angle = -err_angle;};
+      
+        //  si l'erreur est supérieure au nb de degrés autorisé -> on stop
+         if ( err_angle > Nb_deg_autorise) {speed_coef=0;}
+        //  si l'erreur est inférieure au nb de degrés autorisé et supérieur à 0 -> on on ralenti
+         if ( err_angle < Nb_deg_autorise && err_angle>0) {speed_coef = (Nb_deg_autorise - err_angle) / Nb_deg_autorise;}
+        //  si l'erreur est inférieure à 0   -> pas de coef
+         if ( err_angle <= 0) {speed_coef=1;} 
+
+      //on prend le speed coef minimal
+      if (_debug_flag)
+      {
+        printf("  speed_coef = %f  ", speed_coef);
+      }
+      if (speed_coef_final > speed_coef)
+      {
+        speed_coef_final = speed_coef;
+      }
+    }
+  }
+  return speed_coef_final;
+}
+
 void hall_driven_motor::motor_run_forward(double speed)
 {
   // la vitesse max est 4095
