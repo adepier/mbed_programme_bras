@@ -26,8 +26,7 @@ public:
                     Coef_Kp coef_Kp,
                     Coef_Ki coef_Ki,
                     Coef_Kd coef_Kd,
-                    Nb_tic_per_deg nb_tic_per_deg,
-                    Flag_sens flag_sens);
+                    Nb_tic_per_deg nb_tic_per_deg );
 
   // interruptions
   void increment();
@@ -35,20 +34,17 @@ public:
   // methodes
   void run();
   void init();
-  int32_t get_flag_start();
-  int32_t get_flag_stop();
-
   void set_speed_sync(hall_driven_motor *pSynchronised_motor_list[], int pNb_Motor_sync, bool pFlagEnable);
-   
-  double get_angle();
-  string get_motor_name();
-  bool get_sens();
-  void set_target(double pTarget);
-  void set_debug_flag(bool flag);
-  char _motor_name[50];
+  
+  //variables
+  int32_t _flag_start;
+  int32_t _flag_stop;
+  string _motor_name;
   double _deplacement;
   double _angle;
   double _start_angle;
+  double _target;
+  bool _debug_flag;
 
 private:
   InterruptIn _interrupt_count;
@@ -60,16 +56,15 @@ private:
   int _dir_pin;
   int _pwm_pin;
   bool _sens;
-  int32_t _flag_start;
-  int32_t _flag_stop;
+  
   double _count;
-  double _target;
+  
   
   
   double _flag_sens;
   bool _flag_speed_sync;
   int Nb_Motor_sync;
-  bool _debug_flag;
+ 
 
   double previous_speed;
 
@@ -89,12 +84,9 @@ private:
   void motor_run_backward(double speed);
   void motor_stop();
   int get_speed(double target);
-  double get_speed_coef(double pTarget);
-  void displayName();
+  double get_speed_coef(double pTarget); 
   PID _PID;
 
-  double _linked_angle_offset[50]; 
- 
   hall_driven_motor *synchronised_motor_list[];
   
  

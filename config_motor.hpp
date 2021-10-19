@@ -50,8 +50,7 @@ hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compt
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3 ,
-                              flag_sens = true         //
+                              nb_tic_per_deg = 43.3  
 );
 //epaule haut
 hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteur de tour
@@ -69,8 +68,7 @@ hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteu
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 59 ,
-                              flag_sens = true            //
+                              nb_tic_per_deg = 59  
 );
 //coude
 hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de tour
@@ -88,8 +86,7 @@ hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de t
                               coef_Kp = 1,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3 ,
-                              flag_sens = false             //
+                              nb_tic_per_deg = 43.3  
 );
 //poignet
 hall_driven_motor motor_poignet(count_pin = PA_8,
@@ -107,8 +104,7 @@ hall_driven_motor motor_poignet(count_pin = PA_8,
                                 coef_Kp = 1,  //
                                 coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
-                                nb_tic_per_deg = 38.8,
-                              flag_sens = true    );
+                                nb_tic_per_deg = 38.8   );
 
 
 

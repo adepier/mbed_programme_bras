@@ -21,8 +21,7 @@ using Max_speed = fluent::NamedType<std::int32_t, struct Max_speedTag>;         
 using Coef_Kp = fluent::NamedType< double, struct Coef_KpTag>;                         //PID coef proportionnel
 using Coef_Ki = fluent::NamedType< double, struct Coef_KiTag>;                         //PID coef integral
 using Coef_Kd = fluent::NamedType< double, struct Coef_KdTag>;                         //PID coef dérivée
-using Nb_tic_per_deg = fluent::NamedType< double, struct Nb_tic_per_degTag>;           // nombre de tic par tour pour calculer l'angle
-using Flag_sens = fluent::NamedType< bool, struct Flag_sensTag>;           // Sens = horaire = true / anti-horaire = false
+using Nb_tic_per_deg = fluent::NamedType< double, struct Nb_tic_per_degTag>;           // nombre de tic par tour pour calculer l'angle 
 
 //     int motor_shield_type,
 //     int32_t flag_start,
@@ -49,5 +48,4 @@ static const Max_speed::argument max_speed;
 static const Coef_Kp::argument coef_Kp;
 static const Coef_Ki::argument coef_Ki;
 static const Coef_Kd::argument coef_Kd;
-static const Nb_tic_per_deg::argument nb_tic_per_deg;
-static const Flag_sens::argument flag_sens;
+static const Nb_tic_per_deg::argument nb_tic_per_deg; 

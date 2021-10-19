@@ -31,7 +31,7 @@ void init()
 
   // motor_poignet.set_debug_flag(true);
   //  motor_epaule_a_plat.set_debug_flag(true);
-   motor_coude.set_debug_flag(true);
+   motor_coude._debug_flag=true;
 }
 
 //###########################
@@ -43,9 +43,9 @@ void run_motor_in_thread(hall_driven_motor *motor)
   while (true)
   { 
     
-    event_flag.wait_all(motor->get_flag_start()); // attend que le moteur ai le flag de démarrage 
+    event_flag.wait_all(motor->_flag_start); // attend que le moteur ai le flag de démarrage 
     motor->run();
-    event_flag.set(motor->get_flag_stop());
+    event_flag.set(motor->_flag_stop);
      
   }
 }
@@ -64,9 +64,9 @@ int main()
   thread_motor_epaule_a_plat.start(callback(run_motor_in_thread, &motor_epaule_a_plat));
 
   //on met les moteur en place pour la premiere fois
-   motor_poignet.set_target(5)  ;      //point haut poignet
-   motor_coude.set_target(5 + 87); //+87 deg sur le coude pour être à l'horizontal
-   motor_epaule_a_plat.set_target(5);
+   motor_poignet._target=(5)  ;      //point haut poignet
+   motor_coude._target=(5 + 87); //+87 deg sur le coude pour être à l'horizontal
+   motor_epaule_a_plat._target=(5);
 
   printf("mise en position initiale \n");
   event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE|FLAG_START_EPAULE_A_PLAT);    // démarre les moteurs
@@ -102,14 +102,12 @@ int main()
 
   while (true)
   {
-    motor_poignet.set_target ( motor_poignet._angle + deplacement); //--> point bas le moteur fait 2->92
-    motor_coude.set_target  (motor_coude._angle + deplacement);     //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
-    motor_epaule_a_plat.set_target ( motor_epaule_a_plat._angle + deplacement_epaule_a_plat); 
+    motor_poignet._target= ( motor_poignet._angle + deplacement); //--> point bas le moteur fait 2->92
+    motor_coude._target=  (motor_coude._angle + deplacement);     //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_a_plat._target= ( motor_epaule_a_plat._angle + deplacement_epaule_a_plat); 
 
     printf("start descente \n");
-    // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(1000));
-    printf("start descente 1 \n");
+     
     event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE|FLAG_START_EPAULE_A_PLAT);    // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET | FLAG_STOP_COUDE|FLAG_STOP_EPAULE_A_PLAT); // attend que les moteurs
     printf("fin descente \n");
@@ -117,9 +115,9 @@ int main()
     ThisThread::sleep_for(chrono::milliseconds(1000));
 
     // on définit la nouvelle cible
-    motor_poignet.set_target ( motor_poignet.get_angle() - deplacement); //--> point bas le moteur fait 92->2
-    motor_coude.set_target  (motor_coude.get_angle() - deplacement);     //--> point bas le moteur fait 177->89     (+87 deg sur le coude pour être à l'horizontal)
-    motor_epaule_a_plat.set_target ( motor_epaule_a_plat.get_angle() - deplacement_epaule_a_plat); 
+    motor_poignet._target= ( motor_poignet._angle - deplacement); //--> point bas le moteur fait 92->2
+    motor_coude._target = (motor_coude._angle - deplacement);     //--> point bas le moteur fait 177->89     (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_a_plat._target =( motor_epaule_a_plat._angle - deplacement_epaule_a_plat); 
 
     printf("start montée \n");
     event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE|FLAG_START_EPAULE_A_PLAT);    // démarre les moteurs
