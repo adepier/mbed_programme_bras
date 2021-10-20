@@ -150,23 +150,19 @@ void hall_driven_motor::set_speed_sync(hall_driven_motor *pSynchronised_motor_li
 
 void hall_driven_motor::run()
 {
-  //au demarrage on calcul le deplacement pour la synchro
-  if (_debug_flag)
-  {
-    printf("  start run \n"  );
-  };
-  _deplacement = _target - _angle;
-  if (_debug_flag)
-  {
-    printf("   _deplacement: %f\n", _deplacement);
-  };
+  //au demarrage on calcul le deplacement pour la synchro 
+  _deplacement = _target - _angle; 
   // on enregistre la position des moteurs liés au demarrage
   _start_angle=_angle;
+   previous_speed = 0; 
+   
    if (_debug_flag)
   {
+    printf("  start run \n"  );
+    printf("   _deplacement: %f\n", _deplacement);
     printf("   _start_angle: %f\n", _start_angle);
   };
-  previous_speed = 0;
+
   double target_count = _target * _nb_tic_per_deg; //calcul la target en nombre de tic
 
   if ((target_count - _count) > 0)
@@ -205,6 +201,7 @@ void hall_driven_motor::run()
   {
     printf("fin target moteur : angle %f   \n", _angle);
   }
+ 
 }
 //********************** methodes privées
 

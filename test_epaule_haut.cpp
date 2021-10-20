@@ -39,11 +39,11 @@ void run_motor_in_thread(hall_driven_motor *motor)
   while (true)
   {
 
-    event_flag.wait_all(motor->get_flag_start()); // attend que le moteur ai le flag de démarrage
+    event_flag.wait_all(motor->_flag_start); // attend que le moteur ai le flag de démarrage
     // printf("start motor\n");
     //  motor->displayName();
     motor->run();
-    event_flag.set(motor->get_flag_stop());
+    event_flag.set(motor->_flag_stop);
     ; // attend que le moteur renvoie le flag de stop
     //  printf("stop motor %c \n",(char) motor->get_motor_name());
   }
