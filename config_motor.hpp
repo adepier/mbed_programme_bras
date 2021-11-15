@@ -11,11 +11,11 @@
 #define I2C_SCL PA_9
  
 //#####EPAULE_haut 
-#define FLAG_START_EPAULE_HAUT  (1UL << 6)
-#define FLAG_STOP_EPAULE_HAUT (1UL << 7) 
+#define FLAG_START_EPAULE_HAUT  (1UL << 6)// 00000000000000000000000001000000
+#define FLAG_STOP_EPAULE_HAUT (1UL << 7) // 00000000000000000000000010000000
 //#####EPAULE_A_PLAT
-#define FLAG_START_EPAULE_A_PLAT (1UL << 4) // 00000000000000000000000000000001
-#define FLAG_STOP_EPAULE_A_PLAT (1UL << 5)  // 00000000000000000000000000000010
+#define FLAG_START_EPAULE_A_PLAT (1UL << 4) // 00000000000000000000000000010000
+#define FLAG_STOP_EPAULE_A_PLAT (1UL << 5)  // 00000000000000000000000000100000
 //#####COUDE 
 #define FLAG_START_COUDE (1UL << 0) // 00000000000000000000000000000001
 #define FLAG_STOP_COUDE (1UL << 1)  // 00000000000000000000000000000010
@@ -40,7 +40,7 @@ hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compt
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 13,     //pin de commande de la vitesse du moteur 
-                              motor_name = "epaule_a_plat",          //nom du moteur
+                              motor_name = "epaule a plat",          //nom du moteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_A_PLAT, //
                               flag_stop = FLAG_STOP_EPAULE_A_PLAT,   //
@@ -58,7 +58,7 @@ hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteu
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur 
-                              motor_name = "epaule_haut",          //nom du moteur
+                              motor_name = "epaule Haut",          //nom du moteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_HAUT, //
                               flag_stop = FLAG_STOP_EPAULE_HAUT,   //

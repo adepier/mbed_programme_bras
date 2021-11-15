@@ -34,7 +34,7 @@ public:
   // methodes
   void run();
   void init();
-  void set_speed_sync(hall_driven_motor *pSynchronised_motor_list[], int pNb_Motor_sync, bool pFlagEnable);
+  void set_speed_sync(hall_driven_motor *pSynchronised_motor);
   
   //variables
   int32_t _flag_start;
@@ -63,7 +63,7 @@ private:
   
   double _flag_sens;
   bool _flag_speed_sync;
-  int Nb_Motor_sync;
+  int Nb_Motor_sync = 0;
  
 
   double previous_speed;
@@ -87,7 +87,7 @@ private:
   double get_speed_coef(double pTarget); 
   PID _PID;
 
-  hall_driven_motor *synchronised_motor_list[];
+  hall_driven_motor *synchronised_motor_list[10];
   
  
   

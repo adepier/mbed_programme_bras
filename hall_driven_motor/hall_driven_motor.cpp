@@ -127,40 +127,34 @@ void hall_driven_motor::init()
 
 
 
-void hall_driven_motor::set_speed_sync(hall_driven_motor *pSynchronised_motor_list[], int pNb_Motor_sync, bool pFlagEnable)
+void hall_driven_motor::set_speed_sync(hall_driven_motor *pSynchronised_motor)
 {
-  _flag_speed_sync = pFlagEnable;
+  _flag_speed_sync = true;
 
   //  synchronised_motor_list = *pSynchronised_motor_list ;
-  Nb_Motor_sync = pNb_Motor_sync;
+  Nb_Motor_sync++;
   if (_debug_flag)
   {
     printf("Nb_Motor_sync = %i \n", Nb_Motor_sync);
-  }
-
-  //  printf("synchronised_motor_list = %i \n",sizeof(synchronised_motor_list));
-  for (int i = 0; i < Nb_Motor_sync; i++)
-  {
-    synchronised_motor_list[i] = pSynchronised_motor_list[i];
-         
-  }
+  } 
+    synchronised_motor_list[Nb_Motor_sync - 1] = pSynchronised_motor;
+  
 };
 
   
 
 void hall_driven_motor::run()
 {
-  //au demarrage on calcul le deplacement pour la synchro 
-  _deplacement = _target - _angle; 
-  // on enregistre la position des moteurs liés au demarrage
-  _start_angle=_angle;
+  
+  _deplacement = _target - _angle; //au demarrage on calcul le deplacement pour la synchro 
+  _start_angle=_angle;// on enregistre la position des moteurs liés au demarrage
    previous_speed = 0; 
    
    if (_debug_flag)
   {
-    printf("  start run \n"  );
-    printf("   _deplacement: %f\n", _deplacement);
-    printf("   _start_angle: %f\n", _start_angle);
+    printf("start run \n"  );
+    printf("deplacement: %f\n", _deplacement);
+    printf("start_angle: %f\n", _start_angle);
   };
 
   double target_count = _target * _nb_tic_per_deg; //calcul la target en nombre de tic
@@ -199,7 +193,7 @@ void hall_driven_motor::run()
   motor_stop();
   if (_debug_flag)
   {
-    printf("fin target moteur : angle %f   \n", _angle);
+    printf("fin target moteur : angle %f\n", _angle);
   }
  
 }
@@ -290,7 +284,7 @@ double hall_driven_motor::get_speed_coef(double pTarget)
            //on doit avoir (move_angle_current_motor)  = (move_angle_linked_motor )*deplacement/linked_deplacement
            //err_angle = (move_angle_current_motor)  - (move_angle_linked_motor )*deplacement/linked_deplacement
       coef_angle = _deplacement / (synchronised_motor_list[i]->_deplacement); 
-      move_angle_linked_motor = synchronised_motor_list[i]->_angle-  synchronised_motor_list[i]->_start_angle ;
+      move_angle_linked_motor = synchronised_motor_list[i]->_angle -  synchronised_motor_list[i]->_start_angle ;
       move_angle_current_motor=_angle -_start_angle; 
       err_angle = move_angle_current_motor -((move_angle_linked_motor * coef_angle));
 
