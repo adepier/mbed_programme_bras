@@ -54,7 +54,7 @@ int main()
  
 
   //on met les moteur en place pour la premiere fois
-  motor_poignet._target = 5;      //point haut poignet
+  motor_poignet._target = 90;      //point haut poignet
   motor_coude._target = (5 + 87); //+87 deg sur le coude pour être à l'horizontal
   motor_epaule_a_plat._target = 5;
   motor_epaule_haut._target = 5;
