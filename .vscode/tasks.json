@@ -35,7 +35,7 @@
                 "-t",
                 "GCC_ARM",
                 "--mbed-os-path",
-                "C:\\Users\\adepier\\Documents\\projets C++\\MBED\\mbed-os"
+                "../mbed-os"
                
             ]
         },
