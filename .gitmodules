@@ -1,0 +1,3 @@
+[submodule "NamedType"]
+	path = NamedType
+	url = https://github.com/adepier/NamedType.git
