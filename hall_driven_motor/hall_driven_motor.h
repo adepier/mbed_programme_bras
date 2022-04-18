@@ -1,4 +1,4 @@
-#include "../Adafruit_PWMServoDriver/Adafruit_PWMServoDriver.h"
+#include "Adafruit_PWMServoDriver.h"
 #include "mbed.h"
 #include "named_type.hpp"
 #include "../PID/PID_v1.h"
