@@ -2,9 +2,9 @@
 [submodule "NamedType"]
 	path = NamedType
 	url = https://github.com/adepier/NamedType.git
-[submodule "Adafruit_PWMServoDriver"]
-	path = Adafruit_PWMServoDriver
-	url = https://github.com/adepier/Adafruit_PWMServoDriver.git
 [submodule "mbed_PID_Library"]
 	path = mbed_PID_Library
 	url = https://github.com/adepier/mbed_PID_Library.git
+[submodule "mbed_PWMServoDriver"]
+	path = mbed_PWMServoDriver
+	url = https://github.com/adepier/mbed_PWMServoDriver.git
