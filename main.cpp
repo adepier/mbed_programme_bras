@@ -10,7 +10,7 @@ Thread thread_motor_epaule_haut;
 //           THREAD
 //##########################
 
-void run_motor_in_thread(hall_driven_motor *motor)
+void run_motor_in_thread(mbed_hall_driven_motor *motor)
 {
   while (true)
   {
@@ -78,9 +78,9 @@ int main()
   //des autres moteurs
   // on fait une donc une collection avec ces infos, chaque moteur va avoir accès a cette collection
   // pour la synchro on va donc iterer sur chaque moteur pour savoir si on est en retard ou en avance
-  // hall_driven_motor *synchronised_motor_list[3] = {&motor_coude, &motor_epaule_a_plat, &motor_epaule_haut};
+  // mbed_hall_driven_motor *synchronised_motor_list[3] = {&motor_coude, &motor_epaule_a_plat, &motor_epaule_haut};
 
-  // hall_driven_motor* synchronised_motor_list =  {&motor_coude  } ;
+  // mbed_hall_driven_motor* synchronised_motor_list =  {&motor_coude  } ;
   //synchronise les moteurs
     motor_coude.set_speed_sync(&motor_epaule_a_plat);
     motor_coude.set_speed_sync(&motor_epaule_haut);

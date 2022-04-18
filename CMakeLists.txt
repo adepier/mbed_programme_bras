@@ -15,9 +15,9 @@ project(${APP_TARGET})
 
 add_subdirectory(${MBED_PATH}  ${CMAKE_CURRENT_BINARY_DIR}/mbed-os )   
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/NamedType)   
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Adafruit_PWMServoDriver ${CMAKE_CURRENT_BINARY_DIR}/Adafruit_PWMServoDriver )      
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/hall_driven_motor ${CMAKE_CURRENT_BINARY_DIR}/hall_driven_motor )   
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Arduino-PID-Library ${CMAKE_CURRENT_BINARY_DIR}/Arduino-PID-Library )   
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_PWMServoDriver ${CMAKE_CURRENT_BINARY_DIR}/mbed_PWMServoDriver )      
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_hall_driven_motor ${CMAKE_CURRENT_BINARY_DIR}/mbed_hall_driven_motor )   
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_PID_Library ${CMAKE_CURRENT_BINARY_DIR}/mbed_PID_Library )   
 
 add_executable(${APP_TARGET}
       main.cpp
@@ -40,10 +40,10 @@ add_executable(${APP_TARGET}
     MPU6050/MPU6050_6Axis_MotionApps20.h
     MPU6050/I2Cdev/I2Cdev.cpp
     MPU6050/helper_3dmath.h
-    # hall_driven_motor/hall_driven_motor.cpp
-    # hall_driven_motor/hall_driven_motor.h
-    # adafruit_pwmservodriver/Adafruit_PWMServoDriver.cpp
-    # adafruit_pwmservodriver/Adafruit_PWMServoDriver.h 
+    # mbed_hall_driven_motor/mbed_hall_driven_motor.cpp
+    # mbed_hall_driven_motor/mbed_hall_driven_motor.h
+    # mbed_PWMServoDriver/mbed_PWMServoDriver.cpp
+    # mbed_PWMServoDriver/mbed_PWMServoDriver.h 
     # PID/PID_v1.h
     # PID/PID_v1.cpp 
 )
@@ -54,10 +54,10 @@ add_executable(${APP_TARGET}
 target_link_libraries(${APP_TARGET} 
     PUBLIC 
         mbed-os
-        Adafruit_PWMServoDriver
-        hall_driven_motor
+        mbed_PWMServoDriver
+        mbed_hall_driven_motor
         NamedType
-        Arduino-PID-Library )
+        mbed_PID_Library )
 
 mbed_set_post_build(${APP_TARGET})
 

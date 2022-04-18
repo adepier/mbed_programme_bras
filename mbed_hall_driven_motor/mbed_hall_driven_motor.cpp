@@ -1,4 +1,4 @@
-#include "hall_driven_motor.h"
+#include "mbed_hall_driven_motor.h"
 
 /*!
  *  @brief constructeur
@@ -17,9 +17,9 @@
  *  @param
   
  */
-hall_driven_motor::hall_driven_motor(Count_pin count_pin,
+mbed_hall_driven_motor::mbed_hall_driven_motor(Count_pin count_pin,
                                      Stop_pin stop_pin,
-                                     Adafruit_PWMServoDriver &pwm,
+                                     mbed_PWMServoDriver &pwm,
                                      Forward_or_dir_pin forward_or_dir_pin,
                                      Backward_or_speed_pin backward_or_speed_pin,
                                      Motor_name motor_name,
@@ -42,10 +42,10 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
 
   // create the InterruptIn on the pin specified to Counter
   _interrupt_count.fall(callback(
-      this, &hall_driven_motor::increment)); // attach increment function of
+      this, &mbed_hall_driven_motor::increment)); // attach increment function of
                                              // this counter instance
   _interrupt_count.rise(callback(
-      this, &hall_driven_motor::increment)); // attach increment function of
+      this, &mbed_hall_driven_motor::increment)); // attach increment function of
                                              // this counter instance
   _motor_shield_type = motor_shield_type.get();
   if (_motor_shield_type == 1)
@@ -73,7 +73,7 @@ hall_driven_motor::hall_driven_motor(Count_pin count_pin,
 }
 
 //****************** interruptions
-void hall_driven_motor::increment()
+void mbed_hall_driven_motor::increment()
 {
   if (_sens)
   {
@@ -89,7 +89,7 @@ void hall_driven_motor::increment()
 
 //********************** methodes publiques
 
-void hall_driven_motor::init()
+void mbed_hall_driven_motor::init()
 {
   printf("init %s\n", _motor_name.c_str());
 
@@ -127,7 +127,7 @@ void hall_driven_motor::init()
 
 
 
-void hall_driven_motor::set_speed_sync(hall_driven_motor *pSynchronised_motor)
+void mbed_hall_driven_motor::set_speed_sync(mbed_hall_driven_motor *pSynchronised_motor)
 {
   _flag_speed_sync = true;
 
@@ -143,7 +143,7 @@ void hall_driven_motor::set_speed_sync(hall_driven_motor *pSynchronised_motor)
 
   
 
-void hall_driven_motor::run()
+void mbed_hall_driven_motor::run()
 {
   
   _deplacement = _target - _angle; //au demarrage on calcul le deplacement pour la synchro 
@@ -199,7 +199,7 @@ void hall_driven_motor::run()
 }
 //********************** methodes privées
 
-int hall_driven_motor::get_speed(double target)
+int mbed_hall_driven_motor::get_speed(double target)
 {
 
   // calcul de la vitesse avec le PID
@@ -252,7 +252,7 @@ int hall_driven_motor::get_speed(double target)
   return (int)speed;
 }
 
-double hall_driven_motor::get_speed_coef(double pTarget)
+double mbed_hall_driven_motor::get_speed_coef(double pTarget)
 {
    
   // calcul du coeficient de vitesse pour la synchro
@@ -324,7 +324,7 @@ double hall_driven_motor::get_speed_coef(double pTarget)
   return speed_coef_final;
 }
 
-void hall_driven_motor::motor_run_forward(double speed)
+void mbed_hall_driven_motor::motor_run_forward(double speed)
 {
   // la vitesse max est 4095
   if (speed > 4095)
@@ -344,7 +344,7 @@ void hall_driven_motor::motor_run_forward(double speed)
     _pwm->setPWM(_backward_pin, 0, 0);
   }
 }
-void hall_driven_motor::motor_run_backward(double speed)
+void mbed_hall_driven_motor::motor_run_backward(double speed)
 {
   // la vitesse max est 4095
   if (speed > 4095)
@@ -363,7 +363,7 @@ void hall_driven_motor::motor_run_backward(double speed)
     _pwm->setPWM(_backward_pin, 0, int(speed));
   }
 }
-void hall_driven_motor::motor_stop()
+void mbed_hall_driven_motor::motor_stop()
 {
   if (_motor_shield_type == 1)
   {

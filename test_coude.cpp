@@ -34,7 +34,7 @@ void init()
 //           THREAD
 //##########################
 
-void run_motor_in_thread(hall_driven_motor *motor)
+void run_motor_in_thread(mbed_hall_driven_motor *motor)
 {
   while (true)
   {

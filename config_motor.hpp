@@ -1,8 +1,8 @@
 /*  
   
  */
-#include "Adafruit_PWMServoDriver.h"
-#include "hall_driven_motor.h"
+#include "mbed_PWMServoDriver.h"
+#include "mbed_hall_driven_motor.h"
 #include "mbed.h"
 #include <list>
 
@@ -31,11 +31,11 @@ I2C i2c(I2C_SDA, I2C_SCL);
 
 EventFlags event_flag;
 
-Adafruit_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
+mbed_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
                                         // en PWM  (adresse I2C par defaut 0x40)
                                         //epaule
 //epaule à plat
-hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compteur de tour
+mbed_hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compteur de tour
                               stop_pin = PA_12,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
@@ -53,7 +53,7 @@ hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compt
                               nb_tic_per_deg = 43.3  
 );
 //epaule haut
-hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteur de tour
+mbed_hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteur de tour
                               stop_pin = PA_11,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
@@ -71,7 +71,7 @@ hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteu
                               nb_tic_per_deg = 59  
 );
 //coude
-hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de tour
+mbed_hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de tour
                               stop_pin = PB_7,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
@@ -89,7 +89,7 @@ hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de t
                               nb_tic_per_deg = 43.3  
 );
 //poignet
-hall_driven_motor motor_poignet(count_pin = PA_8,
+mbed_hall_driven_motor motor_poignet(count_pin = PA_8,
                                 stop_pin = PB_1,
                                 pwm,
                                 forward_or_dir_pin = 10,

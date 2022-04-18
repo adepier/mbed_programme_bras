@@ -1,4 +1,4 @@
-#include "Adafruit_PWMServoDriver.h"
+#include "mbed_PWMServoDriver.h"
 #include "mbed.h"
 #include "named_type.hpp"
 #include "PID_v1.h"
@@ -8,12 +8,12 @@
  *  @brief classe pour gérer un moteur asservis par un compteur à effet Hall  
 
  */
-class hall_driven_motor
+class mbed_hall_driven_motor
 {
 public:
-  hall_driven_motor(Count_pin count_pin,
+  mbed_hall_driven_motor(Count_pin count_pin,
                     Stop_pin stop_pin,
-                    Adafruit_PWMServoDriver &pwm,
+                    mbed_PWMServoDriver &pwm,
                     Forward_or_dir_pin forward_or_dir_pin,
                     Backward_or_speed_pin backward_or_speed_pin,
                     Motor_name motor_name,
@@ -34,7 +34,7 @@ public:
   // methodes
   void run();
   void init();
-  void set_speed_sync(hall_driven_motor *pSynchronised_motor);
+  void set_speed_sync(mbed_hall_driven_motor *pSynchronised_motor);
   
   //variables
   int32_t _flag_start;
@@ -49,7 +49,7 @@ public:
 private:
   InterruptIn _interrupt_count;
   InterruptIn _interrupt_stop;
-  Adafruit_PWMServoDriver *_pwm;
+  mbed_PWMServoDriver *_pwm;
 
   int _backward_pin;
   int _forward_pin;
@@ -87,7 +87,7 @@ private:
   double get_speed_coef(double pTarget); 
   PID _PID;
 
-  hall_driven_motor *synchronised_motor_list[10];
+  mbed_hall_driven_motor *synchronised_motor_list[10];
   
  
   
