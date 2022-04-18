@@ -2,10 +2,6 @@
 [submodule "NamedType"]
 	path = NamedType
 	url = https://github.com/adepier/NamedType.git
-[submodule "Arduino-PID-Library"]
-	path = Arduino-PID-Library
-	url = https://github.com/adepier/Arduino-PID-Library.git
-
 [submodule "Adafruit_PWMServoDriver"]
 	path = Adafruit_PWMServoDriver
 	url = https://github.com/adepier/Adafruit_PWMServoDriver.git
