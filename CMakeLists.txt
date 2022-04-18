@@ -17,6 +17,7 @@ add_subdirectory(${MBED_PATH}  ${CMAKE_CURRENT_BINARY_DIR}/mbed-os )
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/NamedType)   
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Adafruit_PWMServoDriver ${CMAKE_CURRENT_BINARY_DIR}/Adafruit_PWMServoDriver )      
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/hall_driven_motor ${CMAKE_CURRENT_BINARY_DIR}/hall_driven_motor )   
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Arduino-PID-Library ${CMAKE_CURRENT_BINARY_DIR}/Arduino-PID-Library )   
 
 add_executable(${APP_TARGET}
       main.cpp
@@ -43,8 +44,8 @@ add_executable(${APP_TARGET}
     # hall_driven_motor/hall_driven_motor.h
     # adafruit_pwmservodriver/Adafruit_PWMServoDriver.cpp
     # adafruit_pwmservodriver/Adafruit_PWMServoDriver.h 
-    PID/PID_v1.h
-    PID/PID_v1.cpp 
+    # PID/PID_v1.h
+    # PID/PID_v1.cpp 
 )
 
 
@@ -55,7 +56,8 @@ target_link_libraries(${APP_TARGET}
         mbed-os
         Adafruit_PWMServoDriver
         hall_driven_motor
-        NamedType )
+        NamedType
+        Arduino-PID-Library )
 
 mbed_set_post_build(${APP_TARGET})
 
