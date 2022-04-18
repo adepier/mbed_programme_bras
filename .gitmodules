@@ -8,3 +8,6 @@
 [submodule "mbed_PWMServoDriver"]
 	path = mbed_PWMServoDriver
 	url = https://github.com/adepier/mbed_PWMServoDriver.git
+[submodule "mbed_hall_driven_motor"]
+	path = mbed_hall_driven_motor
+	url = https://github.com/adepier/mbed_hall_driven_motor.git
