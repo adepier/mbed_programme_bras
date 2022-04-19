@@ -18,6 +18,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/NamedType)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_PWMServoDriver ${CMAKE_CURRENT_BINARY_DIR}/mbed_PWMServoDriver )      
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_hall_driven_motor ${CMAKE_CURRENT_BINARY_DIR}/mbed_hall_driven_motor )   
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_PID_Library ${CMAKE_CURRENT_BINARY_DIR}/mbed_PID_Library )   
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_MPU6050 ${CMAKE_CURRENT_BINARY_DIR}/mbed_MPU6050 )   
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mbed_I2Cdev ${CMAKE_CURRENT_BINARY_DIR}/mbed_I2Cdev )   
 
 add_executable(${APP_TARGET}
       main.cpp
@@ -35,11 +37,11 @@ add_executable(${APP_TARGET}
 
  target_sources(${APP_TARGET}
     PRIVATE
-    MPU6050/MPU6050.h
-    MPU6050/MPU6050.cpp
-    MPU6050/MPU6050_6Axis_MotionApps20.h
-    MPU6050/I2Cdev/I2Cdev.cpp
-    MPU6050/helper_3dmath.h
+    # MPU6050/MPU6050.h
+    # MPU6050/MPU6050.cpp
+    # MPU6050/MPU6050_6Axis_MotionApps20.h
+    # MPU6050/I2Cdev/I2Cdev.cpp
+    # MPU6050/helper_3dmath.h
     # mbed_hall_driven_motor/mbed_hall_driven_motor.cpp
     # mbed_hall_driven_motor/mbed_hall_driven_motor.h
     # mbed_PWMServoDriver/mbed_PWMServoDriver.cpp
@@ -57,7 +59,9 @@ target_link_libraries(${APP_TARGET}
         mbed_PWMServoDriver
         mbed_hall_driven_motor
         NamedType
-        mbed_PID_Library )
+        mbed_PID_Library
+        mbed_MPU6050
+        mbed_I2Cdev )
 
 mbed_set_post_build(${APP_TARGET})
 
