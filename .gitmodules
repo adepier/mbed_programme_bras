@@ -11,3 +11,9 @@
 [submodule "mbed_hall_driven_motor"]
 	path = mbed_hall_driven_motor
 	url = https://github.com/adepier/mbed_hall_driven_motor.git
+[submodule "mbed_I2Cdev"]
+	path = mbed_I2Cdev
+	url = https://github.com/adepier/mbed_I2Cdev.git
+[submodule "mbed_MPU6050"]
+	path = mbed_MPU6050
+	url = https://github.com/adepier/mbed_MPU6050.git
