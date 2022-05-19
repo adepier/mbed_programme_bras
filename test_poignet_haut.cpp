@@ -44,6 +44,7 @@ int main()
   }
 
   // init motor
+  motor_poignet_haut._debug_flag =true;
   motor_poignet_haut.init();
    printf("init angle: %f\n",  motor_poignet_haut._angle);
    // on attend un peu

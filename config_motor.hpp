@@ -53,7 +53,8 @@ mbed_hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin 
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3  
+                              nb_tic_per_deg = 43.3  ,
+                                end_stop_type  = 1  
 );
 //epaule haut
 mbed_hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin compteur de tour
@@ -71,7 +72,8 @@ mbed_hall_driven_motor motor_epaule_haut(count_pin = PB_5,              //pin co
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 59  
+                              nb_tic_per_deg = 59  ,
+                                end_stop_type  = 1  
 );
 //coude
 mbed_hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur de tour
@@ -89,7 +91,8 @@ mbed_hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur
                               coef_Kp = 1,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3  
+                              nb_tic_per_deg = 43.3  ,
+                                end_stop_type  = 1  
 );
 //poignet
 mbed_hall_driven_motor motor_poignet(count_pin = PA_8,
@@ -107,7 +110,8 @@ mbed_hall_driven_motor motor_poignet(count_pin = PA_8,
                                 coef_Kp = 1,  //
                                 coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
-                                nb_tic_per_deg = 38.8   );
+                                nb_tic_per_deg = 38.8 ,
+                                end_stop_type  = 1  );
 
 //poignet haut
 DigitalOut pinPB4(PB_4,0);
@@ -127,5 +131,6 @@ mbed_hall_driven_motor motor_poignet_haut(count_pin = PB_4 ,
                                 coef_Kp = 1,  //
                                 coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
-                                nb_tic_per_deg = 38.8   );
+                                nb_tic_per_deg = 38.8 ,
+                                end_stop_type  = 0);
 
