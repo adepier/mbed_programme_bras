@@ -23,7 +23,8 @@ add_subdirectory(mbed_MPU6050 )
 add_subdirectory(mbed_I2Cdev )   
 
 add_executable(${APP_TARGET}
-      main.cpp
+      #main.cpp
+      test_poignet_haut.cpp
 )  
  
  
@@ -32,7 +33,7 @@ add_executable(${APP_TARGET}
     PRIVATE
 )
 
-# premet d'utiliser les lib sans le chemin
+# permet d'utiliser les lib sans le chemin
 target_link_libraries(${APP_TARGET} 
     PUBLIC 
         mbed-os

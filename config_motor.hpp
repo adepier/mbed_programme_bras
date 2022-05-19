@@ -9,7 +9,9 @@
 // Nucleo L432KC
 #define I2C_SDA PA_10
 #define I2C_SCL PA_9
- 
+//#####POIGNET_haut 
+#define FLAG_START_POIGNET_HAUT  (1UL << 8) // 00000000000000000000000010000000
+#define FLAG_STOP_POIGNET_HAUT (1UL << 9) // 00000000000000000000001000000000
 //#####EPAULE_haut 
 #define FLAG_START_EPAULE_HAUT  (1UL << 6)// 00000000000000000000000001000000
 #define FLAG_STOP_EPAULE_HAUT (1UL << 7) // 00000000000000000000000010000000
@@ -22,6 +24,7 @@
 //#####POIGNET
 #define FLAG_START_POIGNET (1UL << 2) // 00000000000000000000000000000100
 #define FLAG_STOP_POIGNET (1UL << 3)  // 00000000000000000000000000001000
+ 
 
  
 
@@ -106,5 +109,23 @@ mbed_hall_driven_motor motor_poignet(count_pin = PA_8,
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 38.8   );
 
-
+//poignet haut
+DigitalOut pinPB4(PB_4,0);
+DigitalOut pinPA2(PA_2,0);
+mbed_hall_driven_motor motor_poignet_haut(count_pin = PB_4 ,
+                                stop_pin = PA_3  ,
+                                pwm,
+                                forward_or_dir_pin = 6,
+                                backward_or_speed_pin = 7, 
+                                motor_name = "Poignet_haut",
+                                motor_shield_type = 3, // comme le type 1 mais inversé
+                                flag_start = FLAG_START_POIGNET_HAUT,
+                                flag_stop = FLAG_STOP_POIGNET_HAUT,
+                                init_speed = 3500,
+                                min_speed =1000,
+                                max_speed = 4095,
+                                coef_Kp = 1,  //
+                                coef_Ki = 0.01, //
+                                coef_Kd = 0,  //
+                                nb_tic_per_deg = 38.8   );
 
