@@ -18,11 +18,11 @@ void run_motor_in_thread(mbed_hall_driven_motor *motor)
   while (true)
   {
 
-    event_flag.wait_all(motor->get_flag_start()); // attend que le moteur ai le flag de démarrage
+    event_flag.wait_all(motor->_flag_start); // attend que le moteur ai le flag de démarrage
     // printf("start motor\n");
     //  motor->displayName();
     motor->run();
-    event_flag.set(motor->get_flag_stop());
+    event_flag.set(motor->_flag_stop);
     ; // attend que le moteur renvoie le flag de stop
     //  printf("stop motor %c \n",(char) motor->get_motor_name());
   }
@@ -45,7 +45,7 @@ int main()
 
   // init motor
   motor_poignet_haut.init();
-   printf("init angle: %i\n", (int) angle_poignet);
+   printf("init angle: %f\n",  motor_poignet_haut._angle);
    // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(10000));
     // motor_poignet_haut.set_debug_flag(true);
@@ -59,11 +59,11 @@ int main()
 
    motor_poignet_haut._target = 10; //+87 deg sur le poignet pour être à l'horizontal
 
-  printf("mise en position initiale angle: %i\n", (int) angle_poignet);
+  printf("mise en position initiale angle: %f\n",  motor_poignet_haut._angle);
   event_flag.set(FLAG_START_POIGNET_HAUT); // démarre les moteurs
 
   event_flag.wait_all(FLAG_STOP_POIGNET_HAUT); // attend que les moteurs
-  printf("fin mise en position initiale angle: %i\n stop 5sec...\n", (int) angle_poignet);
+  printf("fin mise en position initiale angle: %f\n stop 5sec...\n",  motor_poignet_haut._angle);
 
 // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
@@ -84,18 +84,18 @@ int main()
     printf("start montée \n   ");
     event_flag.set(FLAG_START_POIGNET_HAUT);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET_HAUT); // attend que les moteurs
-    printf("fin montée angle: %f\n stop 1sec...\n",   angle_poignet);
+    printf("fin montée angle: %f\n stop 1sec...\n",   motor_poignet_haut._angle);
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
 
     // on définit la nouvelle cible
 
-    target_angle_poignet = angle_poignet - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le poignet pour être à l'horizontal)
+    motor_poignet_haut._target = motor_poignet_haut._angle - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le poignet pour être à l'horizontal)
 
     printf("start descente \n   ");
     event_flag.set(FLAG_START_POIGNET_HAUT);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET_HAUT); // attend que les moteurs
-    printf("fin descente angle: %f\n stop 1sec...\n",   angle_poignet);
+    printf("fin descente angle: %f\n stop 1sec...\n",   motor_poignet_haut._angle);
 
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
