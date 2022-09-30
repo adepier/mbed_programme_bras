@@ -24,7 +24,8 @@ add_subdirectory(mbed_I2Cdev )
 
 add_executable(${APP_TARGET}
       #main.cpp
-      test_poignet_haut.cpp
+      #test_poignet_haut.cpp
+      test_poignet.cpp
 )  
  
  
