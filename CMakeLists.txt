@@ -21,11 +21,20 @@ add_subdirectory(mbed_hall_driven_motor )
 add_subdirectory(mbed_PID_Library )   
 add_subdirectory(mbed_MPU6050 )   
 add_subdirectory(mbed_I2Cdev )   
+add_subdirectory(mbed_INA3221  ) 
+add_subdirectory(mbed_current_driven_motor  ) 
 
 add_executable(${APP_TARGET}
       #main.cpp
       #test_poignet_haut.cpp
-      test_poignet.cpp
+      #test_poignet.cpp
+      #test_doigt_5.cpp
+      #test_doigt_4.cpp
+      #test_doigt_3.cpp
+      #test_doigt_2.cpp
+      #test_doigt_1.cpp
+      #test_doigt_0.cpp
+      test_doigt_1-5 ensemble.cpp
 )  
  
  
@@ -43,7 +52,9 @@ target_link_libraries(${APP_TARGET}
         NamedType
         mbed_PID_Library
         mbed_MPU6050
-        mbed_I2Cdev )
+        mbed_I2Cdev 
+        mbed_INA3221
+        mbed_current_driven_motor)
 
 mbed_set_post_build(${APP_TARGET})
 

@@ -4,6 +4,7 @@
 #include "mbed_PWMServoDriver.h"
 #include "mbed_hall_driven_motor.h"
 #include "mbed.h"
+#include "mbed_current_driven_motor.h"
 #include <list>
 
 // Nucleo L432KC
@@ -24,9 +25,24 @@
 //#####POIGNET
 #define FLAG_START_POIGNET (1UL << 2) // 00000000000000000000000000000100
 #define FLAG_STOP_POIGNET (1UL << 3)  // 00000000000000000000000000001000
- 
-
- 
+ //#####DOIGT 5 (petit doigt)
+#define FLAG_START_DOIGT_5  (1UL << 10) // 00000000000000000000000010000000
+#define FLAG_STOP_DOIGT_5 (1UL << 11) // 00000000000000000000001000000000
+//#####DOIGT 4 (annulaire)
+#define FLAG_START_DOIGT_4  (1UL << 12) // 00000000000000000000000010000000
+#define FLAG_STOP_DOIGT_4 (1UL << 13) // 00000000000000000000001000000000
+//#####DOIGT 3 (majeur)
+#define FLAG_START_DOIGT_3  (1UL << 14) // 00000000000000000000000010000000
+#define FLAG_STOP_DOIGT_3 (1UL << 15) // 00000000000000000000001000000000
+//#####DOIGT 2 (index)
+#define FLAG_START_DOIGT_2  (1UL << 16) // 00000000000000000000000010000000
+#define FLAG_STOP_DOIGT_2 (1UL << 17) // 00000000000000000000001000000000
+//#####DOIGT 1 (pouce)
+#define FLAG_START_DOIGT_1  (1UL << 18) // 00000000000000000000000010000000
+#define FLAG_STOP_DOIGT_1 (1UL << 19) // 00000000000000000000001000000000
+//#####DOIGT 0 (pouce bas)
+#define FLAG_START_DOIGT_0  (1UL << 20) // 00000000000000000000000010000000
+#define FLAG_STOP_DOIGT_0 (1UL << 21) // 00000000000000000000001000000000
 
 int flag_speed_sync_coude;
 
@@ -37,6 +53,10 @@ EventFlags event_flag;
 mbed_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
                                         // en PWM  (adresse I2C par defaut 0x40)
                                         //epaule
+mbed_PWMServoDriver pwm1(0x41, i2c);  // deuxieme carte d'extension 16 sorties pour le pilotage de servos                                       
+INA3221 current(i2c,0x42);
+INA3221 current1(i2c,0x43);
+
 //epaule à plat
 mbed_hall_driven_motor motor_epaule_a_plat(count_pin = PB_0,              //pin compteur de tour
                               stop_pin = PA_12,               //pin de fin de course
@@ -134,3 +154,71 @@ mbed_hall_driven_motor motor_poignet_haut(count_pin = PB_4 ,
                                 nb_tic_per_deg = 38.8 ,
                                 end_stop_type  = 0);
 
+//petit doigt
+mbed_current_driven_motor doigt_5 (current1,
+                                    pwm1,
+                                    11, //pin_IN1
+                                    10, //pin_IN2
+                                    3, //current_sensor_chanel
+                                    "doigt_5" ,//motor_name
+                                    FLAG_START_DOIGT_5, //flag_start
+                                    FLAG_STOP_DOIGT_5 ,//flag_stop
+                                    100 //current_limit
+                                    );
+
+//annulaire 
+mbed_current_driven_motor doigt_4 (current1,
+                                    pwm1,
+                                    9, //pin_IN1
+                                    8, //pin_IN2
+                                    2, //current_sensor_chanel
+                                    "doigt_4" ,//motor_name
+                                    FLAG_START_DOIGT_4, //flag_start
+                                    FLAG_STOP_DOIGT_4 ,//flag_stop
+                                    100 //current_limit
+                                    );
+
+//annulaire 
+mbed_current_driven_motor doigt_3 (current1,
+                                    pwm1,
+                                    7, //pin_IN1
+                                    6, //pin_IN2
+                                    1, //current_sensor_chanel
+                                    "doigt_3" ,//motor_name
+                                    FLAG_START_DOIGT_3, //flag_start
+                                    FLAG_STOP_DOIGT_3 ,//flag_stop
+                                    100 //current_limit
+                                    );
+//index 
+mbed_current_driven_motor doigt_2 (current,
+                                    pwm1,
+                                    4, //pin_IN1
+                                    5, //pin_IN2
+                                    1, //current_sensor_chanel
+                                    "doigt_2" ,//motor_name
+                                    FLAG_START_DOIGT_2, //flag_start
+                                    FLAG_STOP_DOIGT_2 ,//flag_stop
+                                    100 //current_limit
+                                    );                                    
+//pouce 
+mbed_current_driven_motor doigt_1 (current,
+                                    pwm1,
+                                    3, //pin_IN1
+                                    2, //pin_IN2
+                                    2, //current_sensor_chanel
+                                    "doigt_1" ,//motor_name
+                                    FLAG_START_DOIGT_1, //flag_start
+                                    FLAG_STOP_DOIGT_1 ,//flag_stop
+                                    100 //current_limit
+                                    );                                     
+//pouce bas
+mbed_current_driven_motor doigt_0 (current,
+                                    pwm1,
+                                    1, //pin_IN1
+                                    0, //pin_IN2
+                                    3, //current_sensor_chanel
+                                    "doigt_0" ,//motor_name
+                                    FLAG_START_DOIGT_0, //flag_start
+                                    FLAG_STOP_DOIGT_0 ,//flag_stop
+                                    10 //current_limit
+                                    );                                       
