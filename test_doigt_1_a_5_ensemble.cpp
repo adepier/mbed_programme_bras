@@ -6,6 +6,7 @@
  
 
 //Threads moteur
+Thread thread_motor_doigt0;
 Thread thread_motor_doigt1;
 Thread thread_motor_doigt2;
 Thread thread_motor_doigt3;
@@ -71,6 +72,7 @@ int main()
   init();
 
   //démarrage des threads
+  thread_motor_doigt0.start(callback(run_motor_doigt_in_thread, &doigt_0)); 
   thread_motor_doigt1.start(callback(run_motor_doigt_in_thread, &doigt_1)); 
   thread_motor_doigt2.start(callback(run_motor_doigt_in_thread, &doigt_2)); 
   thread_motor_doigt3.start(callback(run_motor_doigt_in_thread, &doigt_3)); 
@@ -82,20 +84,7 @@ int main()
   while (true)
   {
 
-    
-    doigt_1.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    printf("on ferme et stop\n" );
-    event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
-    event_flag.wait_all(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // attend que les moteurs
-    printf("le doigt est fermé\n stop 5sec...\n" );
-    // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000));
 
-    // on définit la nouvelle cible
 
     doigt_1.set_target_to_open() ;// on ouvre le doigt
     doigt_2.set_target_to_open() ;// on ouvre le doigt
@@ -104,10 +93,33 @@ int main()
     doigt_5.set_target_to_open() ;// on ouvre le doigt
     printf("on ouvre le doigt \n ");
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // démarre les moteurs 
-    event_flag.wait_all(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // attend que les moteurs
+    event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
     printf("le doigt est ouvert\n stop 5sec...\n" );
+         // on définit la nouvelle cible
+    doigt_0.set_target_to_open_to_endstop(); //on ouvre la pince
+      event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
+    event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
+    printf("la pince est ouverte\n  " );
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(5000)); 
+    doigt_0.set_target_to_close_to_endstop(); //on ouvre la pince
+      event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
+    event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
+    printf("la pince est fermée\n  " );
+     // on définit la nouvelle cible
+    doigt_1.set_target_to_close_and_stop() ;// on ferme le doigt et stop
+    doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
+    doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
+    doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
+    doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
+    printf("on ferme et stop\n" );
+    event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
+    event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
+    printf("le doigt est fermé\n stop 5sec...\n" );
+    // on attend un peu
+    ThisThread::sleep_for(chrono::milliseconds(5000));
+
+   
 
     // // on définit la nouvelle cible
 

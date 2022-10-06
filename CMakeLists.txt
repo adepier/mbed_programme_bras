@@ -26,7 +26,10 @@ add_subdirectory(mbed_current_driven_motor  )
 
 add_executable(${APP_TARGET}
       #main.cpp
-      #test_poignet_haut.cpp
+      #test_coude.cpp
+      #test_epaule_haut.cpp
+      #test_epaule_a_plat.cpp
+      test_poignet_haut.cpp
       #test_poignet.cpp
       #test_doigt_5.cpp
       #test_doigt_4.cpp
@@ -34,7 +37,7 @@ add_executable(${APP_TARGET}
       #test_doigt_2.cpp
       #test_doigt_1.cpp
       #test_doigt_0.cpp
-      test_doigt_1-5 ensemble.cpp
+      #test_doigt_1_a_5_ensemble.cpp
 )  
  
  

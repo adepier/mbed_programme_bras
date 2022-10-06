@@ -84,7 +84,7 @@ int main()
   {
 
     // motor_poignet._target = (motor_poignet._angle + deplacement);  //--> point bas le moteur fait 89->177     (+87 deg sur le poignet pour être à l'horizontal)
-    motor_poignet._target = 180;
+    motor_poignet._target = 120;
     printf("start montée \n   ");
     event_flag.set(FLAG_START_POIGNET);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_POIGNET); // attend que les moteurs
