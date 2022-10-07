@@ -105,7 +105,7 @@ mbed_hall_driven_motor motor_coude(count_pin = PB_6,              //pin compteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_COUDE, //
                               flag_stop = FLAG_STOP_COUDE,   //
-                              init_speed = 1000,             //
+                              init_speed = 2500,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
                               coef_Kp = 1,                   //

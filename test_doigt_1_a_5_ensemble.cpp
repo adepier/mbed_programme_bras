@@ -5,7 +5,7 @@
 #include "config_motor.hpp"
  
 
-//Threads moteur
+//Threads moteur main
 Thread thread_motor_doigt0;
 Thread thread_motor_doigt1;
 Thread thread_motor_doigt2;
@@ -102,7 +102,7 @@ int main()
     printf("la pince est ouverte\n  " );
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(5000)); 
-    doigt_0.set_target_to_close_to_endstop(); //on ouvre la pince
+    doigt_0.set_target_to_close_to_endstop(); //on ferme la pince
       event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
     printf("la pince est fermée\n  " );

@@ -25,11 +25,11 @@ add_subdirectory(mbed_INA3221  )
 add_subdirectory(mbed_current_driven_motor  ) 
 
 add_executable(${APP_TARGET}
-      #main.cpp
+      main.cpp
       #test_coude.cpp
       #test_epaule_haut.cpp
       #test_epaule_a_plat.cpp
-      test_poignet_haut.cpp
+      #test_poignet_haut.cpp
       #test_poignet.cpp
       #test_doigt_5.cpp
       #test_doigt_4.cpp
