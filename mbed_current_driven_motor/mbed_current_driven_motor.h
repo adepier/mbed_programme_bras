@@ -24,7 +24,8 @@ public:
                         string motor_name, 
                         int32_t flag_start,
                         int32_t flag_stop,
-                        int current_limit );
+                        int current_limit,
+                        int nominal_speed );
 
   // methodes
 void run();
@@ -48,7 +49,7 @@ private:
   int _current_limit;
   int _current_sensor_chanel;
   int _target; //0 = open , 1 = close and keep , 2 = close and stop
-
+int _nominal_speed;
    INA3221 *_current;
   mbed_PWMServoDriver *_pwm;
   

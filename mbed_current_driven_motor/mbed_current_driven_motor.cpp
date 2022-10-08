@@ -20,7 +20,8 @@ mbed_current_driven_motor::mbed_current_driven_motor(INA3221 &current,
                         string motor_name, 
                         int32_t flag_start,
                         int32_t flag_stop,
-                        int current_limit )
+                        int current_limit,
+                        int nominal_speed  )
     : _current(&current),
       _pwm(&pwm)
 
@@ -37,6 +38,7 @@ mbed_current_driven_motor::mbed_current_driven_motor(INA3221 &current,
   _current_limit=current_limit;
   // définit la valeur par défaut
   _debug_flag = false;
+  _nominal_speed=nominal_speed;
 }
 
 
@@ -135,7 +137,7 @@ void mbed_current_driven_motor::run_to_open()
 int i = 0;
 while ( i < 10)
    { 
-         _pwm->setPWM(_pin_IN1,0,2000); //borneIN1 
+         _pwm->setPWM(_pin_IN1,0,_nominal_speed); //borneIN1 
          _pwm->setPWM(_pin_IN2,0,0); //borneIN2 
         //  if faut le voir 10 fois de suite pour considérer que c'est ouvert!
          if (_current->GetCurrent(_current_sensor_chanel) * 1000 > _current_limit)
@@ -158,7 +160,7 @@ int i = 0;
 while ( i < 10)
    {  
          _pwm->setPWM(_pin_IN1,0,0); //borneIN1 
-         _pwm->setPWM(_pin_IN2,0,2000); //borneIN2 
+         _pwm->setPWM(_pin_IN2,0,_nominal_speed); //borneIN2 
         //  if faut le voir 10 fois de suite pour considérer que c'est fermé!
          if (_current->GetCurrent(_current_sensor_chanel) * 1000 > _current_limit)
          {
@@ -182,11 +184,11 @@ void mbed_current_driven_motor::run_to_close_and_keep()
 while ( _current->GetCurrent(_current_sensor_chanel)*1000 < _current_limit )
    {     
          _pwm->setPWM(_pin_IN1,0,0); //borneIN1 
-         _pwm->setPWM(_pin_IN2,0,2000); //borneIN2  
+         _pwm->setPWM(_pin_IN2,0,_nominal_speed); //borneIN2  
    }
 
 //pour rester fermé, on diminue le pwm pour atteindre _current_limit
- int i = 2000 ;
+ int i = _nominal_speed ;
    while ( _current->GetCurrent(_current_sensor_chanel)*1000 > _current_limit )
    {     
 
@@ -214,7 +216,7 @@ int i = 0;
 // i=0;
 // if (_debug_flag) { printf("idle_current %f\n",idle_current); }
 //on met en route jusqu'a la butée
-         _pwm->setPWM(_pin_IN1,0,2000); //borneIN1 
+         _pwm->setPWM(_pin_IN1,0,_nominal_speed); //borneIN1 
          _pwm->setPWM(_pin_IN2,0,0); //borneIN2 
          ThisThread::sleep_for(chrono::milliseconds(1000));
 while ( i < 10)
@@ -254,7 +256,7 @@ int i = 0;
 // i=0;
 // if (_debug_flag) { printf("idle_current %f\n",idle_current); }
  _pwm->setPWM(_pin_IN1,0,0); //borneIN1 
-         _pwm->setPWM(_pin_IN2,0,2000); //borneIN2 
+         _pwm->setPWM(_pin_IN2,0,_nominal_speed); //borneIN2 
           ThisThread::sleep_for(chrono::milliseconds(1000));
 while ( i < 10)
    { 

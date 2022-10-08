@@ -14,6 +14,13 @@ Thread thread_motor_doigt3;
 Thread thread_motor_doigt4;
 Thread thread_motor_doigt5;
 
+//position moteurs
+ int last_target_epaule_a_plat = 0 ;
+  int last_target_epaule_haut = 0 ;
+  int last_target_coude = 0 ;
+  int last_target_poignet = 0 ;
+  int last_target_poignet_haut = 0 ;
+
 //###########################
 //           THREAD
 //##########################
@@ -162,11 +169,12 @@ void close_hand()
 void hand_ILY_from_open()
 {  
      // on définit la nouvelle cible 
+    doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop 
     printf("on ferme et stop\n" );
-    event_flag.set( FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4  );     // démarre les moteurs
-    event_flag.wait_all( FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4  ); // attend que les moteurs
+    event_flag.set( FLAG_START_DOIGT_2 |  FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4  );     // démarre les moteurs
+    event_flag.wait_all( FLAG_STOP_DOIGT_2 |FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4  ); // attend que les moteurs
     printf("le doigt est fermé\n stop 5sec...\n" );
 }
 
@@ -176,16 +184,49 @@ void hand_ILY_from_open()
 
 void move_arm( int epaule_a_plat,int epaule_haut,int coude,int poignet, int poignet_haut )
 {  
-   printf("fin mise en position initiale \n");
-  //on met les moteur en place pour la premiere fois
-  motor_poignet._target = poignet;      //point haut poignet
-  motor_coude._target = coude; //+87 deg sur le coude pour être à l'horizontal
-  motor_epaule_a_plat._target = epaule_a_plat;
-  motor_epaule_haut._target = epaule_haut;
+  uint32_t flags_start=0;
+  uint32_t flags_stop=0;
 
-  printf("mise en position initiale \n"); 
-  event_flag.set(FLAG_START_POIGNET | FLAG_START_COUDE | FLAG_START_EPAULE_A_PLAT | FLAG_START_EPAULE_HAUT);  // démarre les moteurs 
-  event_flag.wait_all(FLAG_STOP_POIGNET | FLAG_STOP_COUDE | FLAG_STOP_EPAULE_A_PLAT | FLAG_STOP_EPAULE_HAUT ); // attend que les moteurs
+ 
+  
+   
+  //définit les moteur a faire tourner
+if (last_target_epaule_a_plat !=epaule_a_plat){
+  flags_start = flags_start|FLAG_START_EPAULE_A_PLAT; //flags start
+  flags_stop = flags_stop | FLAG_STOP_EPAULE_A_PLAT; //flags stop
+  last_target_epaule_a_plat =epaule_a_plat; //retient la position
+  motor_epaule_a_plat._target = epaule_a_plat;  // définit les target
+  }
+if (last_target_epaule_haut !=epaule_haut){
+  flags_start = flags_start|FLAG_START_EPAULE_HAUT; //flags start
+  flags_stop = flags_stop | FLAG_STOP_EPAULE_HAUT; //flags stop
+  last_target_epaule_haut =epaule_haut; //retient la position
+  motor_epaule_haut._target = epaule_haut;  // définit les target
+  }
+if (last_target_coude !=coude){
+  flags_start = flags_start|FLAG_START_COUDE; //flags start
+  flags_stop = flags_stop | FLAG_STOP_COUDE; //flags stop
+  last_target_coude =coude; //retient la position
+  motor_coude._target = coude;  // définit les target
+  }
+if (last_target_poignet !=poignet){
+  flags_start = flags_start|FLAG_START_POIGNET; //flags start
+  flags_stop = flags_stop | FLAG_STOP_POIGNET; //flags stop
+  last_target_poignet= poignet; //retient la position
+  motor_poignet._target = poignet; // définit les target
+  }
+    
+if (last_target_poignet_haut !=poignet_haut){
+  // flags_start = flags_start|FLAG_START_POIGNET_HAUT; //flags start
+  // flags_stop = flags_stop | FLAG_STOP_POIGNET_HAUT; //flags stop
+  last_target_poignet_haut =poignet_haut;//retient la position
+  motor_poignet_haut._target = poignet_haut; // définit les target
+  }   
+ 
+
+  printf("démarre les moteurs \n"); 
+  event_flag.set(flags_start);  // démarre les moteurs 
+  event_flag.wait_all(flags_stop ); // attend que les moteurs
 }
 //###########################
 //           MAIN
@@ -204,42 +245,42 @@ int main()
   // double deplacement_epaule_haut = 45;
   // double deplacement_epaule_a_plat = 20;
 
-  while (false)
-  {
+  // while (true)
+  // {
     
 
 //on baisse le bras pour prendre le verre
  printf("fin mise en position initiale \n");
  move_arm (0,15,90,80,0);
  //ThisThread::sleep_for(chrono::milliseconds(5000));
- move_arm (0,15,90,160,0);
-  move_arm (0,15,90,80,0);
+//  move_arm (0,15,90,160,0);
+  // move_arm (0,15,90,80,0);
  open_hand();
 //on baisse de 80
 printf("on baisse le bras pour prendre le verre \n"); 
 
- move_arm (0,0,170,160,0);
+ move_arm (0,15,170,160,0);
   // on attend un peu
-ThisThread::sleep_for(chrono::milliseconds(5000));
+// ThisThread::sleep_for(chrono::milliseconds(5000));
 close_hand();
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
  move_arm (0,15,20,10,0);
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- move_arm (0,90,95,10,0);
+ //move_arm (0,90,95,10,0);
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
  move_arm (120,90,95,10,0);
 // on attend un peu
-ThisThread::sleep_for(chrono::milliseconds(5000));
+// ThisThread::sleep_for(chrono::milliseconds(5000));
  open_hand();
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
  move_arm (120,90,95,90,0);
  hand_ILY_from_open();
 // on attend un peu
-ThisThread::sleep_for(chrono::milliseconds(5000));
+// ThisThread::sleep_for(chrono::milliseconds(5000));
 
   //   motor_poignet._target = (motor_poignet._angle + deplacement_poignet); //--> point bas le moteur fait 2->92
   //   motor_coude._target = (motor_coude._angle + deplacement_coude);       //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
@@ -270,5 +311,5 @@ ThisThread::sleep_for(chrono::milliseconds(5000));
 
   //   // on attend un peu
   //   ThisThread::sleep_for(chrono::milliseconds(1000));
-   }
+  //  }
 }
