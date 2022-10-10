@@ -142,6 +142,18 @@ void open_hand()
     printf("la pince est ouverte\n  " );
 }
 //###########################
+//           Fonction ferme le pouce
+//##########################
+
+void close_thumb()
+{
+    doigt_0.set_target_to_close_to_endstop(); //on ferme la pince
+      event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
+    event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
+    printf("la pince est fermée\n  " );
+     
+}
+//###########################
 //           Fonction ferme la main
 //##########################
 
@@ -251,7 +263,7 @@ int main()
 
 //on baisse le bras pour prendre le verre
  printf("fin mise en position initiale \n");
- move_arm (0,15,90,80,0);
+ //move_arm (0,15,90,80,0);
  //ThisThread::sleep_for(chrono::milliseconds(5000));
 //  move_arm (0,15,90,160,0);
   // move_arm (0,15,90,80,0);
@@ -259,7 +271,13 @@ int main()
 //on baisse de 80
 printf("on baisse le bras pour prendre le verre \n"); 
 
- move_arm (0,15,170,160,0);
+move_arm (20,25,0,0,0);
+ move_arm (20,25,230,200,0);
+ close_thumb(); 
+ move_arm (0,25,230,200,0);
+  move_arm (0,5,150,140,0);
+  //on avance un peu -20
+
   // on attend un peu
 // ThisThread::sleep_for(chrono::milliseconds(5000));
 close_hand();
