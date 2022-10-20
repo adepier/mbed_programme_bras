@@ -257,8 +257,8 @@ int main()
   // double deplacement_epaule_haut = 45;
   // double deplacement_epaule_a_plat = 20;
 
-  // while (true)
-  // {
+  while (true)
+  {
     
 
 //on baisse le bras pour prendre le verre
@@ -267,6 +267,7 @@ int main()
  //ThisThread::sleep_for(chrono::milliseconds(5000));
 //  move_arm (0,15,90,160,0);
   // move_arm (0,15,90,80,0);
+  move_arm (1,0,0,0,0);
  open_hand();
 //on baisse de 80
 printf("on baisse le bras pour prendre le verre \n"); 
@@ -329,5 +330,5 @@ printf("on releve le bras \n");
 
   //   // on attend un peu
   //   ThisThread::sleep_for(chrono::milliseconds(1000));
-  //  }
+   }
 }
