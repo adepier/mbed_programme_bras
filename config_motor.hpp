@@ -57,11 +57,11 @@ mbed_PWMServoDriver pwm1(0x41, i2c);  // deuxieme carte d'extension 16 sorties p
 INA3221 current(i2c,0x42);
 INA3221 current1(i2c,0x43);
 
-/****************************   BRAS  ******************/
+/****************************   BRAS  *******************************************************************************/
 //epaule à plat
-mbed_hall_driven_motor motor_epaule_a_plat(PB_0,              //count_1_pin 
-                              PB_4,                           //count_2_pin 
-                              stop_pin = PA_12,               //pin de fin de course
+mbed_hall_driven_motor motor_epaule_a_plat(D2,              //count_1_pin 
+                              D3,                           //count_2_pin 
+                              stop_pin = A0,               //pin de fin de course
                               pwm,                            //carte pwm
                               forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 13,     //pin de commande de la vitesse du moteur 
@@ -79,9 +79,9 @@ mbed_hall_driven_motor motor_epaule_a_plat(PB_0,              //count_1_pin
                               end_stop_type  = 1  
 );
 //epaule haut
-mbed_hall_driven_motor motor_epaule_haut(PB_5,              //count_1_pin
-                              PA_11,                        //count_2_pin
-                              stop_pin = PA_11,               //pin de fin de course
+mbed_hall_driven_motor motor_epaule_haut(D4,              //count_1_pin
+                              D5,                        //count_2_pin
+                              stop_pin = A1,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur 
@@ -99,9 +99,9 @@ mbed_hall_driven_motor motor_epaule_haut(PB_5,              //count_1_pin
                                 end_stop_type  = 1  
 );
 //coude
-mbed_hall_driven_motor motor_coude( PB_6,              //count_1_pin
-                              PA_4,                           //count_2_pin
-                              stop_pin = PB_7,               //pin de fin de course
+mbed_hall_driven_motor motor_coude( D6,              //count_1_pin
+                              D7,                           //count_2_pin
+                              stop_pin = A2,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur 
@@ -119,9 +119,9 @@ mbed_hall_driven_motor motor_coude( PB_6,              //count_1_pin
                                 end_stop_type  = 1  
 );
 //poignet
-mbed_hall_driven_motor motor_poignet(PA_8,              //count_1_pin
-                                PA_0,                           //count_2_pin
-                                stop_pin = PB_1,
+mbed_hall_driven_motor motor_poignet(D8,              //count_1_pin
+                                D9,                           //count_2_pin
+                                stop_pin = A3,
                                 pwm,
                                 forward_or_dir_pin = 10,
                                 backward_or_speed_pin = 11, 
@@ -141,9 +141,9 @@ mbed_hall_driven_motor motor_poignet(PA_8,              //count_1_pin
 //poignet haut
 // DigitalOut pinPB4(PA_6,0);
 // DigitalOut pinPA2(PA_2,0);
-mbed_hall_driven_motor motor_poignet_haut(PB_3 ,              //count_1_pin
-                              PA_7,                           //count_2_pin
-                                stop_pin = PA_3  ,
+mbed_hall_driven_motor motor_poignet_haut(D10 ,              //count_1_pin
+                              D11,                           //count_2_pin
+                                stop_pin = A4  ,
                                 pwm,
                                 forward_or_dir_pin = 6,
                                 backward_or_speed_pin = 7, 
@@ -162,7 +162,7 @@ mbed_hall_driven_motor motor_poignet_haut(PB_3 ,              //count_1_pin
 
 
 
-/****************************   MAIN ******************/
+/****************************   MAIN *********************************************************/
 //petit doigt
 mbed_current_driven_motor doigt_5 (current1,
                                     pwm1,
