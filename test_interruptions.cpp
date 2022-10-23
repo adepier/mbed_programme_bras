@@ -7,7 +7,7 @@
 
 class Counter {
 public:
-    Counter(PinName pin1) : _interrupt1(pin1) ,_interrupt1(pin2)         // create the InterruptIn on the pin specified to Counter
+    Counter(PinName pin1,PinName pin2) : _interrupt1(pin1) ,_interrupt2(pin2)         // create the InterruptIn on the pin specified to Counter
     {
         _interrupt1.rise(callback(this, &Counter::increment)); // attach increment function of this counter instance
         _interrupt2.rise(callback(this, &Counter::increment)); // attach increment function of this counter instance
@@ -29,8 +29,13 @@ private:
     volatile int _count;
 };
 
-Counter counter1(PA_0,PB_0);
-Counter counter1(PA_1,PB_1);
+
+Counter counter1(D2,D3);
+Counter counter2(D4,D5);
+Counter counter3(D6,D7);
+Counter counter4(D8,D9);
+Counter counter5(D10,D11);
+
 
 int main()
 {
