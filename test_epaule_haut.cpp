@@ -62,21 +62,21 @@ int main()
 
   //on met les moteur en place pour la premiere fois
 
-  motor_epaule_haut._target = (5); //+87 deg sur le coude pour être à l'horizontal
+  //motor_epaule_haut._target = (5); //+87 deg sur le coude pour être à l'horizontal
 
   printf("mise en position initiale angle: %f\n",    motor_epaule_haut._angle);
   event_flag.set(FLAG_START_EPAULE_HAUT); // démarre les moteurs 
   event_flag.wait_all(FLAG_STOP_EPAULE_HAUT); // attend que les moteurs
   printf("fin mise en position initiale angle: %f\nstop 5sec...\n",  motor_epaule_haut._angle);
 // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000));
+    ThisThread::sleep_for(chrono::milliseconds(1000));
   //pour afficher les courbes
   // printf("commande \t reponse \n");
 
   //synchronise le coude avec le poinet
   //motor_coude.set_speed_sync(angle_motor_coude,false);
 
-  int deplacement = 90;
+  int deplacement = 5;
 
   while (true)
   {

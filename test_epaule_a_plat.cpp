@@ -62,7 +62,7 @@ int main()
 
   //on met les moteur en place pour la premiere fois
 
-  motor_epaule_a_plat._target = (5); //+87 deg sur le coude pour être à l'horizontal
+  motor_epaule_a_plat._target = (0); //+87 deg sur le coude pour être à l'horizontal
 
   printf("mise en position initiale angle: %f\n", motor_epaule_a_plat._angle);
   event_flag.set(FLAG_START_EPAULE_A_PLAT); // démarre les moteurs
@@ -77,7 +77,7 @@ int main()
   //synchronise le coude avec le poinet
   //motor_coude.set_speed_sync(angle_motor_coude,false);
 
-  int deplacement = 45;
+  int deplacement = 5;
 
   while (true)
   {
