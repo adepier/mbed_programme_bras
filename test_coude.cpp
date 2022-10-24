@@ -66,9 +66,9 @@ int main()
   event_flag.wait_all(FLAG_STOP_COUDE); // attend que les moteurs
   printf("fin mise en position initiale angle: %f\n stop 5sec...\n", motor_coude._angle);
 // on attend un peu
-  ThisThread::sleep_for(chrono::milliseconds(5000)); 
+  ThisThread::sleep_for(chrono::milliseconds(1000)); 
  
-  int deplacement = 120;
+  int deplacement = 10;//120;
 
   while (true)
   {
