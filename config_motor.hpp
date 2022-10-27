@@ -58,9 +58,26 @@ INA3221 current(i2c,0x42);
 INA3221 current1(i2c,0x43);
 
 /****************************   BRAS  *******************************************************************************/
+
+Encoder encoder1;
+Encoder encoder2;
+Encoder encoder3;
+Encoder encoder4;
+Encoder encoder5;
+
+Pin_interrupt counter1_1(D2,1,encoder1 );
+Pin_interrupt counter1_2(D3,2,encoder1 );
+Pin_interrupt counter2_1(D4,1,encoder2 );
+Pin_interrupt counter2_2(D5,2,encoder2 );
+Pin_interrupt counter3_1(D6,1,encoder3 );
+Pin_interrupt counter3_2(D9,2,encoder3 );
+Pin_interrupt counter4_1(D10,1,encoder4 );
+Pin_interrupt counter4_2(D11,2,encoder4 );
+Pin_interrupt counter5_1(D12,1,encoder5 );
+Pin_interrupt counter5_2(D13,2,encoder5 );
+
 //epaule à plat
-mbed_hall_driven_motor motor_epaule_a_plat(D2,              //count_1_pin 
-                              D3,                           //count_2_pin 
+mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                           //count_2_pin 
                               stop_pin = A0,               //pin de fin de course
                               pwm,                            //carte pwm
                               forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
@@ -79,8 +96,7 @@ mbed_hall_driven_motor motor_epaule_a_plat(D2,              //count_1_pin
                               end_stop_type  = 1  
 );
 //epaule haut
-mbed_hall_driven_motor motor_epaule_haut(D4,              //count_1_pin
-                              D5,                        //count_2_pin
+mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                        //count_2_pin
                               stop_pin = A1,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
@@ -99,8 +115,7 @@ mbed_hall_driven_motor motor_epaule_haut(D4,              //count_1_pin
                                 end_stop_type  = 1  
 );
 //coude
-mbed_hall_driven_motor motor_coude( D6,              //count_1_pin
-                              D7,                           //count_2_pin
+mbed_hall_driven_motor motor_coude( encoder3.count ,                        //count_2_pin
                               stop_pin = A2,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
@@ -119,8 +134,7 @@ mbed_hall_driven_motor motor_coude( D6,              //count_1_pin
                                 end_stop_type  = 1  
 );
 //poignet
-mbed_hall_driven_motor motor_poignet(D8,              //count_1_pin
-                                D9,                           //count_2_pin
+mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //count_2_pin
                                 stop_pin = A3,
                                 pwm,
                                 forward_or_dir_pin = 10,
@@ -141,8 +155,7 @@ mbed_hall_driven_motor motor_poignet(D8,              //count_1_pin
 //poignet haut
 // DigitalOut pinPB4(PA_6,0);
 // DigitalOut pinPA2(PA_2,0);
-mbed_hall_driven_motor motor_poignet_haut(D10 ,              //count_1_pin
-                              D11,                           //count_2_pin
+mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //count_2_pin
                                 stop_pin = A4  ,
                                 pwm,
                                 forward_or_dir_pin = 6,

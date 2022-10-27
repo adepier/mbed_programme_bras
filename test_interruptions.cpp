@@ -48,10 +48,10 @@ int main()
 {
     while (1) {
          printf("Count1 :   %d:   %d:   %d\n", encoder1.count,encoder1.tic_backward,encoder1.tic_forward);
-         printf("Count1 :   %d:   %d:   %d\n", encoder2.count,encoder2.tic_backward,encoder2.tic_forward);
-         printf("Count1 :   %d:   %d:   %d\n", encoder3.count,encoder3.tic_backward,encoder3.tic_forward);
-         printf("Count1 :   %d:   %d:   %d\n", encoder4.count,encoder4.tic_backward,encoder4.tic_forward);
-         printf("Count1 :   %d:   %d:   %d\n", encoder5count,encoder5.tic_backward,encoder5.tic_forward);
+         printf("Count2 :   %d:   %d:   %d\n", encoder2.count,encoder2.tic_backward,encoder2.tic_forward);
+         printf("Count3 :   %d:   %d:   %d\n", encoder3.count,encoder3.tic_backward,encoder3.tic_forward);
+         printf("Count4 :   %d:   %d:   %d\n", encoder4.count,encoder4.tic_backward,encoder4.tic_forward);
+         printf("Count5 :   %d:   %d:   %d\n", encoder5.count,encoder5.tic_backward,encoder5.tic_forward);
 //  printf("Count3 :   %d  \n", counter3.read1());
 //  printf("Count4 :   %d  \n", counter4.read1());
 //  printf("Count5 :   %d  \n", counter5.read1());
