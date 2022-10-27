@@ -30,7 +30,7 @@ Pin_interrupt counter1_2(D3,2,encoder1  );
 // MyInterrupt counterA6(A6);
 // MyInterrupt counterA7(A7);
 
-
+int test;
 
 int main()
 {
