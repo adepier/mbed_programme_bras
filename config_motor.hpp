@@ -6,6 +6,7 @@
 #include "mbed.h"
 #include "mbed_current_driven_motor.h"
 #include <list>
+ #include "Pin_interrupt.h" 
 
 // Nucleo L432KC
 #define I2C_SDA PA_10

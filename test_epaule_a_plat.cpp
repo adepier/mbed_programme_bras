@@ -25,7 +25,7 @@ void init()
   // init motor
   motor_epaule_a_plat.init();
   // motor_coude.set_debug_flag(true);
-  printf("init angle: %f\n stop 5sec...\n", motor_epaule_a_plat._angle);
+  printf("init angle: %f\n stop 5sec...\n", motor_epaule_a_plat.get_angle());
   // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(5000));
 }
@@ -64,13 +64,13 @@ int main()
 
   motor_epaule_a_plat._target = (0); //+87 deg sur le coude pour être à l'horizontal
 
-  printf("mise en position initiale angle: %f\n", motor_epaule_a_plat._angle);
+  printf("mise en position initiale angle: %f\n", motor_epaule_a_plat.get_angle());
   event_flag.set(FLAG_START_EPAULE_A_PLAT); // démarre les moteurs
 
   event_flag.wait_all(FLAG_STOP_EPAULE_A_PLAT); // attend que les moteurs
-  printf("fin mise en position initiale angle: %f\nstop 5sec...\n", motor_epaule_a_plat._angle);
+  printf("fin mise en position initiale angle: %f\nstop 1sec...\n", motor_epaule_a_plat.get_angle());
 // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000));
+    ThisThread::sleep_for(chrono::milliseconds(1000));
   //pour afficher les courbes
   // printf("commande \t reponse \n");
 
@@ -82,23 +82,23 @@ int main()
   while (true)
   {
 
-    motor_epaule_a_plat._target = motor_epaule_a_plat._angle + deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_a_plat._target = motor_epaule_a_plat.get_angle() + deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start rotation horaire angle: %f\n", motor_epaule_a_plat._angle);
+    printf("start rotation horaire angle: %f\n", motor_epaule_a_plat.get_angle());
     event_flag.set(FLAG_START_EPAULE_A_PLAT);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_EPAULE_A_PLAT); // attend que les moteurs
-    printf("fin rotation horaire angle: %f\nstop 1sec...\n", motor_epaule_a_plat._angle);
+    printf("fin rotation horaire angle: %f\nstop 1sec...\n", motor_epaule_a_plat.get_angle());
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
 
     // on définit la nouvelle cible
 
-    motor_epaule_a_plat._target = motor_epaule_a_plat._angle - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_a_plat._target = motor_epaule_a_plat.get_angle() - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start rotation Anti-horaire angle: %f\n", motor_epaule_a_plat._angle);
+    printf("start rotation Anti-horaire angle: %f\n", motor_epaule_a_plat.get_angle());
     event_flag.set(FLAG_START_EPAULE_A_PLAT);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_EPAULE_A_PLAT); // attend que les moteurs
-    printf("fin rotation Anti-horaire angle: %f\nstop 1sec...\n", motor_epaule_a_plat._angle);
+    printf("fin rotation Anti-horaire angle: %f\nstop 1sec...\n", motor_epaule_a_plat.get_angle());
 
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
