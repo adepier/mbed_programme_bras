@@ -128,8 +128,8 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
                               init_speed = 2500,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 1,                   //
-                              coef_Ki = 0.5,                   //
+                              coef_Kp = 0.01,                   //
+                              coef_Ki = 0.05,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 43.3  ,
                                 end_stop_type  = 1  

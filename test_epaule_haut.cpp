@@ -76,12 +76,12 @@ int main()
   //synchronise le coude avec le poinet
   //motor_coude.set_speed_sync(angle_motor_coude,false);
 
-  int deplacement = 5;
+  int deplacement = 45;
 
   while (true)
   {
 
-    motor_epaule_haut._target =  motor_epaule_haut.get_angle() + deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_haut._target =   deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
 
     printf("start rotation horaire angle: %f\n",  motor_epaule_haut.get_angle());
     event_flag.set(FLAG_START_EPAULE_HAUT);     // démarre les moteurs
@@ -92,7 +92,7 @@ int main()
 
     // on définit la nouvelle cible
 
-    motor_epaule_haut._target =  motor_epaule_haut.get_angle() - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_haut._target = 0; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
 
     printf("start rotation Anti-horaire angle: %f\n",   motor_epaule_haut.get_angle());
     event_flag.set(FLAG_START_EPAULE_HAUT);     // démarre les moteurs
