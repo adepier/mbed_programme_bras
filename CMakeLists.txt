@@ -26,9 +26,9 @@ add_subdirectory(mbed_current_driven_motor  )
 add_subdirectory(Pin_interrupt  ) 
 
 add_executable(${APP_TARGET}
-      #main.cpp
+      main.cpp
       #test_epaule_a_plat.cpp
-      test_epaule_haut.cpp
+      #test_epaule_haut.cpp
       #test_coude.cpp
       #test_poignet.cpp     
       #test_poignet_haut.cpp

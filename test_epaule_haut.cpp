@@ -76,7 +76,7 @@ int main()
   //synchronise le coude avec le poinet
   //motor_coude.set_speed_sync(angle_motor_coude,false);
 
-  int deplacement = 45;
+  int deplacement = 90;
 
   while (true)
   {

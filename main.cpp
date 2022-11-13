@@ -273,10 +273,10 @@ int main()
 printf("on baisse le bras pour prendre le verre \n"); 
 
 move_arm (20,25,0,0,0);
- move_arm (20,25,230,200,0);
+ move_arm (20,25,230,230,0);
  close_thumb(); 
- move_arm (0,25,230,200,0);
-  move_arm (0,5,150,140,0);
+ move_arm (0,25,230,230,0);
+  move_arm (0,5,150,170,0);
   //on avance un peu -20
 
   // on attend un peu
@@ -284,13 +284,13 @@ move_arm (20,25,0,0,0);
 close_hand();
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- move_arm (0,15,20,10,0);
+ move_arm (0,15,20,40,0);
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- //move_arm (0,90,95,10,0);
+ //move_arm (0,90,95,40,0);
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- move_arm (120,90,95,10,0);
+ move_arm (120,90,95,40,0);
 // on attend un peu
 // ThisThread::sleep_for(chrono::milliseconds(5000));
  open_hand();

@@ -72,8 +72,8 @@ Pin_interrupt counter2_1(D4,1,encoder2 );
 Pin_interrupt counter2_2(D5,2,encoder2 );
 Pin_interrupt counter3_1(D6,1,encoder3 );
 Pin_interrupt counter3_2(D9,2,encoder3 );
-Pin_interrupt counter4_1(D10,1,encoder4 );
-Pin_interrupt counter4_2(D11,2,encoder4 );
+Pin_interrupt counter4_1(D11,1,encoder4 );
+Pin_interrupt counter4_2(D10,2,encoder4 );
 Pin_interrupt counter5_1(D12,1,encoder5 );
 Pin_interrupt counter5_2(D13,2,encoder5 );
 
@@ -93,7 +93,7 @@ mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                     
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3  ,
+                              nb_tic_per_deg = 21.65  ,
                               end_stop_type  = 1  
 );
 //epaule haut
@@ -112,7 +112,7 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                       
                               coef_Kp = 0.5,                   //
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 59  ,
+                              nb_tic_per_deg = 20 ,
                                 end_stop_type  = 1  
 );
 //coude
@@ -128,10 +128,10 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
                               init_speed = 2500,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 0.01,                   //
-                              coef_Ki = 0.05,                   //
+                              coef_Kp = 1,                   //
+                              coef_Ki = 0.5,                   //
                               coef_Kd = 0,                   //
-                              nb_tic_per_deg = 43.3  ,
+                              nb_tic_per_deg = 21.65  ,
                                 end_stop_type  = 1  
 );
 //poignet
@@ -148,9 +148,9 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
                                 min_speed =500,
                                 max_speed = 4095,
                                 coef_Kp = 1,  //
-                                coef_Ki = 0.1, //
+                                coef_Ki = 0.5, //
                                 coef_Kd = 0,  //
-                                nb_tic_per_deg = 38.8 ,
+                                nb_tic_per_deg = 18 ,
                                 end_stop_type  = 1  );
 
 //poignet haut
