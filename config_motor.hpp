@@ -110,7 +110,7 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                       
                               min_speed = 500,                 //
                               max_speed = 4095,              //
                               coef_Kp = 0.5,                   //
-                              coef_Ki = 0.005,                   //
+                              coef_Ki = 0.1,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 20 ,
                                 end_stop_type  = 1  
@@ -128,7 +128,7 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
                               init_speed = 2500,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 1,                   //
+                              coef_Kp = 0.5,                   //
                               coef_Ki = 0.5,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 21.65  ,
@@ -145,10 +145,10 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
                                 flag_start = FLAG_START_POIGNET,
                                 flag_stop = FLAG_STOP_POIGNET,
                                 init_speed = 3500,
-                                min_speed =500,
+                                min_speed =3500,
                                 max_speed = 4095,
-                                coef_Kp = 1,  //
-                                coef_Ki = 0.5, //
+                                coef_Kp = 3,  //
+                                coef_Ki = 1, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 18 ,
                                 end_stop_type  = 1  );

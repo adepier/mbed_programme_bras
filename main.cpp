@@ -142,6 +142,23 @@ void open_hand()
     printf("la pince est ouverte\n  " );
 }
 //###########################
+//           Fonction Ouvre la main sans le pouce
+//##########################
+
+void open_hand_without_thumb()
+{
+   doigt_1.set_target_to_open() ;// on ouvre le doigt
+    doigt_2.set_target_to_open() ;// on ouvre le doigt
+    doigt_3.set_target_to_open() ;// on ouvre le doigt
+    doigt_4.set_target_to_open() ;// on ouvre le doigt
+    doigt_5.set_target_to_open() ;// on ouvre le doigt
+    printf("on ouvre le doigt \n ");
+    event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // démarre les moteurs 
+    event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
+    printf("le doigt est ouvert\n stop 5sec...\n" );
+     
+}
+//###########################
 //           Fonction ferme le pouce
 //##########################
 
@@ -248,56 +265,49 @@ int main()
 
    // initialisation
   init();
-
  
-
-
-  // double deplacement_poignet = 90;
-  // double deplacement_coude = 45;
-  // double deplacement_epaule_haut = 45;
-  // double deplacement_epaule_a_plat = 20;
 
   while (true)
   {
     
 
-//on baisse le bras pour prendre le verre
- printf("fin mise en position initiale \n");
- //move_arm (0,15,90,80,0);
- //ThisThread::sleep_for(chrono::milliseconds(5000));
-//  move_arm (0,15,90,160,0);
-  // move_arm (0,15,90,80,0);
-  move_arm (1,0,0,0,0);
+//on met la main a l'horizontale
+  move_arm (0,0,0,35,0);
+//on ouvre la main
  open_hand();
-//on baisse de 80
+ 
 printf("on baisse le bras pour prendre le verre \n"); 
 
-move_arm (20,25,0,0,0);
- move_arm (20,25,230,230,0);
+ move_arm (20,25,230,240,0);
+//ferme le pouce
  close_thumb(); 
- move_arm (0,25,230,230,0);
-  move_arm (0,5,150,170,0);
-  //on avance un peu -20
-
-  // on attend un peu
-// ThisThread::sleep_for(chrono::milliseconds(5000));
+  
+  move_arm (0,25,190,200,0);
+  move_arm (0,5,150,180,0);
+  //attrappe le verre
 close_hand();
+
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- move_arm (0,15,20,40,0);
+// move_arm (0,15,20,70,0);
 //on releve de 150 (75 coude/75 epaule)
-printf("on releve le bras \n"); 
+//printf("on releve le bras \n"); 
  //move_arm (0,90,95,40,0);
 //on releve de 150 (75 coude/75 epaule)
-printf("on releve le bras \n"); 
+//printf("on releve le bras \n"); 
  move_arm (120,90,95,40,0);
 // on attend un peu
-// ThisThread::sleep_for(chrono::milliseconds(5000));
- open_hand();
+  ThisThread::sleep_for(chrono::milliseconds(1000));
+//on repose le verre
+move_arm (0,15,150,170,0);
+ move_arm (0,5,150,180,0);
+ open_hand_without_thumb();
+ move_arm (0,20,190,205,0);
+   move_arm (20,25,230,240,0);
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- move_arm (120,90,95,90,0);
- hand_ILY_from_open();
+ //move_arm (120,90,95,90,0);
+// hand_ILY_from_open();
 // on attend un peu
 // ThisThread::sleep_for(chrono::milliseconds(5000));
 
