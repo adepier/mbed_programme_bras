@@ -5,7 +5,7 @@ Thread thread_motor_coude;
 Thread thread_motor_poignet;
 Thread thread_motor_epaule_a_plat;
 Thread thread_motor_epaule_haut;
-
+Thread thread_motor_poignet_haut;
 //Threads moteur main
 Thread thread_motor_doigt0;
 Thread thread_motor_doigt1;
@@ -73,10 +73,13 @@ void init()
   motor_coude.init();
   // init epaule_haut
   motor_epaule_haut.init();
+  // init epaule_a_plat
+  motor_poignet_haut.init(); 
   // init poignet
   motor_poignet.init();
 // init epaule_a_plat
   motor_epaule_a_plat.init();
+ 
   
  //init INA3221
   current.SetAveragingMode(INA3221_AVERAGE_256);
@@ -99,24 +102,33 @@ void init()
   thread_motor_poignet.start(callback(run_motor_in_thread, &motor_poignet));
   thread_motor_epaule_a_plat.start(callback(run_motor_in_thread, &motor_epaule_a_plat));
   thread_motor_epaule_haut.start(callback(run_motor_in_thread, &motor_epaule_haut));
-
+  thread_motor_poignet_haut.start(callback(run_motor_in_thread, &motor_poignet_haut));
   
   //synchronise les moteurs
     motor_coude.set_speed_sync(&motor_epaule_a_plat);
     motor_coude.set_speed_sync(&motor_epaule_haut);
     motor_coude.set_speed_sync(&motor_poignet);
+    motor_coude.set_speed_sync(&motor_poignet_haut);
 
     motor_epaule_haut.set_speed_sync(&motor_epaule_a_plat);
     motor_epaule_haut.set_speed_sync(&motor_coude);
     motor_epaule_haut.set_speed_sync(&motor_poignet);
+    motor_epaule_haut.set_speed_sync(&motor_poignet_haut);
 
     motor_epaule_a_plat.set_speed_sync(&motor_coude);
     motor_epaule_a_plat.set_speed_sync(&motor_epaule_haut);
     motor_epaule_a_plat.set_speed_sync(&motor_poignet);
+    motor_epaule_a_plat.set_speed_sync(&motor_poignet_haut);
 
     motor_poignet.set_speed_sync(&motor_coude);
     motor_poignet.set_speed_sync(&motor_epaule_haut);
-    motor_poignet.set_speed_sync(&motor_epaule_a_plat);   
+    motor_poignet.set_speed_sync(&motor_epaule_a_plat); 
+    motor_poignet.set_speed_sync(&motor_poignet_haut);   
+
+    motor_poignet_haut.set_speed_sync(&motor_coude);
+    motor_poignet_haut.set_speed_sync(&motor_epaule_haut);
+    motor_poignet_haut.set_speed_sync(&motor_epaule_a_plat); 
+    motor_poignet_haut.set_speed_sync(&motor_poignet); 
   // motor_coude.set_speed_sync_2(angle_epaule_a_plat,true,true);
 }
 
@@ -246,8 +258,8 @@ if (last_target_poignet !=poignet){
   }
     
 if (last_target_poignet_haut !=poignet_haut){
-  // flags_start = flags_start|FLAG_START_POIGNET_HAUT; //flags start
-  // flags_stop = flags_stop | FLAG_STOP_POIGNET_HAUT; //flags stop
+   flags_start = flags_start|FLAG_START_POIGNET_HAUT; //flags start
+   flags_stop = flags_stop | FLAG_STOP_POIGNET_HAUT; //flags stop
   last_target_poignet_haut =poignet_haut;//retient la position
   motor_poignet_haut._target = poignet_haut; // définit les target
   }   
@@ -272,41 +284,41 @@ int main()
     
 
 //on met la main a l'horizontale
-  move_arm (0,0,0,35,0);
+  move_arm (0,0,0,35,160);
 //on ouvre la main
  open_hand();
  
 printf("on baisse le bras pour prendre le verre \n"); 
 
- move_arm (20,25,230,240,0);
+ move_arm (20,25,230,240,160);
 //ferme le pouce
  close_thumb(); 
   
-  move_arm (0,25,190,200,0);
-  move_arm (0,5,150,180,0);
+  move_arm (0,25,190,200,160);
+  move_arm (0,5,150,180,160);
   //attrappe le verre
 close_hand();
 
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
-// move_arm (0,15,20,70,0);
+// move_arm (0,15,20,70,160);
 //on releve de 150 (75 coude/75 epaule)
 //printf("on releve le bras \n"); 
- //move_arm (0,90,95,40,0);
+ //move_arm (0,90,95,40,160);
 //on releve de 150 (75 coude/75 epaule)
 //printf("on releve le bras \n"); 
- move_arm (120,90,95,40,0);
+ move_arm (120,90,95,40,160);
 // on attend un peu
   ThisThread::sleep_for(chrono::milliseconds(1000));
 //on repose le verre
-move_arm (0,15,150,170,0);
- move_arm (0,5,150,180,0);
+move_arm (0,15,150,170,160);
+ move_arm (0,5,150,180,160);
  open_hand_without_thumb();
- move_arm (0,20,190,205,0);
-   move_arm (20,25,230,240,0);
+ move_arm (0,20,190,205,160);
+   move_arm (20,25,230,240,160);
 //on releve de 150 (75 coude/75 epaule)
 printf("on releve le bras \n"); 
- //move_arm (120,90,95,90,0);
+ //move_arm (120,90,95,90,160);
 // hand_ILY_from_open();
 // on attend un peu
 // ThisThread::sleep_for(chrono::milliseconds(5000));

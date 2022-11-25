@@ -98,7 +98,7 @@ mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                     
 );
 //epaule haut
 mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                        //count_2_pin
-                              stop_pin = A1,               //pin de fin de course
+                              stop_pin = A0,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur 
@@ -117,7 +117,7 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                       
 );
 //coude
 mbed_hall_driven_motor motor_coude( encoder3.count ,                        //count_2_pin
-                              stop_pin = A2,               //pin de fin de course
+                              stop_pin = A0,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur 
@@ -136,7 +136,7 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
 );
 //poignet
 mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //count_2_pin
-                                stop_pin = A3,
+                                stop_pin = A0,
                                 pwm,
                                 forward_or_dir_pin = 10,
                                 backward_or_speed_pin = 11, 
@@ -157,7 +157,7 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
 // DigitalOut pinPB4(PA_6,0);
 // DigitalOut pinPA2(PA_2,0);
 mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //count_2_pin
-                                stop_pin = A4  ,
+                                stop_pin = A0 ,
                                 pwm,
                                 forward_or_dir_pin = 6,
                                 backward_or_speed_pin = 7, 
@@ -172,7 +172,7 @@ mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //
                                 coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 38.8 ,
-                                end_stop_type  = 0);
+                                end_stop_type  = 1);
 
 
 
