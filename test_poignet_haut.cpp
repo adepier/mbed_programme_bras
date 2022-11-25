@@ -56,18 +56,18 @@ int main()
   //démarrage des threads
   thread_motor_poignet_haut.start(callback(run_motor_in_thread, &motor_poignet_haut));
 
-  //on met les moteur en place pour la premiere fois
+//   //on met les moteur en place pour la premiere fois
 
-   motor_poignet_haut._target = 0; //+87 deg sur le poignet pour être à l'horizontal
+//    motor_poignet_haut._target = 0; //+87 deg sur le poignet pour être à l'horizontal
 
-  printf("mise en position initiale angle: %f\n",  motor_poignet_haut.get_angle());
-  event_flag.set(FLAG_START_POIGNET_HAUT); // démarre les moteurs
+//   printf("mise en position initiale angle: %f\n",  motor_poignet_haut.get_angle());
+//   event_flag.set(FLAG_START_POIGNET_HAUT); // démarre les moteurs
 
-  event_flag.wait_all(FLAG_STOP_POIGNET_HAUT); // attend que les moteurs
-  printf("fin mise en position initiale angle: %f\n stop 5sec...\n",  motor_poignet_haut.get_angle());
+//   event_flag.wait_all(FLAG_STOP_POIGNET_HAUT); // attend que les moteurs
+//   printf("fin mise en position initiale angle: %f\n stop 5sec...\n",  motor_poignet_haut.get_angle());
 
-// on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(1000));
+// // on attend un peu
+//     ThisThread::sleep_for(chrono::milliseconds(1000));
 
   //pour afficher les courbes
   // printf("commande \t reponse \n");
