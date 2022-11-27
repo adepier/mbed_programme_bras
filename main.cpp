@@ -1,11 +1,11 @@
 #include "config_motor.hpp"
-
+ 
 //Threads moteur
-Thread thread_motor_coude;
-Thread thread_motor_poignet;
-Thread thread_motor_epaule_a_plat;
-Thread thread_motor_epaule_haut;
-Thread thread_motor_poignet_haut;
+Thread thread_motor_coude(osPriorityNormal,1000, nullptr,  nullptr);
+Thread thread_motor_poignet(osPriorityNormal,1000, nullptr,  nullptr);
+Thread thread_motor_epaule_a_plat(osPriorityNormal,1000, nullptr,  nullptr);
+Thread thread_motor_epaule_haut(osPriorityNormal,1000, nullptr,  nullptr);
+Thread thread_motor_poignet_haut(osPriorityNormal,1000, nullptr,  nullptr);
 //Threads moteur main
 Thread thread_motor_doigt0;
 Thread thread_motor_doigt1;
@@ -90,7 +90,22 @@ void init()
   current1.SetShuntConversionTime(INA3221_588_US);
   current1.SetBusConversionTime(INA3221_140_US);
 
+ //démarrage des doigts
+  thread_motor_doigt0.start(callback(run_motor_doigt_in_thread, &doigt_0)); 
+  thread_motor_doigt1.start(callback(run_motor_doigt_in_thread, &doigt_1)); 
+  thread_motor_doigt2.start(callback(run_motor_doigt_in_thread, &doigt_2)); 
+  thread_motor_doigt3.start(callback(run_motor_doigt_in_thread, &doigt_3)); 
+  thread_motor_doigt4.start(callback(run_motor_doigt_in_thread, &doigt_4)); 
+  thread_motor_doigt5.start(callback(run_motor_doigt_in_thread, &doigt_5));
  
+//démarrage des moteurs
+  thread_motor_coude.start(callback(run_motor_in_thread, &motor_coude));
+  thread_motor_poignet.start(callback(run_motor_in_thread, &motor_poignet));
+  thread_motor_epaule_a_plat.start(callback(run_motor_in_thread, &motor_epaule_a_plat));
+  thread_motor_epaule_haut.start(callback(run_motor_in_thread, &motor_epaule_haut));
+  thread_motor_poignet_haut.start(callback(run_motor_in_thread, &motor_poignet_haut));
+
+
   
 
   //synchronise les moteurs
@@ -120,56 +135,8 @@ void init()
     motor_poignet_haut.set_speed_sync(&motor_poignet); 
   // motor_coude.set_speed_sync_2(angle_epaule_a_plat,true,true);
 }
-//###########################
-//           Fonction demmarre les threads dbras
-//##########################
-void start_arm()
-{ //démarrage des moteurs
-  thread_motor_coude.start(callback(run_motor_in_thread, &motor_coude));
-  thread_motor_poignet.start(callback(run_motor_in_thread, &motor_poignet));
-  thread_motor_epaule_a_plat.start(callback(run_motor_in_thread, &motor_epaule_a_plat));
-  thread_motor_epaule_haut.start(callback(run_motor_in_thread, &motor_epaule_haut));
-  thread_motor_poignet_haut.start(callback(run_motor_in_thread, &motor_poignet_haut));
+ 
 
-   }
-//###########################
-//           Fonction stop les threads du bras
-//##########################
-void stop_arm()
-{  
-  //démarrage des moteurs
-  thread_motor_coude.terminate();
-  thread_motor_poignet.terminate();
-  thread_motor_epaule_a_plat.terminate();
-  thread_motor_epaule_haut.terminate();
-  thread_motor_poignet_haut.terminate();
-
-   }
-
-//###########################
-//           Fonction demmarre les threads de la main
-//##########################
-void start_hand()
-{ //démarrage des doigts
-  thread_motor_doigt0.start(callback(run_motor_doigt_in_thread, &doigt_0)); 
-  thread_motor_doigt1.start(callback(run_motor_doigt_in_thread, &doigt_1)); 
-  thread_motor_doigt2.start(callback(run_motor_doigt_in_thread, &doigt_2)); 
-  thread_motor_doigt3.start(callback(run_motor_doigt_in_thread, &doigt_3)); 
-  thread_motor_doigt4.start(callback(run_motor_doigt_in_thread, &doigt_4)); 
-  thread_motor_doigt5.start(callback(run_motor_doigt_in_thread, &doigt_5));
-   }
-//###########################
-//           Fonction stop les threads de la main
-//##########################
-void stop_hand()
-{ //démarrage des doigts
-  thread_motor_doigt0.terminate(); 
-  thread_motor_doigt1.terminate(); 
-  thread_motor_doigt2.terminate(); 
-  thread_motor_doigt3.terminate(); 
-  thread_motor_doigt4.terminate(); 
-  thread_motor_doigt5.terminate(); 
-   }
 
 //###########################
 //           Fonction Ouvre la main
@@ -177,7 +144,7 @@ void stop_hand()
 
 void open_hand()
 {
-  start_hand();
+  
    doigt_1.set_target_to_open() ;// on ouvre le doigt
     doigt_2.set_target_to_open() ;// on ouvre le doigt
     doigt_3.set_target_to_open() ;// on ouvre le doigt
@@ -191,7 +158,7 @@ void open_hand()
     doigt_0.set_target_to_open_to_endstop(); //on ouvre la pince
       event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
-    stop_hand();
+    
     printf("la pince est ouverte\n  " );
 }
 //###########################
@@ -200,7 +167,7 @@ void open_hand()
 
 void open_hand_without_thumb()
 {
-  start_hand();
+  
    doigt_1.set_target_to_open() ;// on ouvre le doigt
     doigt_2.set_target_to_open() ;// on ouvre le doigt
     doigt_3.set_target_to_open() ;// on ouvre le doigt
@@ -209,7 +176,7 @@ void open_hand_without_thumb()
     printf("on ouvre le doigt \n ");
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
-    stop_hand();
+    
     printf("le doigt est ouvert\n stop 5sec...\n" );
      
 }
@@ -219,11 +186,11 @@ void open_hand_without_thumb()
 
 void close_thumb()
 {
-  start_hand();
+  
     doigt_0.set_target_to_close_to_endstop(); //on ferme la pince
       event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
-    stop_hand();
+    
     printf("la pince est fermée\n  " );
      
 }
@@ -233,7 +200,7 @@ void close_thumb()
 
 void close_hand()
 {
-  start_hand();
+  
     doigt_0.set_target_to_close_to_endstop(); //on ferme la pince
       event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
@@ -247,7 +214,7 @@ void close_hand()
     printf("on ferme et stop\n" );
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
-    stop_hand();
+    
     printf("le doigt est fermé\n stop 5sec...\n" );
 }
 //###########################
@@ -256,7 +223,7 @@ void close_hand()
 
 void hand_ILY_from_open()
 {  
-  start_hand();
+  
      // on définit la nouvelle cible 
     doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
@@ -264,7 +231,7 @@ void hand_ILY_from_open()
     printf("on ferme et stop\n" );
     event_flag.set( FLAG_START_DOIGT_2 |  FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4  );     // démarre les moteurs
     event_flag.wait_all( FLAG_STOP_DOIGT_2 |FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4  ); // attend que les moteurs
-    stop_hand();
+    
     printf("le doigt est fermé\n stop 5sec...\n" );
 }
 
@@ -307,18 +274,18 @@ if (last_target_poignet !=poignet){
   }
     
 if (last_target_poignet_haut !=poignet_haut){
-   flags_start = flags_start | FLAG_START_POIGNET_HAUT; //flags start
-   flags_stop = flags_stop | FLAG_STOP_POIGNET_HAUT; //flags stop
+    flags_start = flags_start | FLAG_START_POIGNET_HAUT; //flags start
+    flags_stop = flags_stop | FLAG_STOP_POIGNET_HAUT; //flags stop
   last_target_poignet_haut =poignet_haut;//retient la position
   motor_poignet_haut._target = poignet_haut; // définit les target
   }   
  
 
   printf("démarre les moteurs \n"); 
-  start_arm();
+ 
   event_flag.set(flags_start);  // démarre les moteurs 
   event_flag.wait_all(flags_stop ); // attend que les moteurs
-  stop_arm();
+ 
 }
 //###########################
 //           MAIN
@@ -333,17 +300,19 @@ int main()
 
   while (true)
   {
-   
-
-  move_arm (0,0,0,0,160);
+  
 //on met la main a l'horizontale
   move_arm (0,0,0,35,160);
 //on ouvre la main
  open_hand();
+
+
  
 printf("on baisse le bras pour prendre le verre \n"); 
 
  move_arm (20,25,230,240,160);
+
+ 
 //ferme le pouce
  close_thumb(); 
   
