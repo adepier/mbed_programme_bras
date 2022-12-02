@@ -81,7 +81,7 @@ int main()
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
     printf("le doigt est fermé\n stop 5sec...\n" );
     // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000));
+    ThisThread::sleep_for(chrono::milliseconds(1000));
 
     // on définit la nouvelle cible
 
@@ -91,16 +91,7 @@ int main()
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
     printf("le doigt est ouvert\n stop 5sec...\n" );
     // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000)); 
+    ThisThread::sleep_for(chrono::milliseconds(1000)); 
 
-    // // on définit la nouvelle cible
-
-    // doigt_0.set_target_to_close_and_keep() ;// on ouvre le doigt
-    // printf("on ferme le doigt et garde fermé ");
-    // event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
-    // event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
-    // printf("le doigt est fermé et continue de serrer pendant 5sec...\n" );
-    // // on attend un peu
-    // ThisThread::sleep_for(chrono::milliseconds(5000)); 
   }
 }

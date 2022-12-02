@@ -73,8 +73,8 @@ int main()
   while (true)
   {
      motor_coude._target = deplacement; // définit les target
+     motor_poignet._target = deplacement; // définit les target
      motor_poignet_haut._target = deplacement; // définit les target
-    motor_poignet_haut._target = deplacement; // définit les target
 
     printf("start deplacement \n");
     event_flag.set( FLAG_START_POIGNET|FLAG_START_POIGNET_HAUT|FLAG_START_COUDE);    // démarre les moteurs
@@ -87,7 +87,7 @@ int main()
 
     motor_coude._target = 0; // définit les target
     motor_poignet._target = 0; // définit les target
-     motor_poignet_haut._target = 0; // définit les target
+    motor_poignet_haut._target = 0; // définit les target
     
     printf("start retour a zero \n");
     event_flag.set( FLAG_START_POIGNET|FLAG_START_POIGNET_HAUT|FLAG_START_COUDE);    // démarre les moteurs

@@ -68,8 +68,8 @@ Encoder encoder5;
 
 Pin_interrupt counter1_1(D2,1,encoder1 );
 Pin_interrupt counter1_2(D3,2,encoder1 );
-Pin_interrupt counter2_1(D4,1,encoder2 );
-Pin_interrupt counter2_2(D5,2,encoder2 );
+Pin_interrupt counter2_1(D5,1,encoder2 );
+Pin_interrupt counter2_2(D4,2,encoder2 );
 Pin_interrupt counter3_1(D6,1,encoder3 );
 Pin_interrupt counter3_2(D9,2,encoder3 );
 Pin_interrupt counter4_1(D11,1,encoder4 );
@@ -81,8 +81,8 @@ Pin_interrupt counter5_2(D13,2,encoder5 );
 mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                           //count_2_pin 
                               stop_pin = A0,               //pin de fin de course
                               pwm,                            //carte pwm
-                              forward_or_dir_pin = 12,        //pin de commande de la direction du moteur
-                              backward_or_speed_pin = 13,     //pin de commande de la vitesse du moteur 
+                              forward_or_dir_pin = 4,        //pin de commande de la direction du moteur
+                              backward_or_speed_pin = 5,     //pin de commande de la vitesse du moteur 
                               motor_name = "epaule a plat",   //nom du moteur
                               motor_shield_type = 1,          // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_A_PLAT, //

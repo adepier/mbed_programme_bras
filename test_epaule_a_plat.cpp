@@ -9,28 +9,6 @@
 Thread thread_motor_epaule_a_plat;
 
 //###########################
-//           INIT
-//##########################
-void init()
-{
-  printf("init PWM\n");
-  pwm.begin();
-  pwm.setPWMFreq(1600); // This is the maximum PWM frequency
-  // RAZ pwm
-  for (uint8_t pwmnum = 0; pwmnum < 16; pwmnum++)
-  {
-    pwm.setPWM(pwmnum, 0, 0);
-  }
-
-  // init motor
-  motor_epaule_a_plat.init();
-  // motor_coude.set_debug_flag(true);
-  printf("init angle: %f\n stop 5sec...\n", motor_epaule_a_plat.get_angle());
-  // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000));
-}
-
-//###########################
 //           THREAD
 //##########################
 
@@ -48,6 +26,29 @@ void run_motor_in_thread(mbed_hall_driven_motor *motor)
     //  printf("stop motor %c \n",(char) motor->get_motor_name());
   }
 }
+//###########################
+//           INIT
+//##########################
+void init()
+{
+  printf("init PWM\n");
+  pwm.begin();
+  pwm.setPWMFreq(1600); // This is the maximum PWM frequency
+  // RAZ pwm
+  for (uint8_t pwmnum = 0; pwmnum < 16; pwmnum++)
+  {
+    pwm.setPWM(pwmnum, 0, 0);
+  }
+
+  // init motor
+  motor_epaule_a_plat.init();
+  //démarrage des threads
+  thread_motor_epaule_a_plat.start(callback(run_motor_in_thread, &motor_epaule_a_plat));
+ // motor_coude.set_debug_flag(true);
+  printf("init angle: %f\n ", motor_epaule_a_plat.get_angle());
+ 
+}
+
 
 //###########################
 //           MAIN
@@ -57,32 +58,13 @@ int main()
   // initialisation
   init();
 
-  //démarrage des threads
-  thread_motor_epaule_a_plat.start(callback(run_motor_in_thread, &motor_epaule_a_plat));
 
-  //on met les moteur en place pour la premiere fois
-
-  motor_epaule_a_plat._target = (0); //+87 deg sur le coude pour être à l'horizontal
-
-  printf("mise en position initiale angle: %f\n", motor_epaule_a_plat.get_angle());
-  event_flag.set(FLAG_START_EPAULE_A_PLAT); // démarre les moteurs
-
-  event_flag.wait_all(FLAG_STOP_EPAULE_A_PLAT); // attend que les moteurs
-  printf("fin mise en position initiale angle: %f\nstop 1sec...\n", motor_epaule_a_plat.get_angle());
-// on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(1000));
-  //pour afficher les courbes
-  // printf("commande \t reponse \n");
-
-  //synchronise le coude avec le poinet
-  //motor_coude.set_speed_sync(angle_motor_coude,false);
-
-  int deplacement = 5;
+  int deplacement = 180;
 
   while (true)
   {
 
-    motor_epaule_a_plat._target = motor_epaule_a_plat.get_angle() + deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_a_plat._target =  deplacement; //--> point bas le moteur fait 89->177     (+87 deg sur le coude pour être à l'horizontal)
 
     printf("start rotation horaire angle: %f\n", motor_epaule_a_plat.get_angle());
     event_flag.set(FLAG_START_EPAULE_A_PLAT);     // démarre les moteurs
@@ -93,7 +75,7 @@ int main()
 
     // on définit la nouvelle cible
 
-    motor_epaule_a_plat._target = motor_epaule_a_plat.get_angle() - deplacement; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
+    motor_epaule_a_plat._target =0; //--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
 
     printf("start rotation Anti-horaire angle: %f\n", motor_epaule_a_plat.get_angle());
     event_flag.set(FLAG_START_EPAULE_A_PLAT);     // démarre les moteurs
