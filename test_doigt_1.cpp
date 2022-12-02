@@ -14,14 +14,14 @@ Thread thread_motor_doigt1;
 void init()
 {
   printf("init PWM\n");
-  // pwm.begin();
+   pwm.begin();
   pwm1.begin();
-  // pwm.setPWMFreq(1600); // This is the maximum PWM frequency
+   pwm.setPWMFreq(1600); // This is the maximum PWM frequency
   pwm1.setPWMFreq(1600); // This is the maximum PWM frequency
   // RAZ pwm
   for (uint8_t pwmnum = 0; pwmnum < 16; pwmnum++)
   {
-    // pwm.setPWM(pwmnum, 0, 0);
+     pwm.setPWM(pwmnum, 0, 0);
     pwm1.setPWM(pwmnum, 0, 0);
   } 
   //init INA3221

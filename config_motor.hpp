@@ -180,8 +180,8 @@ mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //
 //petit doigt
 mbed_current_driven_motor doigt_5 (current1,
                                     pwm1,
-                                    11, //pin_IN1
-                                    10, //pin_IN2
+                                    10, //pin_IN1
+                                    11, //pin_IN2
                                     3, //current_sensor_chanel
                                     "doigt_5" ,//motor_name
                                     FLAG_START_DOIGT_5, //flag_start
@@ -230,8 +230,8 @@ mbed_current_driven_motor doigt_2 (current,
 //pouce 
 mbed_current_driven_motor doigt_1 (current,
                                     pwm1,
-                                    3, //pin_IN1
-                                    2, //pin_IN2
+                                    2, //pin_IN1
+                                    3, //pin_IN2
                                     2, //current_sensor_chanel
                                     "doigt_1" ,//motor_name
                                     FLAG_START_DOIGT_1, //flag_start
