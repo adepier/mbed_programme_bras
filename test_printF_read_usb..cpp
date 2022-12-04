@@ -11,6 +11,7 @@ static BufferedSerial pc(USBTX, USBRX);
 
 
 
+
 int main(void)
 {   
    double pi = 3.14159265359;
@@ -18,13 +19,14 @@ int main(void)
     string s = "Echoes back to the screen anything you type\0";
     char buffer[s.length() + 1];
     strcpy(buffer, s.c_str()); 
-    printf("%s %f\n", buffer,pi); 
-   
+    printf("%s %f\n", buffer,pi);  
     while (1) {
         if (pc.readable()) {
             ThisThread::sleep_for(1000);
-            pc.read(buffer, 10);
-            printf("I got '%s'\n", buffer);
+            char buffer1[10];
+            pc.read(buffer1, 10);
+            printf("\nI got '%s'\n", buffer1);
+            
         }
     }
 }
