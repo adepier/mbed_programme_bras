@@ -4,14 +4,21 @@
 #define BUILD_I2C_SLAVE 0 // Build for slave =1 or master=0 of this example
 #define SLAVE_ADDR 0xA0
 #define BUFFER_SIZE 6
+#define I2C_SDA PA_10
+#define I2C_SCL PA_9
+
+
 #if BUILD_I2C_SLAVE
-// Slave side of the example
+//********************************************* Slave side of the example
 #if !DEVICE_I2CSLAVE
 #error [NOT_SUPPORTED] I2C Slave is not supported
 #endif
 I2CSlave slave(I2C_SDA, I2C_SCL);
-int main() {
+// Create a serial object
+static BufferedSerial pc(USBTX, USBRX);
+int main() { 
     char buf[BUFFER_SIZE] = "ABCDE";
+    printf("I am the slave %s\n", buf ); 
     slave.address(SLAVE_ADDR);
     while (1) {
         int i = slave.receive();
@@ -33,7 +40,7 @@ int main() {
     }
 }
 #else
-// Master side of the example
+//******************************************* Master side of the example
 I2C master(I2C_SDA, I2C_SCL);
 static const char* to_send[] = { "abcde", "12345", "EFGHI" };
 int main() {

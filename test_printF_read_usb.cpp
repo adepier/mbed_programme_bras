@@ -7,11 +7,10 @@
 
 // Create a serial object
 static BufferedSerial pc(USBTX, USBRX);
-static BufferedSerial uart(D1, D0,9600);
 
  //The constructor takes in RX, and TX pin respectively.
 //These pins, for this example, are defined in mbed_app.json
-CAN can1(D10, D2);
+
 int flag=0;
 
 int main(void)
@@ -27,19 +26,9 @@ int main(void)
             ThisThread::sleep_for(1000);
             char buffer1[10];
             pc.read(buffer1, 10);
-            uart.write(buffer1,10);
-            flag=1;
-            ThisThread::sleep_for(1000);
-            while (flag==1) {
-            if (uart.readable()) {
-                ThisThread::sleep_for(1000);
-                char buffer2[10];
-                puartc1.read(buffer2, 10);
-                printf("\nI got 2 '%s'\n", buffer2);
-                flag=0;
-                }
-            }            
+            ThisThread::sleep_for(1000); 
         }
+        if (pc.writable()){pc.write(buffer1, 10);}
     }
 }
 
