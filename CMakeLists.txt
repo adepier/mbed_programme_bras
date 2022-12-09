@@ -51,7 +51,8 @@ add_executable(${APP_TARGET}
       #test_printF_read_usb_slave.cpp
       #test_SPI_slave.cpp
       #test_SPI_master.cpp
-      test_i2c_slave_and_master.cpp
+      #test_master_and_slave_i2c.cpp
+      test_master_and_slave_serial.cpp
       #test_scan_I2C.cpp
       
 
