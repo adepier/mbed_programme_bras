@@ -14,7 +14,7 @@ include(${MBED_PATH}/tools/cmake/app.cmake)
 project(${APP_TARGET})
 
 # ajoute les lib
-add_subdirectory(${MBED_PATH}  ${CMAKE_CURRENT_BINARY_DIR}/mbed-os )   
+add_subdirectory(${MBED_PATH}  ${CMAKE_CURRENT_BINARY_DIR}/mbed-os )     
 add_subdirectory(NamedType)   
 add_subdirectory(mbed_PWMServoDriver  )      
 add_subdirectory(mbed_hall_driven_motor )   
@@ -39,27 +39,35 @@ add_executable(${APP_TARGET}
       #test_doigt_1.cpp
       #test_doigt_0.cpp
       #test_doigt_1_a_5_ensemble.cpp
-      test_interruptions.cpp
+      #test_interruptions.cpp
       #test_digitalIn.cpp
       #test_poignet_poignet_haut_synchro.cpp
       #test_coude_poignet_poignet_haut_synchro.cpp
       #test_move.cpp
       #test_CAN_receive.cpp
-      #test_printF_read_usb..cpp
+      #test_printF_read_usb.cpp
+      #test_echo_serial.cpp
+      #test_echo_serial_master.cpp
+      #test_printF_read_usb_slave.cpp
       #test_SPI_slave.cpp
       #test_SPI_master.cpp
+      test_i2c_slave_and_master.cpp
+      #test_scan_I2C.cpp
+      
+
+
 )  
  
  
 
  target_sources(${APP_TARGET}
-    PRIVATE
+    PRIVATE 
 )
 
 # permet d'utiliser les lib sans le chemin
 target_link_libraries(${APP_TARGET} 
     PUBLIC 
-        mbed-os
+        mbed-os 
         mbed_PWMServoDriver
         mbed_hall_driven_motor
         NamedType
