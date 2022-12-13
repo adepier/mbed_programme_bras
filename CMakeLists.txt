@@ -27,6 +27,7 @@ add_subdirectory(Pin_interrupt  )
 
 add_executable(${APP_TARGET}
       #main.cpp
+      slave_to_can_or_serial.cpp
       #test_epaule_a_plat.cpp
       #test_epaule_haut.cpp
       #test_coude.cpp
@@ -43,15 +44,10 @@ add_executable(${APP_TARGET}
       #test_digitalIn.cpp
       #test_poignet_poignet_haut_synchro.cpp
       #test_coude_poignet_poignet_haut_synchro.cpp
-      #test_move.cpp
-      #test_CAN_receive.cpp
-      #test_printF_read_usb.cpp
+      #test_move.cpp 
       #test_echo_serial.cpp
-      #test_echo_serial_master.cpp
-      #test_printF_read_usb_slave.cpp
-      #test_SPI_slave.cpp
-      #test_SPI_master.cpp
-      test_master_and_slave_i2c.cpp
+      #test_printF_read_usb.cpp  
+      #test_master_and_slave_i2c.cpp
       #test_master_and_slave_serial.cpp
       #test_scan_I2C.cpp
       

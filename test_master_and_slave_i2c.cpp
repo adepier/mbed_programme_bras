@@ -6,8 +6,8 @@
 #define BUFFER_SIZE 6
 #define I2C_SDA PA_10
 #define I2C_SCL PA_9
-
-
+#define 	I2C_NOSTRETCH_ENABLE   I2C_CR1_NOSTRETCH
+/*****************use 4k7 pull-ups connected to SDA and SCL and to 3.3V but 5V is also working.!!!!!!!*/
 #if BUILD_I2C_SLAVE
 //********************************************* Slave side of the example
 #if !DEVICE_I2CSLAVE
