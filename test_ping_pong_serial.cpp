@@ -4,12 +4,10 @@
 #define MAXIMUM_BUFFER_SIZE 32
 #define BUFFER_CMDE_SIZE 64
 #define BUFFER_CMDE_NB 5
-#define BUFFER_I2C 5
 // Application buffer to receive the data
 char buf[MAXIMUM_BUFFER_SIZE] = {0};
 char cmd_list[BUFFER_CMDE_SIZE][BUFFER_CMDE_NB] = {0};
 char buf_cmde[BUFFER_CMDE_SIZE] = {0};
-char bufi2c[BUFFER_I2C] = {0};
 int nb_char_recu = 0;
 int nb_cmde_entree = 0;
 int nb_cmde_envoyee = 0;
@@ -19,13 +17,7 @@ int nb_cmde = 0;
 // Create a BufferedSerial object with a default baud rate.
 static BufferedSerial serial_port(USBTX, USBRX, 9600);
 
-#define SLAVE_ADDR 0xA0
-#define I2C_SDA PA_10
-#define I2C_SCL PA_9
-I2CSlave slave(I2C_SDA, I2C_SCL);
 
- 
-   
 
 void reception_cmde()
 { 
@@ -55,7 +47,7 @@ void reception_cmde()
 void envoi_cmde()
 {
     
-    if (nb_cmde > 0)
+    while (nb_cmde > 0)
     {
         for (int i = 0; i < BUFFER_CMDE_SIZE; i++)
         {
@@ -63,25 +55,17 @@ void envoi_cmde()
             // on vide la ligne
             cmd_list[i][nb_cmde_envoyee] = '\0';
         }
-         
+        buf_cmde[BUFFER_CMDE_SIZE-1]='\n';
         serial_port.write(buf_cmde, BUFFER_CMDE_SIZE);
-        // Write back the buffer from the master
-        slave.write(buf_cmde, BUFFER_CMDE_SIZE);
         nb_cmde_envoyee = (nb_cmde_envoyee + 1) % BUFFER_CMDE_NB; // % = modulo
-        nb_cmde--; 
+        nb_cmde--;
     }
-    
 }
 int main(void)
-{   
-    slave.address(SLAVE_ADDR);
+{
     while (1)
     {
         reception_cmde();
-
-        if( slave.receive()==I2CSlave::ReadAddressed)
-        {  envoi_cmde();
-        }
-        ;
+        envoi_cmde();
     }
 }
