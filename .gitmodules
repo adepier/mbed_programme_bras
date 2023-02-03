@@ -20,3 +20,6 @@
 [submodule "mbed_INA3221"]
 	path = mbed_INA3221
 	url = https://github.com/adepier/mbed_INA3221.git
+[submodule "pin_encoder"]
+	path = pin_encoder
+	url = https://github.com/adepier/pin_encoder.git
