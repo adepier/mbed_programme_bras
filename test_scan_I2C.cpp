@@ -2,13 +2,16 @@
 // Modified by Domen Ornik, 4.5.2015
  
 #include "mbed.h"
- 
-#define I2C_SDA PA_10
-#define I2C_SCL PA_9
+ //L432KC
+// #define I2C_SDA PB_7
+// #define I2C_SCL PB_6
+//L452RE
+ #define I2C_SDA PB_9
+ #define I2C_SCL PB_8
  
 I2C i2c(I2C_SDA , I2C_SCL );  
 int returnCode, address, numberOfDevices = 0;
-char outByte = 0xAA;
+char outByte = 1;//0xAA;
  
 int main() {
      

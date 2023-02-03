@@ -62,5 +62,5 @@ void Pin_interrupt::increment()
           _encoder->tic_backward = 0;  
       }
 }
-   
+ 
  

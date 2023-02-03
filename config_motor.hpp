@@ -8,9 +8,7 @@
 #include <list>
  #include "Pin_interrupt.h" 
 
-// Nucleo L432KC
-#define I2C_SDA PA_10
-#define I2C_SCL PA_9
+
 //#####POIGNET_haut 
 #define FLAG_START_POIGNET_HAUT  (1UL << 8) // 00000000000000000000000010000000
 #define FLAG_STOP_POIGNET_HAUT (1UL << 9) // 00000000000000000000001000000000
@@ -47,16 +45,8 @@
 
 int flag_speed_sync_coude;
 
-I2C i2c(I2C_SDA, I2C_SCL);
 
 EventFlags event_flag;
-
-mbed_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
-                                        // en PWM  (adresse I2C par defaut 0x40)
-                                        //epaule
-mbed_PWMServoDriver pwm1(0x41, i2c);  // deuxieme carte d'extension 16 sorties pour le pilotage de servos                                       
-INA3221 current(i2c,0x42);
-INA3221 current1(i2c,0x43);
 
 /****************************   BRAS  *******************************************************************************/
 
@@ -66,20 +56,49 @@ Encoder encoder3;
 Encoder encoder4;
 Encoder encoder5;
 
-Pin_interrupt counter1_1(D2,1,encoder1 );
-Pin_interrupt counter1_2(D3,2,encoder1 );
-Pin_interrupt counter2_1(D5,1,encoder2 );
-Pin_interrupt counter2_2(D4,2,encoder2 );
-Pin_interrupt counter3_1(D6,1,encoder3 );
-Pin_interrupt counter3_2(D9,2,encoder3 );
-Pin_interrupt counter4_1(D11,1,encoder4 );
-Pin_interrupt counter4_2(D10,2,encoder4 );
-Pin_interrupt counter5_1(D12,1,encoder5 );
-Pin_interrupt counter5_2(D13,2,encoder5 );
+// Nucleo L432KC
+// #define I2C_SDA D0
+// #define I2C_SCL D1
+// Pin_interrupt counter1_1(D2,1,encoder1 );
+// Pin_interrupt counter1_2(D3,2,encoder1 );
+// Pin_interrupt counter2_1(D5,1,encoder2 );
+// Pin_interrupt counter2_2(D4,2,encoder2 );
+// Pin_interrupt counter3_1(D6,1,encoder3 );
+// Pin_interrupt counter3_2(D9,2,encoder3 );
+// Pin_interrupt counter4_1(D11,1,encoder4 );
+// Pin_interrupt counter4_2(D10,2,encoder4 );
+// Pin_interrupt counter5_1(D12,1,encoder5 );
+// Pin_interrupt counter5_2(D13,2,encoder5 );
+ //L452RE
+ #define I2C_SDA PB_9
+ #define I2C_SCL PB_8
+ #define STOP_PIN PB_3
+Pin_interrupt counter1_1(PA_5,1,encoder1 );
+Pin_interrupt counter1_2(PA_6,2,encoder1 );
+Pin_interrupt counter2_1(PA_7,1,encoder2 );
+Pin_interrupt counter2_2(PB_2,2,encoder2 );
+Pin_interrupt counter3_1(PB_1,1,encoder3 );
+Pin_interrupt counter3_2(PB_15,2,encoder3 );
+Pin_interrupt counter4_1(PB_13,1,encoder4 );
+Pin_interrupt counter4_2(PB_14,2,encoder4 );
+Pin_interrupt counter5_1(PB_10,1,encoder5 );
+Pin_interrupt counter5_2(PB_4,2,encoder5 );
+CAN can1(PA_11, PA_12);
+ 
+
+I2C i2c(I2C_SDA, I2C_SCL);
+
+
+mbed_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
+                                        // en PWM  (adresse I2C par defaut 0x40)
+                                        //epaule
+mbed_PWMServoDriver pwm1(0x41, i2c);  // deuxieme carte d'extension 16 sorties pour le pilotage de servos                                       
+INA3221 current(i2c,0x42);
+INA3221 current1(i2c,0x43);
 
 //epaule à plat
 mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                           //count_2_pin 
-                              stop_pin = A0,               //pin de fin de course
+                              stop_pin = STOP_PIN,               //pin de fin de course
                               pwm,                            //carte pwm
                               forward_or_dir_pin = 4,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 5,     //pin de commande de la vitesse du moteur 
@@ -98,7 +117,7 @@ mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                     
 );
 //epaule haut
 mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                        //count_2_pin
-                              stop_pin = A0,               //pin de fin de course
+                              stop_pin = STOP_PIN,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 2,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 3,     //pin de commande de la vitesse du moteur 
@@ -117,7 +136,7 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                       
 );
 //coude
 mbed_hall_driven_motor motor_coude( encoder3.count ,                        //count_2_pin
-                              stop_pin = A0,               //pin de fin de course
+                              stop_pin = STOP_PIN,               //pin de fin de course
                               pwm,                           //carte pwm
                               forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
                               backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur 
@@ -136,7 +155,7 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
 );
 //poignet
 mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //count_2_pin
-                                stop_pin = A0,
+                                stop_pin = STOP_PIN,
                                 pwm,
                                 forward_or_dir_pin = 10,
                                 backward_or_speed_pin = 11, 
@@ -157,7 +176,7 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
 // DigitalOut pinPB4(PA_6,0);
 // DigitalOut pinPA2(PA_2,0);
 mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //count_2_pin
-                                stop_pin = A0 ,
+                                stop_pin = STOP_PIN ,
                                 pwm,
                                 forward_or_dir_pin = 6,
                                 backward_or_speed_pin = 7, 

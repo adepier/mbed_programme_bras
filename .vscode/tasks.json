@@ -25,13 +25,28 @@
     },
     "tasks": [
         {
-            "label": "compile",
+            "label": "compile L432KC",
             "group": "build",
             "command": "mbed-tools",
             "args": [
                 "compile",
                 "-m",
                 "NUCLEO_L432KC",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "../mbed-os"
+               
+            ]
+        },
+        {
+            "label": "compile L452RE",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "compile",
+                "-m",
+                "NUCLEO_L452RE_P",
                 "-t",
                 "GCC_ARM",
                 "--mbed-os-path",
@@ -84,6 +99,23 @@
                 "-f",
                 "",
                 "--sterm",
+                ""
+            ]
+        },{
+            "label": "compile/flash",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "compile",
+                "-m",
+                "NUCLEO_L432KC",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "../mbed-os",
+                "-f",
+                "",
+                "",
                 ""
             ]
         },

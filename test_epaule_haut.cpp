@@ -31,8 +31,15 @@ void run_motor_in_thread(mbed_hall_driven_motor *motor)
 //##########################
 void init()
 {
+  
+  // char data[] = {PCA9685_MODE1, MODE1_RESTART};
+  //   if(i2c.write(0x40, data, 2))
+  //   {  
+  //       printf(" No ACK on i2c write!\n"); 
+  //   }
   printf("init PWM\n");
   pwm.begin();
+    printf("setPWMFreq PWM\n");
   pwm.setPWMFreq(1600); // This is the maximum PWM frequency
   // RAZ pwm
   for (uint8_t pwmnum = 0; pwmnum < 16; pwmnum++)
@@ -41,12 +48,13 @@ void init()
   }
 
   // init motor
+          printf("Count2 :   %d:   %d:   %d\n", encoder2.count,encoder2.tic_backward,encoder2.tic_forward);
   motor_epaule_haut.init();
   // motor_coude.set_debug_flag(true);
  //démarrage des threads
   thread_motor_epaule_haut.start(callback(run_motor_in_thread, &motor_epaule_haut));
  printf("init angle: %f\n stop 5sec...\n",  motor_epaule_haut.get_angle());
-  
+          printf("Count2 :   %d:   %d:   %d\n", encoder2.count,encoder2.tic_backward,encoder2.tic_forward);
 }
 
 
@@ -58,7 +66,7 @@ int main()
   // initialisation
   init();
 
-  int deplacement = 90;
+  int deplacement = 5;
 
   while (true)
   {
@@ -70,7 +78,7 @@ int main()
     event_flag.wait_all(FLAG_STOP_EPAULE_HAUT); // attend que les moteurs
     printf("fin rotation horaire angle: %f\nstop 1sec...\n",   motor_epaule_haut.get_angle());
     // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(1000));
+    ThisThread::sleep_for(chrono::milliseconds(1s));
 
     // on définit la nouvelle cible
 
@@ -82,6 +90,6 @@ int main()
     printf("fin rotation Anti-horaire angle: %f\nstop 1sec...\n",   motor_epaule_haut.get_angle());
 
     // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(1000));
+    ThisThread::sleep_for(chrono::milliseconds(1s));
   }
 }

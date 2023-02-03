@@ -12,7 +12,8 @@ public:
   void  fall_1();
   void  fall_2();
   void  rise_2();
-  void  increment();
+  void  increment(); 
+
 
 
 

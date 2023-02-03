@@ -59,7 +59,7 @@ int main()
   init();
 
 
-  int deplacement = 180;
+  int deplacement = 5;
 
   while (true)
   {

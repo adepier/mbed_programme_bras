@@ -75,7 +75,7 @@ int main()
   //synchronise le poignet avec le poinet
   //motor_poignet_haut.set_speed_sync(angle_motor_poignet_haut,false);
 
-  double deplacement = 160;
+  double deplacement = 10;
 
   while (true)
   {

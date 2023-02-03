@@ -26,7 +26,7 @@ add_subdirectory(mbed_current_driven_motor  )
 add_subdirectory(Pin_interrupt  ) 
 
 add_executable(${APP_TARGET}
-      #main.cpp
+      main.cpp
       #slave_to_can_or_serial.cpp
       #test_epaule_a_plat.cpp
       #test_epaule_haut.cpp
@@ -46,9 +46,11 @@ add_executable(${APP_TARGET}
       #test_coude_poignet_poignet_haut_synchro.cpp
       #test_move.cpp  
       #test_printF_read_usb.cpp  
-      test_master_and_slave_i2c.cpp
+      #test_master_and_slave_i2c.cpp
       #test_master_and_slave_serial.cpp
       #test_scan_I2C.cpp
+      #test_ping_pong_serial.cpp
+      #test_master_i2c.cpp
       
 
 
