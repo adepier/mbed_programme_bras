@@ -4,12 +4,12 @@
  */
 
 #include "mbed.h" 
- #include "Pin_interrupt.h"  
-Encoder encoder1;
-Encoder encoder2;
-Encoder encoder3;
-Encoder encoder4;
-Encoder encoder5; 
+ #include "pin_encoder.h"  
+encoder_values encoder1;
+encoder_values encoder2;
+encoder_values encoder3;
+encoder_values encoder4;
+encoder_values encoder5; 
 
 
  //L452RE
@@ -17,16 +17,16 @@ Encoder encoder5;
  #define I2C_SCL PB_8
 DigitalInOut mypin0(PB_3,PIN_OUTPUT,PullDown,0); 
 
-Pin_interrupt counter1_1(PA_5,1,encoder1 );
-Pin_interrupt counter1_2(PA_6,2,encoder1 );
-Pin_interrupt counter2_1(PA_7,1,encoder2 );
-Pin_interrupt counter2_2(PB_2,2,encoder2 );
-Pin_interrupt counter3_1(PB_1,1,encoder3 );
-Pin_interrupt counter3_2(PB_15,2,encoder3 );
-Pin_interrupt counter4_1(PB_14,1,encoder4 );
-Pin_interrupt counter4_2(PB_13,2,encoder4 );
-Pin_interrupt counter5_1(PB_10,1,encoder5 );
-Pin_interrupt counter5_2(PB_4,2,encoder5 );
+pin_encoder counter1_1(PA_5,1,encoder1 );
+pin_encoder counter1_2(PA_6,2,encoder1 );
+pin_encoder counter2_1(PA_7,1,encoder2 );
+pin_encoder counter2_2(PB_2,2,encoder2 );
+pin_encoder counter3_1(PB_1,1,encoder3 );
+pin_encoder counter3_2(PB_15,2,encoder3 );
+pin_encoder counter4_1(PB_14,1,encoder4 );
+pin_encoder counter4_2(PB_13,2,encoder4 );
+pin_encoder counter5_1(PB_10,1,encoder5 );
+pin_encoder counter5_2(PB_4,2,encoder5 );
 CAN can1(PA_11, PA_12);
 
  //L432KC
@@ -35,21 +35,21 @@ CAN can1(PA_11, PA_12);
 
 // DigitalInOut mypin0(PA_0,PIN_OUTPUT,PullDown,0); 
 
-// Pin_interrupt counter1_1(D2,1,encoder1 );
-// Pin_interrupt counter1_2(D3,2,encoder1 );
-// Pin_interrupt counter2_1(D4,1,encoder2 );
-// Pin_interrupt counter2_2(D5,2,encoder2 );
-// Pin_interrupt counter3_1(D6,1,encoder3 );
-// Pin_interrupt counter3_2(D9,2,encoder3 );
-// Pin_interrupt counter4_1(D10,1,encoder4 );
-// Pin_interrupt counter4_2(D11,2,encoder4 );
-// Pin_interrupt counter5_1(D12,1,encoder5 );
-// Pin_interrupt counter5_2(D13,2,encoder5 );
+// pin_encoder counter1_1(D2,1,encoder1 );
+// pin_encoder counter1_2(D3,2,encoder1 );
+// pin_encoder counter2_1(D4,1,encoder2 );
+// pin_encoder counter2_2(D5,2,encoder2 );
+// pin_encoder counter3_1(D6,1,encoder3 );
+// pin_encoder counter3_2(D9,2,encoder3 );
+// pin_encoder counter4_1(D10,1,encoder4 );
+// pin_encoder counter4_2(D11,2,encoder4 );
+// pin_encoder counter5_1(D12,1,encoder5 );
+// pin_encoder counter5_2(D13,2,encoder5 );
 
 
 I2C i2c(I2C_SDA, I2C_SCL);
-// Pin_interrupt counter6_2(PC_4,1,encoder5 );
-// Pin_interrupt counter6_2(PC_6,2,encoder5 );
+// pin_encoder counter6_2(PC_4,1,encoder5 );
+// pin_encoder counter6_2(PC_6,2,encoder5 );
  
 int test;
 int returnCode, address, numberOfDevices = 0;

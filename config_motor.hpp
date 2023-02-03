@@ -6,7 +6,7 @@
 #include "mbed.h"
 #include "mbed_current_driven_motor.h"
 #include <list>
- #include "Pin_interrupt.h" 
+ #include "pin_encoder.h" 
 
 
 //#####POIGNET_haut 
@@ -50,39 +50,39 @@ EventFlags event_flag;
 
 /****************************   BRAS  *******************************************************************************/
 
-Encoder encoder1;
-Encoder encoder2;
-Encoder encoder3;
-Encoder encoder4;
-Encoder encoder5;
+encoder_values encoder1;
+encoder_values encoder2;
+encoder_values encoder3;
+encoder_values encoder4;
+encoder_values encoder5;
 
 // Nucleo L432KC
 // #define I2C_SDA D0
 // #define I2C_SCL D1
-// Pin_interrupt counter1_1(D2,1,encoder1 );
-// Pin_interrupt counter1_2(D3,2,encoder1 );
-// Pin_interrupt counter2_1(D5,1,encoder2 );
-// Pin_interrupt counter2_2(D4,2,encoder2 );
-// Pin_interrupt counter3_1(D6,1,encoder3 );
-// Pin_interrupt counter3_2(D9,2,encoder3 );
-// Pin_interrupt counter4_1(D11,1,encoder4 );
-// Pin_interrupt counter4_2(D10,2,encoder4 );
-// Pin_interrupt counter5_1(D12,1,encoder5 );
-// Pin_interrupt counter5_2(D13,2,encoder5 );
+// pin_encoder counter1_1(D2,1,encoder1 );
+// pin_encoder counter1_2(D3,2,encoder1 );
+// pin_encoder counter2_1(D5,1,encoder2 );
+// pin_encoder counter2_2(D4,2,encoder2 );
+// pin_encoder counter3_1(D6,1,encoder3 );
+// pin_encoder counter3_2(D9,2,encoder3 );
+// pin_encoder counter4_1(D11,1,encoder4 );
+// pin_encoder counter4_2(D10,2,encoder4 );
+// pin_encoder counter5_1(D12,1,encoder5 );
+// pin_encoder counter5_2(D13,2,encoder5 );
  //L452RE
  #define I2C_SDA PB_9
  #define I2C_SCL PB_8
  #define STOP_PIN PB_3
-Pin_interrupt counter1_1(PA_5,1,encoder1 );
-Pin_interrupt counter1_2(PA_6,2,encoder1 );
-Pin_interrupt counter2_1(PA_7,1,encoder2 );
-Pin_interrupt counter2_2(PB_2,2,encoder2 );
-Pin_interrupt counter3_1(PB_1,1,encoder3 );
-Pin_interrupt counter3_2(PB_15,2,encoder3 );
-Pin_interrupt counter4_1(PB_13,1,encoder4 );
-Pin_interrupt counter4_2(PB_14,2,encoder4 );
-Pin_interrupt counter5_1(PB_10,1,encoder5 );
-Pin_interrupt counter5_2(PB_4,2,encoder5 );
+pin_encoder counter1_1(PA_5,1,encoder1 );
+pin_encoder counter1_2(PA_6,2,encoder1 );
+pin_encoder counter2_1(PA_7,1,encoder2 );
+pin_encoder counter2_2(PB_2,2,encoder2 );
+pin_encoder counter3_1(PB_1,1,encoder3 );
+pin_encoder counter3_2(PB_15,2,encoder3 );
+pin_encoder counter4_1(PB_13,1,encoder4 );
+pin_encoder counter4_2(PB_14,2,encoder4 );
+pin_encoder counter5_1(PB_10,1,encoder5 );
+pin_encoder counter5_2(PB_4,2,encoder5 );
 CAN can1(PA_11, PA_12);
  
 

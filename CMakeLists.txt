@@ -23,7 +23,7 @@ add_subdirectory(mbed_MPU6050 )
 add_subdirectory(mbed_I2Cdev )   
 add_subdirectory(mbed_INA3221  ) 
 add_subdirectory(mbed_current_driven_motor  ) 
-add_subdirectory(Pin_interrupt  ) 
+add_subdirectory(pin_encoder  ) 
 
 add_executable(${APP_TARGET}
       main.cpp
@@ -74,7 +74,7 @@ target_link_libraries(${APP_TARGET}
         mbed_I2Cdev 
         mbed_INA3221
         mbed_current_driven_motor
-        Pin_interrupt)
+        pin_encoder)
 
 mbed_set_post_build(${APP_TARGET})
 

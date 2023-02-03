@@ -1,18 +1,18 @@
-#include "Pin_interrupt.h" 
+#include "pin_encoder.h" 
 
-Pin_interrupt::Pin_interrupt(PinName pin , int num_compteur, Encoder &encoder) : _interrupt(pin,PullDown)          // create the InterruptIn on the pin specified to MyInterrupt
+pin_encoder::pin_encoder(PinName pin , int num_compteur, encoder_values &encoder) : _interrupt(pin,PullDown)          // create the InterruptIn on the pin specified to MyInterrupt
     {   
          if (num_compteur==1)
         {
            // attach increment function of this counter instance
-            _interrupt.rise(callback(this, &Pin_interrupt::increment)); 
-            _interrupt.fall(callback(this, &Pin_interrupt::fall_1)); 
+            _interrupt.rise(callback(this, &pin_encoder::increment)); 
+            _interrupt.fall(callback(this, &pin_encoder::fall_1)); 
              }
         if (num_compteur==2)
         {
            // attach increment function of this counter instance
-            _interrupt.rise(callback(this, &Pin_interrupt::rise_2)); 
-            _interrupt.fall(callback(this, &Pin_interrupt::fall_2)); 
+            _interrupt.rise(callback(this, &pin_encoder::rise_2)); 
+            _interrupt.fall(callback(this, &pin_encoder::fall_2)); 
              }
         
         _encoder   = &encoder; 
@@ -27,26 +27,26 @@ dans le sens aller, on doit avoir la trame :  0 -> 21 -> 10 -> 20 =>  51
 dans le sens retour, on doit avoir la trame : 0 -> 20 -> 10 -> 21 =>  51
 */
 
-   void Pin_interrupt::fall_1()
+   void pin_encoder::fall_1()
 {
       if (_encoder->tic_forward==21) {_encoder->tic_forward=31; };
       if (_encoder->tic_backward==20) {_encoder->tic_backward=30; };
 }
-void Pin_interrupt::fall_2()
+void pin_encoder::fall_2()
 {
    if (_encoder->tic_forward==31) {_encoder->tic_forward=51; };
    if (_encoder->tic_backward==0) {_encoder->tic_backward=20; };
      
 }
 
-void Pin_interrupt::rise_2()
+void pin_encoder::rise_2()
 {
    if (_encoder->tic_forward==0) {_encoder->tic_forward=21 ;};
    if (_encoder->tic_backward==30) {_encoder->tic_backward=51; };
      
 }
 
-void Pin_interrupt::increment()
+void pin_encoder::increment()
 {
       //on est arrivé a bout de la trame, on incremente le compteur
       if (_encoder->tic_forward==51){_encoder->count=_encoder->count+1;};
