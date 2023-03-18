@@ -26,12 +26,12 @@ add_subdirectory(mbed_current_driven_motor  )
 add_subdirectory(pin_encoder  ) 
 
 add_executable(${APP_TARGET}
-      main.cpp
+      #main.cpp
       #slave_to_can_or_serial.cpp
       #test_epaule_a_plat.cpp
       #test_epaule_haut.cpp
       #test_coude.cpp
-      #test_poignet.cpp     
+      test_poignet.cpp     
       #test_poignet_haut.cpp
       #test_doigt_5.cpp
       #test_doigt_4.cpp

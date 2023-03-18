@@ -73,26 +73,24 @@ encoder_values encoder5;
  #define I2C_SDA PB_9
  #define I2C_SCL PB_8
  #define STOP_PIN PB_3
-pin_encoder counter1_1(PA_5,1,encoder1 );
-pin_encoder counter1_2(PA_6,2,encoder1 );
-pin_encoder counter2_1(PA_7,1,encoder2 );
-pin_encoder counter2_2(PB_2,2,encoder2 );
+pin_encoder counter1_1(PA_6,1,encoder1 );
+pin_encoder counter1_2(PA_5,2,encoder1 );
+pin_encoder counter2_1(PA_7,2,encoder2 );
+pin_encoder counter2_2(PB_2,1,encoder2 );
 pin_encoder counter3_1(PB_1,1,encoder3 );
 pin_encoder counter3_2(PB_15,2,encoder3 );
 pin_encoder counter4_1(PB_13,1,encoder4 );
 pin_encoder counter4_2(PB_14,2,encoder4 );
-pin_encoder counter5_1(PB_10,1,encoder5 );
-pin_encoder counter5_2(PB_4,2,encoder5 );
+pin_encoder counter5_1(PB_10,2,encoder5 );
+pin_encoder counter5_2(PB_4,1,encoder5 );
 CAN can1(PA_11, PA_12);
  
 
 I2C i2c(I2C_SDA, I2C_SCL);
 
 
-mbed_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage de servos
-                                        // en PWM  (adresse I2C par defaut 0x40)
-                                        //epaule
-mbed_PWMServoDriver pwm1(0x41, i2c);  // deuxieme carte d'extension 16 sorties pour le pilotage de servos                                       
+mbed_PWMServoDriver pwm(0x40, i2c); // Carte d'extension 16 sorties pour le pilotage des moteurs du bras
+mbed_PWMServoDriver pwm1(0x41, i2c);  // deuxieme carte d'extension 16 sorties pour le pilotage de la main                                      
 INA3221 current(i2c,0x42);
 INA3221 current1(i2c,0x43);
 
@@ -100,8 +98,8 @@ INA3221 current1(i2c,0x43);
 mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                           //count_2_pin 
                               stop_pin = STOP_PIN,               //pin de fin de course
                               pwm,                            //carte pwm
-                              forward_or_dir_pin = 4,        //pin de commande de la direction du moteur
-                              backward_or_speed_pin = 5,     //pin de commande de la vitesse du moteur 
+                              forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
+                              backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur 
                               motor_name = "epaule a plat",   //nom du moteur
                               motor_shield_type = 1,          // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_A_PLAT, //
@@ -113,7 +111,8 @@ mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                     
                               coef_Ki = 0.005,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 21.65  ,
-                              end_stop_type  = 1  
+                              end_stop_type  = 1 ,
+                                false /*reverse rotation*/ 
 );
 //epaule haut
 mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                        //count_2_pin
@@ -132,14 +131,15 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                       
                               coef_Ki = 0.1,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 20 ,
-                                end_stop_type  = 1  
+                                end_stop_type  = 1 ,
+                                false /*reverse rotation*/ 
 );
 //coude
 mbed_hall_driven_motor motor_coude( encoder3.count ,                        //count_2_pin
                               stop_pin = STOP_PIN,               //pin de fin de course
                               pwm,                           //carte pwm
-                              forward_or_dir_pin = 0,        //pin de commande de la direction du moteur
-                              backward_or_speed_pin = 1,     //pin de commande de la vitesse du moteur 
+                              forward_or_dir_pin = 4,        //pin de commande de la direction du moteur
+                              backward_or_speed_pin = 5,     //pin de commande de la vitesse du moteur 
                               motor_name = "Coude",          //nom du moteur
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_COUDE, //
@@ -151,14 +151,15 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
                               coef_Ki = 0.5,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 21.65  ,
-                                end_stop_type  = 1  
+                                end_stop_type  = 1 ,
+                                false /*reverse rotation*/ 
 );
 //poignet
 mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //count_2_pin
                                 stop_pin = STOP_PIN,
                                 pwm,
-                                forward_or_dir_pin = 10,
-                                backward_or_speed_pin = 11, 
+                                forward_or_dir_pin = 6,
+                                backward_or_speed_pin = 7, 
                                 motor_name = "Poignet",
                                 motor_shield_type = 1,
                                 flag_start = FLAG_START_POIGNET,
@@ -170,7 +171,8 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
                                 coef_Ki = 1, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 18 ,
-                                end_stop_type  = 1  );
+                                end_stop_type  = 1 ,
+                                true /*reverse rotation*/ );
 
 //poignet haut
 // DigitalOut pinPB4(PA_6,0);
@@ -178,8 +180,8 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
 mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //count_2_pin
                                 stop_pin = STOP_PIN ,
                                 pwm,
-                                forward_or_dir_pin = 6,
-                                backward_or_speed_pin = 7, 
+                                forward_or_dir_pin = 8,
+                                backward_or_speed_pin = 9, 
                                 motor_name = "Poignet_haut",
                                 motor_shield_type = 1, // comme le type 1 mais inversé
                                 flag_start = FLAG_START_POIGNET_HAUT,
@@ -191,7 +193,8 @@ mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //
                                 coef_Ki = 0.01, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 38.8 ,
-                                end_stop_type  = 1);
+                                end_stop_type  = 1,
+                                true /*reverse rotation*/);
 
 
 
