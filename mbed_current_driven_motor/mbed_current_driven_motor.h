@@ -35,11 +35,13 @@ void set_target_to_close_and_stop();
 void set_target_to_open_to_endstop();
 void set_target_to_close_to_endstop();
 void set_target_to_open();
+bool get_position(); //0 = ouvert; 1= fermé
   
   //variables
-  
+ 
   string _motor_name; 
   bool _debug_flag;
+  bool current_position =0 ;
   int32_t _flag_start;
   int32_t _flag_stop;
   

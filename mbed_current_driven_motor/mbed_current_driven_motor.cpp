@@ -41,7 +41,9 @@ mbed_current_driven_motor::mbed_current_driven_motor(INA3221 &current,
   _nominal_speed=nominal_speed;
 }
 
-
+bool mbed_current_driven_motor::get_position() {//0 = ouvert; 1= fermé
+return current_position;
+} 
 
 //********************** methodes publiques
 void mbed_current_driven_motor::set_target_to_close_and_keep(){
@@ -68,67 +70,18 @@ void mbed_current_driven_motor::set_target_to_close_to_endstop(){
 
 void mbed_current_driven_motor::init()
 {
-  // printf("init %s\n", _motor_name.c_str());
-  // if (_current_limit>0)
-  // {set_target_to_open();
-  // }
-  // else{
-  //   set_target_to_open_to_endstop();
-  // }
-  // run(); 
-  // // log
-  // printf("fin init %s\n", _motor_name.c_str());
 }
  
 
 void mbed_current_driven_motor::run()
 {
   //0 = open , 1 = close and keep , 2 = close and stop, 3 = open to endstop , 4 = close to endstop
-  if (_target == 0)
- {
-  if (_debug_flag)
-      {
-        printf("run to open\n");
-      }
-  run_to_open();
- }
-  if (_target == 1)
- {
-  if (_debug_flag)
-      {
-        printf("run to close and keep\n");
-      }
-  run_to_close_and_keep();
- }
-  if (_target == 2)
- {
-  if (_debug_flag)
-      {
-        printf("run to close and stop\n");
-      }
-  run_to_close_and_stop();
- }
-
-  if (_target == 3)
- {
-  if (_debug_flag)
-      {
-        printf("run_open_to_endstop\n");
-      }
-  run_open_to_endstop();
- }
-  if (_target == 4)
- {
-  if (_debug_flag)
-      {
-        printf("run to close and stop\n");
-      }
-  run_close_to_endstop();
- }
-  if (_debug_flag)
-  {
-    printf("fin run moteur  \n" );
-  }
+  if (_target == 0) {if (_debug_flag){printf("run to open\n");}            run_to_open();           current_position=false; }
+  if (_target == 1) {if (_debug_flag){printf("run to close and keep\n");}  run_to_close_and_keep(); current_position=true;  }
+  if (_target == 2) {if (_debug_flag){printf("run to close and stop\n");}  run_to_close_and_stop(); current_position=true;  }
+  if (_target == 3) {if (_debug_flag){printf("run_open_to_endstop\n");}    run_open_to_endstop();   current_position=false; }
+  if (_target == 4) {if (_debug_flag){printf("run to close and stop\n");}  run_close_to_endstop();  current_position=true;  }
+  if (_debug_flag)  {printf("fin run moteur  \n" ); }
 }
 //********************** methodes privées
 

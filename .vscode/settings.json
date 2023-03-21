@@ -65,7 +65,8 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "pinnamestypes.h": "c",
-        "mstd_atomic": "cpp"
+        "mstd_atomic": "cpp",
+        "mstd_iterator": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.intelliSenseEngine": "Tag Parser",
