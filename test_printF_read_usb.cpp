@@ -31,5 +31,4 @@ int main(void)
         if (pc.writable()){pc.write(buffer1, 10);}
     }
 }
-
  

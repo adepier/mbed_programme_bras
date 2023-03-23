@@ -47,10 +47,25 @@ int main()
               }
               if (msg.data[1] == 101)
               {
-                // Envoyer l'accusé de réception
-                char data[2] = {(char)DEVICE_ID, (char)ACK_ID};
-                CANMessage ack(msg.data[0], data, 2);
+                // Envoyer l'accusé de réception avec la position des doigts sur 6 bits
+                int pos = 0;
+                pos = doigt_0.get_position() |
+                      doigt_1.get_position()<<1 |
+                      doigt_2.get_position()<<2 |
+                      doigt_3.get_position()<<3 |
+                      doigt_4.get_position()<<4 |
+                      doigt_5.get_position()<<5 ;
+                char data[4] = {(char)DEVICE_ID, (char)ACK_ID
+                                                , '1' /*angles valides le bras est a l'arret*/
+                                                , (char)pos};
+                CANMessage ack(msg.data[0], data, 4);
                 can.write(ack);
+                //pour le decoder 
+                //  int i;
+                // for (i = 0; i < 8; i++) {
+                //     printf("%d", !!((result << i) & 0x80));
+                // }
+                // printf("\n");
               }
             }
             //renvoie le l'accusé de réception
