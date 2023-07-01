@@ -18,8 +18,8 @@ int main()
             if(msg.id==DEVICE_ID)
             {printf("Message received:  from %i valeur: %i \n", msg.data[0], msg.data[1]);
             //si la commande est supérieur à 100, on renvoie les valeurs avec l'accusé reception
-            // msg.data[1] = 12 -> donne la position bras/ renvoie angles = DATA[1..5] (parametres: destinataire DATA[2]  )
-            // msg.data[1] = 13 -> donne la position main/ renvoie ouvert/fermé = DATA[1] (parametres: destinataire DATA[2]  )
+            // msg.data[1] = 100 -> donne la position bras/ renvoie angles = DATA[1..5] (parametres: destinataire DATA[2]  )
+            // msg.data[1] = 101 -> donne la position main/ renvoie ouvert/fermé = DATA[1] (parametres: destinataire DATA[2]  )
             if (msg.data[1] >= 100)
             { 
               if (mail_box.empty())

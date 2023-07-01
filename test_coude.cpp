@@ -27,7 +27,7 @@ void init()
   // motor_coude.set_debug_flag(true);
   printf("init angle: %f\n stop 5sec...\n",motor_coude.get_angle());
   // on attend un peu
-    ThisThread::sleep_for(chrono::milliseconds(5000));
+    // ThisThread::sleep_for(chrono::milliseconds(5000));
 }
 
 //###########################
@@ -56,9 +56,20 @@ int main()
 {
   // initialisation
   init();
-
+//test à la main
   //démarrage des threads
   thread_motor_coude.start(callback(run_motor_in_thread, &motor_coude)); 
+  ThisThread::sleep_for(chrono::milliseconds(1000)); 
+   printf(" angle: %f\n", motor_coude.get_angle());
+    ThisThread::sleep_for(chrono::milliseconds(1000)); 
+   printf(" angle: %f\n", motor_coude.get_angle());
+    ThisThread::sleep_for(chrono::milliseconds(1000)); 
+   printf(" angle: %f\n", motor_coude.get_angle());
+    ThisThread::sleep_for(chrono::milliseconds(1000)); 
+   printf(" angle: %f\n", motor_coude.get_angle());
+    ThisThread::sleep_for(chrono::milliseconds(1000)); 
+   printf(" angle: %f\n", motor_coude.get_angle());
+
   //on met les moteur en place pour la premiere fois 
   //motor_coude._target = 85;//+87 deg sur le coude pour être à l'horizontal 
   printf("mise en position initiale angle: %f\n", motor_coude.get_angle());
@@ -68,7 +79,7 @@ int main()
 // on attend un peu
   ThisThread::sleep_for(chrono::milliseconds(1000)); 
  
-  int deplacement = 5;//120;
+  int deplacement = 1;//120;
 
   while (true)
   {
@@ -86,10 +97,10 @@ int main()
 
     motor_coude._target = 0;//(motor_coude.get_angle() - deplacement);//--> point bas le moteur fait 177->89    (+87 deg sur le coude pour être à l'horizontal)
 
-    printf("start montée angle: %f\n", motor_coude.get_angle());
+    printf("start montee angle: %f\n", motor_coude.get_angle());
     event_flag.set(FLAG_START_COUDE);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_COUDE); // attend que les moteurs
-    printf("fin montée angle: %f\n stop 1sec...\n", motor_coude.get_angle());
+    printf("fin montee angle: %f\n stop 1sec...\n", motor_coude.get_angle());
 
     // on attend un peu
     ThisThread::sleep_for(chrono::milliseconds(1000));
