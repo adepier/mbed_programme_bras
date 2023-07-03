@@ -1,4 +1,5 @@
-#include "config_motor.hpp"
+//#include "config_motor.hpp"
+#include "config_fonctions.hpp"
 //###########################
 //           MAIN
 //##########################
@@ -8,6 +9,7 @@ int main()
    // initialisation
   printf("init all\n");
   init_all();
+  init_position();
 
  printf("start ecoute CAN \n");
    CANMessage msg;

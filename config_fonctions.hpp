@@ -153,7 +153,7 @@ if (last_target_poignet_haut !=poignet_haut){
   }   
  
 
-  printf("démarre les moteurs \n"); 
+  printf("demarre les moteurs \n"); 
  
   event_flag.set(flags_start);  // démarre les moteurs 
   event_flag.wait_all(flags_stop ); // attend que les moteurs
@@ -223,7 +223,34 @@ void run_motor_doigt_in_thread(mbed_current_driven_motor *motor)
   }
 }
 
- 
+//###########################
+//           INIT Position
+//##########################
+
+void init_position(){
+
+ // si le flag stop est 1 on bouge de 5 degrés pour avoir flag stop à 0
+                             if (end_stop.read() == 0 ) {
+                              move_arm ((int) motor_epaule_a_plat.get_angle() +5,
+                                        (int) motor_epaule_haut.get_angle() +5,
+                                        (int) motor_coude.get_angle() +5,
+                                        (int) motor_poignet.get_angle() +5,
+                                        (int) motor_poignet_haut.get_angle() +5);
+                            }
+                            // init coude
+                            motor_coude.init_position();
+                            // init epaule_haut
+                            motor_epaule_haut.init_position();
+                            // init epaule_a_plat
+                            motor_poignet_haut.init_position(); 
+                            // init poignet
+                            motor_poignet.init_position();
+                          // init epaule_a_plat
+                            motor_epaule_a_plat.init_position();
+                            //ouvre la main
+                            open_hand();
+}
+
  /*******
  * Fonctions BRAS
 Message:
@@ -273,37 +300,22 @@ void run_cmde_CAN_in_thread()
       if (mail->cmde == 4){close_thumb();}
       if (mail->cmde == 5){close_hand();}
       if (mail->cmde == 6){hand_ILY_from_open();}
-      if (mail->cmde == 7){motor_epaule_a_plat.init();}
-      if (mail->cmde == 8){motor_epaule_haut.init();}
-      if (mail->cmde == 9){motor_coude.init();}
-      if (mail->cmde == 10){motor_poignet.init();}
-      if (mail->cmde == 11){motor_poignet_haut.init();}
-      if (mail->cmde == 12){
-                            // si le flag stop est 1 on bouge de 5 degrés pour avoir flag stop à 0
-                            //if ()
-                            // init coude
-                            motor_coude.init();
-                            // init epaule_haut
-                            motor_epaule_haut.init();
-                            // init epaule_a_plat
-                            motor_poignet_haut.init(); 
-                            // init poignet
-                            motor_poignet.init();
-                          // init epaule_a_plat
-                            motor_epaule_a_plat.init();
-                            //ouvre la main
-                            open_hand();
-                            }
+      // if (mail->cmde == 7){motor_epaule_a_plat.init();}
+      // if (mail->cmde == 8){motor_epaule_haut.init();}
+      // if (mail->cmde == 9){motor_coude.init();}
+      // if (mail->cmde == 10){motor_poignet.init();}
+      // if (mail->cmde == 11){motor_poignet_haut.init();}
+      if (mail->cmde == 12){init_position(); }
       mail_box.free(mail);
     }
 
     // ThisThread::sleep_for(chrono::milliseconds(1s));
-  }
+  } 
 }
 
 
 //###########################
-//           INIT
+//           INIT cartes
 //##########################
 
 void init_all(){
@@ -372,6 +384,17 @@ void init_all(){
 
   //commandes CAN 
   thread_execute_cmde.start(callback(run_cmde_CAN_in_thread));
+
+   // init coude moteurs
+  motor_coude.init();
+  // init epaule_haut
+  motor_epaule_haut.init();
+  // init epaule_a_plat
+  motor_poignet_haut.init(); 
+  // init poignet
+  motor_poignet.init();
+// init epaule_a_plat
+  motor_epaule_a_plat.init();
 }
 
 
