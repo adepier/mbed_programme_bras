@@ -110,6 +110,7 @@ void hand_ILY_from_open()
   int last_target_coude = 0 ;
   int last_target_poignet = 0 ;
   int last_target_poignet_haut = 0 ;
+int init_position_done =0; //0 : l'init n'a pas été faite / 1 l'init a été faite
 
 void move_arm( int epaule_a_plat,int epaule_haut,int coude,int poignet, int poignet_haut )
 {  
@@ -159,7 +160,21 @@ if (last_target_poignet_haut !=poignet_haut){
   event_flag.wait_all(flags_stop ); // attend que les moteurs
  
 }
-
+void epaule_a_plat_run_forward(){  motor_epaule_a_plat.motor_run_forward(500); }
+void epaule_a_plat_run_backward(){ motor_epaule_a_plat.motor_run_backward(500); }
+void epaule_a_plat_stop(){         motor_epaule_a_plat.motor_stop(); }
+void epaule_haut_run_forward(){ motor_epaule_haut.motor_run_forward(500); }
+void epaule_haut_run_backward(){ motor_epaule_haut.motor_run_backward(500); }
+void epaule_haut_stop(){ motor_epaule_haut.motor_stop(); }
+void coude_run_forward(){  motor_coude.motor_run_forward(1000); }
+void coude_run_backward(){ motor_coude.motor_run_backward(1000); }
+void coude_stop(){         motor_coude.motor_stop(); }
+void poignet_run_forward(){  motor_poignet.motor_run_forward(1500); }
+void poignet_run_backward(){ motor_poignet.motor_run_backward(1500); }
+void poignet_stop(){         motor_poignet.motor_stop(); }
+void poignet_haut_run_forward(){  motor_poignet_haut.motor_run_forward(1500); }
+void poignet_haut_run_backward(){ motor_poignet_haut.motor_run_backward(1500); }
+void poignet_haut_stop(){         motor_poignet_haut.motor_stop(); }
 
 
 //###########################
@@ -227,7 +242,7 @@ void run_motor_doigt_in_thread(mbed_current_driven_motor *motor)
 //           INIT Position
 //##########################
 
-void init_position(){
+int init_position(){
 
  // si le flag stop est 1 on bouge de 5 degrés pour avoir flag stop à 0
                              if (end_stop.read() == 0 ) {
@@ -249,6 +264,7 @@ void init_position(){
                             motor_epaule_a_plat.init_position();
                             //ouvre la main
                             open_hand();
+     return 1; //l'init position a été faite                     
 }
 
  /*******
@@ -276,13 +292,13 @@ cmde = 10 -> init poignet bas
 cmde = 11 -> init poignet haut
 cmde = 12 -> 
 cmde = 13 -> 
-cmde = 100 -> donne la position bras/ renvoie les angles = data_8..3  (parametres: destinataire data_1  )
-cmde = 101 -> donne la position main/ renvoie ouvert/fermé = data_2 (parametres: destinataire data_1  )
+cmde = 200 -> donne la position bras/ renvoie les angles = data_8..3  (parametres: destinataire data_1  ) + init_position_done
+cmde = 201 -> donne la position main/ renvoie ouvert/fermé = data_2 (parametres: destinataire data_1  )
 ********/
 
-void run_cmde_CAN_in_thread()
+void run_bras()
 {
-  while (true)
+  while (!mail_box.empty())
   {
     mail_t *mail = mail_box.try_get();
 
@@ -305,9 +321,28 @@ void run_cmde_CAN_in_thread()
       // if (mail->cmde == 9){motor_coude.init();}
       // if (mail->cmde == 10){motor_poignet.init();}
       // if (mail->cmde == 11){motor_poignet_haut.init();}
-      if (mail->cmde == 12){init_position(); }
-      mail_box.free(mail);
-    }
+      if (mail->cmde == 12){init_position_done = init_position(); }
+      //manettes
+      if (mail->cmde == 20){epaule_a_plat_run_forward(); }
+      if (mail->cmde == 21){epaule_a_plat_run_backward(); }
+      if (mail->cmde == 22){epaule_a_plat_stop(); }
+      if (mail->cmde == 23){epaule_haut_run_forward(); }
+      if (mail->cmde == 24){epaule_haut_run_backward(); }
+      if (mail->cmde == 25){epaule_haut_stop(); }
+      if (mail->cmde == 26){coude_run_forward(); }
+      if (mail->cmde == 27){coude_run_backward(); }
+      if (mail->cmde == 28){coude_stop(); }    
+      if (mail->cmde == 29){poignet_run_forward(); }
+      if (mail->cmde == 30){poignet_run_backward(); }
+      if (mail->cmde == 31){poignet_stop(); }   
+      if (mail->cmde == 32){poignet_haut_run_forward(); }
+      if (mail->cmde == 33){poignet_haut_run_backward(); }
+      if (mail->cmde == 34){poignet_haut_stop(); } 
+
+         }      
+      
+           mail_box.free(mail);
+   
 
     // ThisThread::sleep_for(chrono::milliseconds(1s));
   } 
@@ -382,8 +417,7 @@ void init_all(){
     motor_poignet_haut.set_speed_sync(&motor_poignet); 
   // motor_coude.set_speed_sync_2(angle_epaule_a_plat,true,true);
 
-  //commandes CAN 
-  thread_execute_cmde.start(callback(run_cmde_CAN_in_thread));
+  
 
    // init coude moteurs
   motor_coude.init();
