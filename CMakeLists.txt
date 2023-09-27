@@ -52,6 +52,7 @@ add_executable(${APP_TARGET}
       #test_carte_pwm.cpp
       #test_ping_pong_serial.cpp
       #test_master_i2c.cpp
+      #test_CAN_receive.cpp
       
 
 

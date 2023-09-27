@@ -64,8 +64,8 @@ encoder_values encoder5;
  //end_stop
  DigitalIn end_stop(STOP_PIN, PullUp);
 
-pin_encoder counter1_1(PA_6,1,encoder1 ); //epaule_a_plat
-pin_encoder counter1_2(PA_5,2,encoder1 ); //epaule_a_plat
+pin_encoder counter1_1(PA_6,2,encoder1 ); //epaule_a_plat
+pin_encoder counter1_2(PA_5,1,encoder1 ); //epaule_a_plat
 pin_encoder counter2_1(PA_7,2,encoder2 ); //epaule_haut
 pin_encoder counter2_2(PB_2,1,encoder2 ); //epaule_haut
 pin_encoder counter3_1(PB_1,1,encoder3 ); //coude
@@ -102,12 +102,12 @@ mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,                     
                               init_speed = 1000,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 0.5,                   //
-                              coef_Ki = 0.005,                   //
+                              coef_Kp = 1,                   //
+                              coef_Ki = 0.00,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 21.65  ,
                               // end_stop_type  = 1 ,
-                                false /*reverse rotation*/ 
+                              true /*reverse rotation*/ 
 );
 //epaule haut
 mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                        //count_2_pin
@@ -119,11 +119,11 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,                       
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_EPAULE_HAUT, //
                               flag_stop = FLAG_STOP_EPAULE_HAUT,   //
-                              init_speed = 1500,             //
+                              init_speed = 1000,             //
                               min_speed = 500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 0.5,                   //
-                              coef_Ki = 0.1,                   //
+                              coef_Kp = 1,                   //
+                              coef_Ki = 0,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 26.04 , //6.5rpm ratio : 1/625 15PPR nb tic par degres = 26
                                 // end_stop_type  = 1 ,
@@ -139,11 +139,11 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
                               motor_shield_type = 1,         // motor_shield_type:1=type dir/pwm -- 2=type Forward/backward
                               flag_start = FLAG_START_COUDE, //
                               flag_stop = FLAG_STOP_COUDE,   //
-                              init_speed = 2500,             //
-                              min_speed = 500,                 //
+                              init_speed = 1500,             //
+                              min_speed = 1500,                 //
                               max_speed = 4095,              //
-                              coef_Kp = 0.5,                   //
-                              coef_Ki = 0.5,                   //
+                              coef_Kp = 1,                   //
+                              coef_Ki = 0,                   //
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 21.65  ,
                                 // end_stop_type  = 1 ,
@@ -163,7 +163,7 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
                                 min_speed =3500,
                                 max_speed = 4095,
                                 coef_Kp = 3,  //
-                                coef_Ki = 1, //
+                                coef_Ki = 0, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 18.33 ,//20rpm ratio : 1/600 11PPR nb tic par degres = 18.33
                                 // end_stop_type  = 1 ,
@@ -185,7 +185,7 @@ mbed_hall_driven_motor motor_poignet_haut(encoder5.count ,                    //
                                 min_speed =1000,
                                 max_speed = 4095,
                                 coef_Kp = 1,  //
-                                coef_Ki = 0.01, //
+                                coef_Ki = 0.0, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 38.8 ,
                                 // end_stop_type  = 1,

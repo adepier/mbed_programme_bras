@@ -112,16 +112,19 @@ void hand_ILY_from_open()
   int last_target_poignet_haut = 0 ;
 int init_position_done =0; //0 : l'init n'a pas été faite / 1 l'init a été faite
 
-void move_arm( int epaule_a_plat,int epaule_haut,int coude,int poignet, int poignet_haut )
+void move_arm( int epaule_a_plat,int epaule_haut,int coude,int poignet, int poignet_haut, int pPouvement_type )
 {  
   uint32_t flags_start=0;
-  uint32_t flags_stop=0;
+  uint32_t flags_stop=0; 
 
- 
-  
-   
+ motor_epaule_a_plat.mouvement_type = pPouvement_type;
+ motor_epaule_haut.mouvement_type = pPouvement_type; 
+ motor_coude.mouvement_type = pPouvement_type;  
+ motor_poignet.mouvement_type = pPouvement_type;
+ motor_poignet_haut.mouvement_type = pPouvement_type;
+
   //définit les moteur a faire tourner
-if (last_target_epaule_a_plat !=epaule_a_plat){
+if (last_target_epaule_a_plat != epaule_a_plat){
   flags_start = flags_start|FLAG_START_EPAULE_A_PLAT; //flags start
   flags_stop = flags_stop | FLAG_STOP_EPAULE_A_PLAT; //flags stop
   last_target_epaule_a_plat =epaule_a_plat; //retient la position
@@ -154,7 +157,7 @@ if (last_target_poignet_haut !=poignet_haut){
   }   
  
 
-  printf("demarre les moteurs \n"); 
+  printf("demarre les moteurs -> pPouvement_type: %i \n",pPouvement_type); 
  
   event_flag.set(flags_start);  // démarre les moteurs 
   event_flag.wait_all(flags_stop ); // attend que les moteurs
@@ -163,8 +166,8 @@ if (last_target_poignet_haut !=poignet_haut){
 void epaule_a_plat_run_forward(){  motor_epaule_a_plat.motor_run_forward(500); }
 void epaule_a_plat_run_backward(){ motor_epaule_a_plat.motor_run_backward(500); }
 void epaule_a_plat_stop(){         motor_epaule_a_plat.motor_stop(); }
-void epaule_haut_run_forward(){ motor_epaule_haut.motor_run_forward(500); }
-void epaule_haut_run_backward(){ motor_epaule_haut.motor_run_backward(500); }
+void epaule_haut_run_forward(){ motor_epaule_haut.motor_run_forward(1000); }
+void epaule_haut_run_backward(){ motor_epaule_haut.motor_run_backward(1000); }
 void epaule_haut_stop(){ motor_epaule_haut.motor_stop(); }
 void coude_run_forward(){  motor_coude.motor_run_forward(1000); }
 void coude_run_backward(){ motor_coude.motor_run_backward(1000); }
@@ -250,20 +253,43 @@ int init_position(){
                                         (int) motor_epaule_haut.get_angle() +5,
                                         (int) motor_coude.get_angle() +5,
                                         (int) motor_poignet.get_angle() +5,
-                                        (int) motor_poignet_haut.get_angle() +5);
+                                        (int) motor_poignet_haut.get_angle() +5,
+                                        (int) 0);
                             }
                             // init coude
                             motor_coude.init_position();
                             // init epaule_haut
                             motor_epaule_haut.init_position();
-                            // init epaule_a_plat
+                            // init motor_poignet_haut
                             motor_poignet_haut.init_position(); 
                             // init poignet
                             motor_poignet.init_position();
+                            //init position moteurs
+                            last_target_epaule_a_plat = 0 ;
+                            last_target_epaule_haut = 0 ;
+                            last_target_coude = 0 ;
+                            last_target_poignet = 0 ;
+                            last_target_poignet_haut = 0 ;
                           // init epaule_a_plat
+                          //on met la main dans la bonne position
+                           move_arm (0, //motor_epaule_a_plat
+                                        0, //motor_epaule_haut
+                                        0, //motor_coude
+                                        170, //motor_poignet
+                                        0,//motor_poignet_haut
+                                        0);  //pEnable_PID
                             motor_epaule_a_plat.init_position();
+                            //init position moteurs
+                            last_target_epaule_a_plat = 0 ;
+                            move_arm (50, //motor_epaule_a_plat
+                                        0, //motor_epaule_haut
+                                        0, //motor_coude
+                                        170, //motor_poignet
+                                        0, //motor_poignet_haut
+                                        0); //pEnable_PID
                             //ouvre la main
                             open_hand();
+
      return 1; //l'init position a été faite                     
 }
 
@@ -304,13 +330,18 @@ void run_bras()
 
     if (mail != nullptr)
     { printf(" get cmde %i \n", mail->cmde);
-      if (mail->cmde == 1 )
+      if (mail->cmde == 1 && init_position_done ==1 /*on bouge uniquement si l'init a été fait*/)
+                                                
       { move_arm ((int)(mail->data_1*360.0/255.0),
                   (int)(mail->data_2*360.0/255.0),
                   (int)(mail->data_3*360.0/255.0),
                   (int)(mail->data_4*360.0/255.0),
-                  (int)(mail->data_5*360.0/255.0));
-        printf(" position bras %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5);}
+                  (int)(mail->data_5*360.0/255.0),
+                  (int)(mail->data_6));
+        printf(" position bras %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
+      if (mail->cmde == 1 && init_position_done ==0 /*l'init n'a pas été fait*/)  {
+        printf("l'init n'a pas ete fait! \n");
+        printf("position demande %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
       if (mail->cmde == 2){open_hand();}
       if (mail->cmde == 3){open_hand_without_thumb();}
       if (mail->cmde == 4){close_thumb();}
@@ -390,6 +421,19 @@ void init_all(){
   thread_motor_epaule_haut.start(callback(run_motor_in_thread, &motor_epaule_haut));
   thread_motor_poignet_haut.start(callback(run_motor_in_thread, &motor_poignet_haut));
 
+//debug
+//motor_coude._debug_flag = true;
+
+   // init coude moteurs
+  motor_coude.init();
+  // init epaule_haut
+  motor_epaule_haut.init();
+  // init epaule_a_plat
+  motor_poignet_haut.init(); 
+  // init poignet
+  motor_poignet.init();
+// init epaule_a_plat
+  motor_epaule_a_plat.init();
   //synchronise les moteurs
     motor_coude.set_speed_sync(&motor_epaule_a_plat);
     motor_coude.set_speed_sync(&motor_epaule_haut);
@@ -418,17 +462,6 @@ void init_all(){
   // motor_coude.set_speed_sync_2(angle_epaule_a_plat,true,true);
 
   
-
-   // init coude moteurs
-  motor_coude.init();
-  // init epaule_haut
-  motor_epaule_haut.init();
-  // init epaule_a_plat
-  motor_poignet_haut.init(); 
-  // init poignet
-  motor_poignet.init();
-// init epaule_a_plat
-  motor_epaule_a_plat.init();
 }
 
 
