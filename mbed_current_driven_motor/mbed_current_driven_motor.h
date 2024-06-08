@@ -30,18 +30,19 @@ public:
   // methodes
 void run();
 void init();
-void set_target_to_close_and_keep();
 void set_target_to_close_and_stop();
 void set_target_to_open_to_endstop();
 void set_target_to_close_to_endstop();
 void set_target_to_open();
-bool get_position(); //0 = ouvert; 1= fermé
-  
+int get_position(); //0 = ouvert; 1= fermé //2=non initialisé
+void motor_open();
+void motor_close();
+void motor_stop();
   //variables
  
   string _motor_name; 
   bool _debug_flag;
-  bool current_position =0 ;
+  int current_position = 2; //0 = ouvert; 1= fermé //2=non initialisé
   int32_t _flag_start;
   int32_t _flag_stop;
   
@@ -50,13 +51,12 @@ private:
   int _pin_IN2;
   int _current_limit;
   int _current_sensor_chanel;
-  int _target; //0 = open , 1 = close and keep , 2 = close and stop
+  int _target; //0 = open ,  2 = close and stop, 3 = open to endstop , 4 = close to endstop
 int _nominal_speed;
    INA3221 *_current;
   mbed_PWMServoDriver *_pwm;
   
   void run_to_open();
-  void run_to_close_and_keep();
   void run_to_close_and_stop();
   void run_open_to_endstop();
    void run_close_to_endstop(); 

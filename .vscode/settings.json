@@ -69,8 +69,8 @@
         "mstd_iterator": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
-    "C_Cpp.intelliSenseEngine": "Tag Parser",
     "cmake.configureOnOpen": true,
     "idf.portWin": "COM3",
+    "C_Cpp.intelliSenseEngine": "disabled",
    
 }
