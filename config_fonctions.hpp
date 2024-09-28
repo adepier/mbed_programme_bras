@@ -106,7 +106,10 @@ printf("motor_poignet_haut  : target %f angle %f err: %f\n", motor_poignet_haut.
     printf("envoi :id: \t %i data: \t %i \t %i \t %i \t %i \t %i \t %i \t %i \t %i \n", msg_to_send.id, msg_to_send.data[0], msg_to_send.data[1], msg_to_send.data[2], msg_to_send.data[3], msg_to_send.data[4], msg_to_send.data[5], msg_to_send.data[6], msg_to_send.data[7]);
      //essaye d'envoyer
     for( int i = 0; i <= 3; i++) 
-    {if(can.write(msg_to_send)==0){  printf("error write\n" ); } else {break;};}
+    {if(can.write(msg_to_send)==0){  printf("error write %i\n", i ); 
+              // très important! il faut attendre un peu avant de renvoyer le message!
+              ThisThread::sleep_for(chrono::milliseconds(500ms));
+                }  else {break;};}
         
 }
 //###########################

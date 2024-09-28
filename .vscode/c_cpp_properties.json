@@ -10,7 +10,7 @@
             ],
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "compileCommands": "${workspaceFolder}/cmake_build/NUCLEO_L432KC/develop/GCC_ARM/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/cmake_build/NUCLEO_L452RE_P/develop/GCC_ARM/compile_commands.json"
         }
     ],
     "version": 4
