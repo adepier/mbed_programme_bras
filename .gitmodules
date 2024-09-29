@@ -23,3 +23,6 @@
 [submodule "pin_encoder"]
 	path = pin_encoder
 	url = https://github.com/adepier/pin_encoder.git
+[submodule "mbed_debug_print"]
+	path = mbed_debug_print
+	url = https://github.com/adepier/mbed_debug_print.git
