@@ -7,7 +7,7 @@
 #include "mbed_current_driven_motor.h"
 #include <list>
  #include "pin_encoder.h" 
-
+#include "debug_print.h" // Inclure le fichier d'en-tête contenant print_debug
 
 //#####POIGNET_haut 
 #define FLAG_START_POIGNET_HAUT  (1UL << 8) // 00000000000000000000000010000000

@@ -24,6 +24,7 @@ add_subdirectory(mbed_I2Cdev )
 add_subdirectory(mbed_INA3221  ) 
 add_subdirectory(mbed_current_driven_motor  ) 
 add_subdirectory(pin_encoder  ) 
+add_subdirectory(mbed_debug_print  ) 
 
 add_executable(${APP_TARGET}
       main.cpp
@@ -76,7 +77,8 @@ target_link_libraries(${APP_TARGET}
         mbed_I2Cdev 
         mbed_INA3221
         mbed_current_driven_motor
-        pin_encoder)
+        pin_encoder
+        debug_print)
 
 mbed_set_post_build(${APP_TARGET})
 

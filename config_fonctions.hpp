@@ -2,6 +2,7 @@
   
  */
 #include "config_motor.hpp"
+#include "debug_print.h" // Inclure le fichier d'en-tête contenant print_debug
 
  //position moteurs
  int last_target_epaule_a_plat = 0 ;
@@ -44,51 +45,51 @@ motor_poignet_haut._coef_accel  = pCoef_accel;
   flags_stop = flags_stop | FLAG_STOP_EPAULE_A_PLAT; //flags stop
   last_target_epaule_a_plat =epaule_a_plat; //retient la position
   motor_epaule_a_plat._target = epaule_a_plat;  // définit les target
-   //printf("epaule_a_plat target: %i \n",epaule_a_plat); 
+   //print_debug("epaule_a_plat target: %i \n",epaule_a_plat); 
 //   }
 // if (last_target_epaule_haut !=epaule_haut){
   flags_start = flags_start|FLAG_START_EPAULE_HAUT; //flags start
   flags_stop = flags_stop | FLAG_STOP_EPAULE_HAUT; //flags stop
   last_target_epaule_haut =epaule_haut; //retient la position
   motor_epaule_haut._target = epaule_haut;  // définit les target
-    //printf("epaule_haut target: %i \n",epaule_haut); 
+    //print_debug("epaule_haut target: %i \n",epaule_haut); 
 //   }
 // if (last_target_coude !=coude){
   flags_start = flags_start|FLAG_START_COUDE; //flags start
   flags_stop = flags_stop | FLAG_STOP_COUDE; //flags stop
   last_target_coude =coude; //retient la position
   motor_coude._target = coude;  // définit les target
-     //printf("coude target: %i \n",coude); 
+     //print_debug("coude target: %i \n",coude); 
 //   }
 // if (last_target_poignet !=poignet){
   flags_start = flags_start|FLAG_START_POIGNET; //flags start
   flags_stop = flags_stop | FLAG_STOP_POIGNET; //flags stop
   last_target_poignet= poignet; //retient la position
   motor_poignet._target = poignet; // définit les target
-     //printf("poignet target: %i \n",poignet); 
+     //print_debug("poignet target: %i \n",poignet); 
 //   }  
 // if (last_target_poignet_haut !=poignet_haut){
     flags_start = flags_start | FLAG_START_POIGNET_HAUT; //flags start
     flags_stop = flags_stop | FLAG_STOP_POIGNET_HAUT; //flags stop
   last_target_poignet_haut =poignet_haut;//retient la position
   motor_poignet_haut._target = poignet_haut; // définit les target
-    //  printf("poignet_haut target: %i \n",poignet_haut); 
+    //  print_debug("poignet_haut target: %i \n",poignet_haut); 
   // }   
  
 
- // printf("demarre les moteurs -> pPouvement_type: %i \n",pPouvement_type); 
+ // print_debug("demarre les moteurs -> pPouvement_type: %i \n",pPouvement_type); 
 
   event_flag.clear();  //remet les flag à 0
   event_flag.set(flags_start);  // démarre les moteurs 
   event_flag.wait_all(flags_stop ); // attend que les moteurs terminent
 
-printf("fin move \n" ); 
+print_debug("fin move \n" ); 
 
-printf("motor_epaule_a_plat : target %f angle %f err: %f\n", motor_epaule_a_plat._target , motor_epaule_a_plat.get_angle(),motor_epaule_a_plat._target - motor_epaule_a_plat.get_angle());
-printf("motor_epaule_haut   : target %f angle %f err: %f\n", motor_epaule_haut._target , motor_epaule_haut.get_angle(),motor_epaule_haut._target - motor_epaule_haut.get_angle());
-printf("motor_coude         : target %f angle %f err: %f\n", motor_coude._target , motor_coude.get_angle(),motor_coude._target - motor_coude.get_angle());
-printf("motor_poignet       : target %f angle %f err: %f\n", motor_poignet._target , motor_poignet.get_angle(),motor_poignet._target - motor_poignet.get_angle());
-printf("motor_poignet_haut  : target %f angle %f err: %f\n", motor_poignet_haut._target , motor_poignet_haut.get_angle(),motor_poignet_haut._target - motor_poignet_haut.get_angle());
+print_debug("motor_epaule_a_plat : target %f angle %f err: %f\n", motor_epaule_a_plat._target , motor_epaule_a_plat.get_angle(),motor_epaule_a_plat._target - motor_epaule_a_plat.get_angle());
+print_debug("motor_epaule_haut   : target %f angle %f err: %f\n", motor_epaule_haut._target , motor_epaule_haut.get_angle(),motor_epaule_haut._target - motor_epaule_haut.get_angle());
+print_debug("motor_coude         : target %f angle %f err: %f\n", motor_coude._target , motor_coude.get_angle(),motor_coude._target - motor_coude.get_angle());
+print_debug("motor_poignet       : target %f angle %f err: %f\n", motor_poignet._target , motor_poignet.get_angle(),motor_poignet._target - motor_poignet.get_angle());
+print_debug("motor_poignet_haut  : target %f angle %f err: %f\n", motor_poignet_haut._target , motor_poignet_haut.get_angle(),motor_poignet_haut._target - motor_poignet_haut.get_angle());
  
 }
 /*envoi les message CAN facilement!*/
@@ -103,10 +104,10 @@ printf("motor_poignet_haut  : target %f angle %f err: %f\n", motor_poignet_haut.
     buffer[6] = (char) d7;
     buffer[7] = (char) d8;
     CANMessage msg_to_send(dest,  buffer, 8); 
-    printf("envoi :id: \t %i data: \t %i \t %i \t %i \t %i \t %i \t %i \t %i \t %i \n", msg_to_send.id, msg_to_send.data[0], msg_to_send.data[1], msg_to_send.data[2], msg_to_send.data[3], msg_to_send.data[4], msg_to_send.data[5], msg_to_send.data[6], msg_to_send.data[7]);
+    print_debug("envoi :id: \t %i data: \t %i \t %i \t %i \t %i \t %i \t %i \t %i \t %i \n", msg_to_send.id, msg_to_send.data[0], msg_to_send.data[1], msg_to_send.data[2], msg_to_send.data[3], msg_to_send.data[4], msg_to_send.data[5], msg_to_send.data[6], msg_to_send.data[7]);
      //essaye d'envoyer
     for( int i = 0; i <= 3; i++) 
-    {if(can.write(msg_to_send)==0){  printf("error write %i\n", i ); 
+    {if(can.write(msg_to_send)==0){  print_debug("error write %i\n", i ); 
               // très important! il faut attendre un peu avant de renvoyer le message!
               ThisThread::sleep_for(chrono::milliseconds(500ms));
                 }  else {break;};}
@@ -124,16 +125,16 @@ void open_hand()
    doigt_3.set_target_to_open() ;// on ouvre le doigt
    doigt_4.set_target_to_open() ;// on ouvre le doigt
    doigt_5.set_target_to_open() ;// on ouvre le doigt
-    printf("on ouvre le doigt \n ");
+    print_debug("on ouvre le doigt \n ");
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
-    printf("le doigt est ouvert\n stop 5sec...\n" );
+    print_debug("le doigt est ouvert\n stop 5sec...\n" );
          // on définit la nouvelle cible
   doigt_0.set_target_to_open_to_endstop();  //on ouvre la pince
     event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
     
-    printf("la pince est ouverte\n  " );
+    print_debug("la pince est ouverte\n  " );
 }
 //###########################
 //           Fonction Ouvre la main sans le pouce
@@ -147,11 +148,11 @@ void open_hand_without_thumb()
     doigt_3.set_target_to_open() ;// on ouvre le doigt
     doigt_4.set_target_to_open() ;// on ouvre le doigt
     doigt_5.set_target_to_open() ;// on ouvre le doigt
-    printf("on ouvre le doigt \n ");
+    print_debug("on ouvre le doigt \n ");
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
     
-    printf("le doigt est ouvert\n stop 5sec...\n" );
+    print_debug("le doigt est ouvert\n stop 5sec...\n" );
      
 }
 //###########################
@@ -165,7 +166,7 @@ void close_thumb()
     event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
     
-    printf("la pince est fermee\n  " );
+    print_debug("la pince est fermee\n  " );
      
 }
 void open_thumb()
@@ -175,7 +176,7 @@ void open_thumb()
     event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
     
-    printf("la pince est fermee\n  " );
+    print_debug("la pince est fermee\n  " );
      
 }
 //###########################
@@ -188,18 +189,18 @@ void close_hand()
     doigt_0.set_target_to_close_to_endstop(); //on ferme la pince
     event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
-    printf("la pince est fermee\n  " );
+    print_debug("la pince est fermee\n  " );
      // on définit la nouvelle cible
     doigt_1.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    printf("on ferme et stop\n" );
+    print_debug("on ferme et stop\n" );
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
     event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
     
-    printf("le doigt est fermé\n stop 5sec...\n" );
+    print_debug("le doigt est fermé\n stop 5sec...\n" );
 }
 void fumee_lumieres(){
   if(fumee_lumiere_on==1)
@@ -269,7 +270,7 @@ void hand_ILY_from_open()
     doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop 
-    printf("on ferme et stop\n" );
+    print_debug("on ferme et stop\n" );
     event_flag.set( FLAG_START_DOIGT_2 |  FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4  );     // démarre les moteurs
     move_position_ily();
     event_flag.wait_all( FLAG_STOP_DOIGT_2 |FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4  ); // attend que les moteurs
@@ -289,7 +290,7 @@ void thumb_up()
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    printf("on ferme et stop\n" );
+    print_debug("on ferme et stop\n" );
     event_flag.set (FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
     move_position_init(); //INIT au cas ou on  a bougé
     event_flag.wait_all(  FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
@@ -306,26 +307,26 @@ void bouge_les_doigts()
     doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     event_flag.set (FLAG_START_DOIGT_2  );  
     event_flag.wait_all(  FLAG_STOP_DOIGT_2  ); 
- printf("doigt 2 fermé / les autres ouverts\n  " );
+ print_debug("doigt 2 fermé / les autres ouverts\n  " );
     doigt_2.set_target_to_open() ;
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     event_flag.set (FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3) ;     // démarre les moteurs
     event_flag.wait_all(  FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 );
- printf("doigt 2 ouvert / 3 fermé\n  " );
+ print_debug("doigt 2 ouvert / 3 fermé\n  " );
     doigt_3.set_target_to_open() ;
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     event_flag.set ( FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4  );     // démarre les moteurs
     event_flag.wait_all(   FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4  ); // attend que les moteurs
- printf("doigt 3 ouvert / 4 fermé\n  " );
+ print_debug("doigt 3 ouvert / 4 fermé\n  " );
     doigt_4.set_target_to_open() ;
     doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     event_flag.set (  FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
     event_flag.wait_all(   FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
- printf("doigt 4 ouvert / 5 fermé\n  " );
+ print_debug("doigt 4 ouvert / 5 fermé\n  " );
     doigt_5.set_target_to_open() ; 
     event_flag.set ( FLAG_START_DOIGT_5);     // démarre les moteurs
     event_flag.wait_all(  FLAG_STOP_DOIGT_5); // attend que les moteurs
-  printf("tout ouvert\n  " );   
+  print_debug("tout ouvert\n  " );   
    }
 }
 void fuck()
@@ -337,14 +338,14 @@ void fuck()
      doigt_0.set_target_to_close_to_endstop(); //on ferme la pince
     event_flag.set(FLAG_START_DOIGT_0); // démarre les moteurs 
     event_flag.wait_all(FLAG_STOP_DOIGT_0); // attend que les moteurs
-    printf("la pince est fermee\n  " );
+    print_debug("la pince est fermee\n  " );
      // on définit la nouvelle cible
     doigt_1.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_2.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    printf("on ferme et stop\n" );
+    print_debug("on ferme et stop\n" );
     event_flag.set(FLAG_START_DOIGT_1 | FLAG_START_DOIGT_2 |     FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
     move_position_fuck();
     event_flag.wait_all(FLAG_STOP_DOIGT_1 | FLAG_STOP_DOIGT_2 |    FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
@@ -363,7 +364,7 @@ void thumb_down()
     doigt_3.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_4.set_target_to_close_and_stop() ;// on ferme le doigt et stop
     doigt_5.set_target_to_close_and_stop() ;// on ferme le doigt et stop
-    printf("on ferme et stop\n" );
+    print_debug("on ferme et stop\n" );
     event_flag.set (FLAG_START_DOIGT_2 | FLAG_START_DOIGT_3 | FLAG_START_DOIGT_4 | FLAG_START_DOIGT_5);     // démarre les moteurs
     move_position_thumb_down(); 
     event_flag.wait_all(  FLAG_STOP_DOIGT_2 | FLAG_STOP_DOIGT_3 | FLAG_STOP_DOIGT_4 | FLAG_STOP_DOIGT_5); // attend que les moteurs
@@ -415,8 +416,7 @@ move_position_hors_carrousel();  //tourne hors du carrousel
 } 
 void verre_vers_pos1(){
 move_position_verre(); // position verre
-//move_position_avant_verre();  //position avant verre 
-
+move_position_avant_verre();  //position avant verre 
 move_position_1(); // POS1  
    current_position=2;
 }
@@ -442,6 +442,7 @@ move_position_verre(); // position verre
 }
 void pos1_vers_verre(){
 move_position_1();  
+move_position_avant_verre();  //position avant verre
 move_position_verre(); // position verre
   current_position=1;
 }
@@ -468,9 +469,17 @@ move_position_hors_carrousel();  //tourne hors du carrousel
 
 
 
-void verre_vers_fin(){}
-// current_position  0 : position_init / 1: prend_le_verre / 2: carrousel1 / 3: carrousel2 / 4: carrousel3 / 5: lache_le_verre
+ 
+//  position  0: position_init
+ // position  1: prend_le_verre 
+ // position  2: carrousel1 
+ // position  3: carrousel2 
+ // position  4: carrousel3 
+ // position  5: lache_le_verre
+
+
 void position_init(){
+  print_debug("position_init , current_position = % \n",current_position); 
   if (current_position != 0 ) {
     if (current_position == 1){verre_vers_init();} // verre -> init
     if (current_position == 2){ pos1_vers_verre();// pos1 -> init
@@ -483,6 +492,7 @@ void position_init(){
    }
 }
 void prend_le_verre(){
+  print_debug("position prend_le_verre , current_position = %i \n",current_position); 
   if (current_position != 1 ) {
     if (current_position == 0){init_vers_verre();} //init -> verre
     if (current_position == 2){pos1_vers_verre();} //position1 -> verre
@@ -491,7 +501,8 @@ void prend_le_verre(){
    }
 }
 void position1(){
-  if (current_position != 2 ) {
+  print_debug("position 1 , current_position = %i \n",current_position); 
+  if (current_position != 2 /*position 2: carrousel1*/ ) {
     if (current_position == 0){init_vers_verre(); //init -> pos1
                               verre_vers_pos1();}
     
@@ -501,6 +512,7 @@ void position1(){
    }
 }
 void position2(){
+  print_debug("position 2 , current_position = %i \n",current_position); 
  if (current_position != 3 ) {
     if (current_position == 0){init_vers_verre(); //init -> pos2
                               verre_vers_pos2(); 
@@ -513,6 +525,7 @@ void position2(){
 
 }
 void position3(){
+  print_debug("position 3, current_position = %i \n",current_position); 
    if (current_position != 4 ) {
     if (current_position == 0){init_vers_verre(); //init -> pos3
                               verre_vers_pos3(); 
@@ -537,9 +550,9 @@ void epaule_a_plat_run_backward(){
                       }
 void epaule_a_plat_stop(){ 
                     motor_epaule_a_plat.motor_stop() ;
-                    // printf("move_arm ( %f , \t  %f , \t %f , \t %f , \t %f , 0 ); \n ",  motor_epaule_a_plat.get_angle()  ,  motor_epaule_haut.get_angle()  ,  motor_coude.get_angle()  ,  motor_poignet.get_angle()  ,  motor_poignet_haut.get_angle() );
-                    // printf("move_arm ( %i , \t  %i , \t %i , \t %i , \t %i , 0 ); \n ", (int)  motor_epaule_a_plat.get_angle()  ,  (int)  motor_epaule_haut.get_angle()  ,  (int)  motor_coude.get_angle()  ,  (int)  motor_poignet.get_angle()  ,  (int)  motor_poignet_haut.get_angle() );
-                    printf("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
+                    // print_debug("move_arm ( %f , \t  %f , \t %f , \t %f , \t %f , 0 ); \n ",  motor_epaule_a_plat.get_angle()  ,  motor_epaule_haut.get_angle()  ,  motor_coude.get_angle()  ,  motor_poignet.get_angle()  ,  motor_poignet_haut.get_angle() );
+                    // print_debug("move_arm ( %i , \t  %i , \t %i , \t %i , \t %i , 0 ); \n ", (int)  motor_epaule_a_plat.get_angle()  ,  (int)  motor_epaule_haut.get_angle()  ,  (int)  motor_coude.get_angle()  ,  (int)  motor_poignet.get_angle()  ,  (int)  motor_poignet_haut.get_angle() );
+                    print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
                         }
 
 /***epaule haut***/
@@ -553,13 +566,13 @@ void epaule_haut_run_backward(){
                       }
 void epaule_haut_stop(){ 
                       motor_epaule_haut.motor_stop();
-                     printf("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
+                     print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
                       
-                    //   printf("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
-                    // printf("motor_epaule_haut   :  angle %f  \n",  motor_epaule_haut.get_angle() );
-                    // printf("motor_coude         : angle %f \n",   motor_coude.get_angle() );
-                    // printf("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
-                    // printf("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
+                    //   print_debug("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
+                    // print_debug("motor_epaule_haut   :  angle %f  \n",  motor_epaule_haut.get_angle() );
+                    // print_debug("motor_coude         : angle %f \n",   motor_coude.get_angle() );
+                    // print_debug("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
+                    // print_debug("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
                       }
 
 /***coude***/
@@ -573,13 +586,13 @@ void coude_run_backward(){
                       }
 void coude_stop(){        
                     motor_coude.motor_stop();
-                    printf("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
+                    print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
                      
-                    // printf("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
-                    // printf("motor_epaule_haut   : angle %f  \n",  motor_epaule_haut.get_angle() );
-                    // printf("motor_coude         : angle %f \n",   motor_coude.get_angle() );
-                    // printf("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
-                    // printf("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
+                    // print_debug("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
+                    // print_debug("motor_epaule_haut   : angle %f  \n",  motor_epaule_haut.get_angle() );
+                    // print_debug("motor_coude         : angle %f \n",   motor_coude.get_angle() );
+                    // print_debug("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
+                    // print_debug("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
                     }
 
 /***poignet***/
@@ -587,25 +600,25 @@ void poignet_run_forward(){
                          
                        motor_poignet.speed_manual_run = 3500; //flag manuel
                        event_flag.set(FLAG_START_POIGNET); //demarre le moteur
-                      //printf("forward  speed_manual_run_forward = %i speed_manual_run_backward: %i stop: %i \n", motor_poignet.speed_manual_run_forward, motor_poignet.speed_manual_run_backward,motor_poignet.flag_manual_stop);
+                      //print_debug("forward  speed_manual_run_forward = %i speed_manual_run_backward: %i stop: %i \n", motor_poignet.speed_manual_run_forward, motor_poignet.speed_manual_run_backward,motor_poignet.flag_manual_stop);
 
                       }
 void poignet_run_backward(){ 
                        
                       motor_poignet.speed_manual_run = -3500;//flag manuel 
                       event_flag.set(FLAG_START_POIGNET); //demarre le moteur
-                      //printf("backward  speed_manual_run_forward = %i speed_manual_run_backward: %i stop: %i \n", motor_poignet.speed_manual_run_forward, motor_poignet.speed_manual_run_backward,motor_poignet.flag_manual_stop);
+                      //print_debug("backward  speed_manual_run_forward = %i speed_manual_run_backward: %i stop: %i \n", motor_poignet.speed_manual_run_forward, motor_poignet.speed_manual_run_backward,motor_poignet.flag_manual_stop);
 
                       }
 void poignet_stop(){         
                     motor_poignet.motor_stop();
-                    printf("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
+                    print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
                      
-                    // printf("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
-                    // printf("motor_epaule_haut   :  angle %f  \n",  motor_epaule_haut.get_angle() );
-                    // printf("motor_coude         : angle %f \n",   motor_coude.get_angle() );
-                    // printf("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
-                    // printf("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
+                    // print_debug("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
+                    // print_debug("motor_epaule_haut   :  angle %f  \n",  motor_epaule_haut.get_angle() );
+                    // print_debug("motor_coude         : angle %f \n",   motor_coude.get_angle() );
+                    // print_debug("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
+                    // print_debug("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
                        }                               
 
 /***poignet haut***/
@@ -619,13 +632,13 @@ void poignet_haut_run_backward(){
                       }
 void poignet_haut_stop(){         
                     motor_poignet_haut.motor_stop();
-                    printf("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
+                    print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
                      
-                    //   printf("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
-                    // printf("motor_epaule_haut   :  angle %f  \n",  motor_epaule_haut.get_angle() );
-                    // printf("motor_coude         : angle %f \n",   motor_coude.get_angle() );
-                    // printf("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
-                    // printf("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
+                    //   print_debug("motor_epaule_a_plat : angle %f \n",  motor_epaule_a_plat.get_angle() );
+                    // print_debug("motor_epaule_haut   :  angle %f  \n",  motor_epaule_haut.get_angle() );
+                    // print_debug("motor_coude         : angle %f \n",   motor_coude.get_angle() );
+                    // print_debug("motor_poignet       : angle %f \n",  motor_poignet.get_angle() );
+                    // print_debug("motor_poignet_haut  : angle %f  \n",   motor_poignet_haut.get_angle() );
                          }
 
 
@@ -696,7 +709,7 @@ void run_motor_in_thread(mbed_hall_driven_motor *motor)
     event_flag.wait_all(motor->_flag_start); // attend le flag de démarrage 
     //pour arreter le moteur en butée avec la commande manuelle,
     //on fait un boucle et on sort quand quand la vitesse est à 0 
-    //printf("thread angle %s : %f\n",motor->_motor_name.c_str(), motor->get_angle());
+    //print_debug("thread angle %s : %f\n",motor->_motor_name.c_str(), motor->get_angle());
     while(true)
             {
               motor->run();
@@ -705,12 +718,12 @@ void run_motor_in_thread(mbed_hall_driven_motor *motor)
              }
     //le flag flag_manual_stop stop le thread 
     //motor->motor_stop(); 
-    // printf("thread angle %s : %f\n",motor->_motor_name.c_str(), motor->get_angle());
+    // print_debug("thread angle %s : %f\n",motor->_motor_name.c_str(), motor->get_angle());
     event_flag.set(motor->_flag_stop);  
-     //printf("stop in thread speed_manual_run_forward = %i speed_manual_run_backward: %i stop: %i \n", motor->speed_manual_run_forward, motor->speed_manual_run_backward,motor->flag_manual_stop);
+     //print_debug("stop in thread speed_manual_run_forward = %i speed_manual_run_backward: %i stop: %i \n", motor->speed_manual_run_forward, motor->speed_manual_run_backward,motor->flag_manual_stop);
 
   }
-  //printf(" fin du thread! \n");
+  //print_debug(" fin du thread! \n");
 }
 
 void run_motor_doigt_in_thread(mbed_current_driven_motor *motor)
@@ -718,12 +731,12 @@ void run_motor_doigt_in_thread(mbed_current_driven_motor *motor)
   while (true)
   {
     event_flag.wait_all(motor->_flag_start); // attend le flag de démarrage 
-    // printf("start motor\n");
+    // print_debug("start motor\n");
     //  motor->displayName();
     motor->run();
     event_flag.set(motor->_flag_stop);
     ; // attend que le moteur renvoie le flag de stop
-    //  printf("stop motor %c \n",(char) motor->get_motor_name());
+    //  print_debug("stop motor %c \n",(char) motor->get_motor_name());
   }
 }
 
@@ -757,7 +770,7 @@ int init_position(){
                             last_target_coude = 0 ;
                             last_target_poignet = 0 ;
                             last_target_poignet_haut = 0 ;
-                            // printf("angle poignet1: %f\n", motor_poignet.get_angle());
+                            // print_debug("angle poignet1: %f\n", motor_poignet.get_angle());
                           // init epaule_a_plat
                           //on met la main dans la bonne position
                           //motor_poignet._debug_flag =true;
@@ -767,18 +780,18 @@ int init_position(){
                                         166, //motor_poignet
                                         0,//motor_poignet_haut
                                         10);  //pEnable_PID
-                              // printf("angle poignet2: %f\n", motor_poignet.get_angle());
+                              // print_debug("angle poignet2: %f\n", motor_poignet.get_angle());
                             motor_epaule_a_plat.init_position();
                             //init position moteurs
                             last_target_epaule_a_plat = 0 ;
-                            //  printf("angle poignet3: %f\n", motor_poignet.get_angle());
+                            //  print_debug("angle poignet3: %f\n", motor_poignet.get_angle());
                             move_arm (70, //motor_epaule_a_plat
                                         0, //motor_epaule_haut
                                         0, //motor_coude
                                         166, //motor_poignet
                                         0, //motor_poignet_haut
                                         10); //pEnable_PID
-                              // printf("angle poignet4: %f\n", motor_poignet.get_angle());
+                              // print_debug("angle poignet4: %f\n", motor_poignet.get_angle());
                             //ouvre la main
                             open_hand();
 
@@ -864,7 +877,7 @@ void run_bras()
     mail_t *mail = mail_box.try_get();
 
     if (mail != nullptr)
-    { printf(" get cmde %i \n", mail->cmde);
+    { print_debug("mail get cmde %i \n", mail->cmde);
       if (mail->cmde == 1 && init_position_done ==1 /*on bouge uniquement si l'init a été fait*/)
                                                 
       { move_arm ((int)(mail->data_1*360.0/255.0),
@@ -873,10 +886,10 @@ void run_bras()
                   (int)(mail->data_4*360.0/255.0),
                   (int)(mail->data_5*360.0/255.0),
                   (int)(mail->data_6));
-        printf(" position bras %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
+        print_debug(" position bras %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
       if (mail->cmde == 1 && init_position_done ==0 /*l'init n'a pas été fait*/)  {
-        printf("l'init n'a pas ete fait! \n");
-        printf("position demande %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
+              print_debug("l'init n'a pas ete fait! \n");
+              print_debug("position demande %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
       if (mail->cmde == 2){open_hand();}
       if (mail->cmde == 3){open_hand_without_thumb();}
       if (mail->cmde == 4){close_thumb();}
@@ -926,12 +939,14 @@ void run_bras()
                 (n°destinataire = 4 (bras), n° emetteur , cmde=150, n° bouteille, temps dose,n° bouteille, temps dose,n° bouteille, temps dose)
                 bouteilles = 1..18
                 19 : fin du cocktail, lache le verre et retour à l'init */
-   
+      if (mail->cmde == 150 && init_position_done ==0){
+                        print_debug(" l'init n'a pas ete fait \n");
+                        print_debug("position demande %i, %i, %i, %i, %i, %i \n", mail->data_1,mail->data_2,mail->data_3,mail->data_4,mail->data_5,mail->data_6);}
       if (mail->cmde == 150 && init_position_done ==1)
           {
             fumee_lumiere_on = 1 ;
             if ((int)(mail->data_1)>= 1 && (int)(mail->data_1)<= 6)
-            {position1();
+            {position1(); 
               send_buffer( 1, DEVICE_ID , 1, (int)(mail->data_1),  0 ,   0,  0,  0,   0 ); /*positionne le carrousel*/
               send_buffer( 1, DEVICE_ID ,  3, (int)(mail->data_2),   0,  0,  0,   0,   0 ); /*envoi servir sur carrousel 1*/ 
               send_buffer( 1, DEVICE_ID ,  201,  4 ,   0,  0,  0,   0,   0 ); /*à la fin du service, envoi run sur le bras*/
@@ -954,17 +969,20 @@ void run_bras()
             else if ((int)(mail->data_1)>= 19) /* retour à l'init*/
             {position_init(); 
             }
+            print_debug("free(mail) \n");
             mail_box.free(mail);
             return; /*on sort de la pile de mail*/
           }
+           
                 
      
       if (mail->cmde == 201){  send_buffer (mail->data_1,DEVICE_ID,200,0,0,0,0,0,0); /*envoi run sur les autres noeuds*/
+                              print_debug("free(mail) \n");
                               mail_box.free(mail);
                               return; /*on sort de la pile de mail*/
                             } 
          }      
-      
+           print_debug("free(mail) \n");
            mail_box.free(mail);
    
 
