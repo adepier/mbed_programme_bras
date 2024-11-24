@@ -1,0 +1,134 @@
+{
+    "version": "2.0.0",
+    "type": "shell",
+    "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+        ],
+        "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+        }
+    },
+    "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false
+    },
+    "tasks": [
+        // {
+        //     "label": "compile L432KC",
+        //     "group": "build",
+        //     "command": "mbed-tools",
+        //     "args": [
+        //         "compile",
+        //         "-m",
+        //         "NUCLEO_L432KC",
+        //         "-t",
+        //         "GCC_ARM",
+        //         "--mbed-os-path",
+        //         "../mbed-os"
+               
+        //     ]
+        // },
+        {
+            "label": "compile L452RE",
+            "group": "build",
+            "command": "mbed-tools",
+            "args": [
+                "compile",
+                "-m",
+                "NUCLEO_L452RE_P",
+                "-t",
+                "GCC_ARM",
+                "--mbed-os-path",
+                "../mbed-os"
+               
+            ]
+        }
+        
+        // ,
+        // {
+        //     "label": "compile clean L432KC",
+        //     "group": "build",
+        //     "command": "mbed-tools",
+        //     "args": [
+        //         "compile",
+        //         "-m",
+        //         "NUCLEO_L432KC",
+        //         "-t",
+        //         "GCC_ARM",
+        //         "--mbed-os-path",
+        //         "../mbed-os",
+        //         "--clean",
+        //         ""
+        //     ]
+        // },
+        // {
+        //     "label": "configure L432KC",
+        //     "group": "build",
+        //     "command": "mbed-tools",
+        //     "args": [
+        //         "configure",
+        //         "-m",
+        //         "NUCLEO_L432KC",
+        //         "-t",
+        //         "GCC_ARM",
+        //         "--mbed-os-path",
+        //         "../mbed-os"
+        //     ]
+        // },
+        // {
+        //     "label": "compile/flash/open terminal L432KC",
+        //     "group": "build",
+        //     "command": "mbed-tools",
+        //     "args": [
+        //         "compile",
+        //         "-m",
+        //         "NUCLEO_L432KC",
+        //         "-t",
+        //         "GCC_ARM",
+        //         "--mbed-os-path",
+        //         "../mbed-os",
+        //         "-f",
+        //         "",
+        //         "--sterm",
+        //         ""
+        //     ]
+        // },{
+        //     "label": "compile/flash L432KC",
+        //     "group": "build",
+        //     "command": "mbed-tools",
+        //     "args": [
+        //         "compile",
+        //         "-m",
+        //         "NUCLEO_L432KC",
+        //         "-t",
+        //         "GCC_ARM",
+        //         "--mbed-os-path",
+        //         "../mbed-os",
+        //         "-f",
+        //         "",
+        //         "",
+        //         ""
+        //     ]
+        // },
+        // {
+        //     "label": "open terminal",
+        //     "group": "build",
+        //     "command": "mbed-tools",
+        //     "args": [
+        //         "sterm",
+        //         ""
+        //     ]
+        // } 
+    ]
+}
