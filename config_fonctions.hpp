@@ -20,6 +20,8 @@ int init_position_done =0; //0 : l'init n'a pas été faite / 1 l'init a été f
 5: lache_le_verre
 */
 int current_position = 0;
+/*pour régler les positions du bras en debug*/
+int reglage_bras_current_position = 0;
 int fumee_lumiere_on = 0; //0=off 1=on
  
 void move_arm( int epaule_a_plat,int epaule_haut,int coude,int poignet, int poignet_haut, int pCoef_accel )
@@ -218,43 +220,45 @@ send_buffer (3, DEVICE_ID,200,0,0,0,0,0,0); /*envoi run sur le carrousel*/ }
 //###########################
 //           Fonction bouger le bras
 //##########################
-void move_position_hors_carrousel(){
-  move_arm ( 200 ,   102 ,  272 ,  166 ,  183 , 1 );  //tourne hors du carrousel 
-}
-void move_position_avant_verre(){
-  move_arm (   247   , 83     ,  272  , 185   ,  183      , 1       );  //position avant verre
-}
-void move_position_verre(){
-  //move_arm ( 244 ,   58 ,  232 ,  171 ,  188 , 1 ); // position verre
-    move_arm ( 248 ,   49 ,  218 ,  164 ,  183 , 1 );  // position verre pour lacher
-  // move_position_verre_pour_lacher();
-}
 // void move_position_verre_pour_lacher(){
 // move_arm ( 248 ,   49 ,  218 ,  164 ,  183 , 1 );  // position verre pour lacher
 // }
+void move_position_init(){
+   move_arm (   0   , 0        ,  0     ,0   ,  0       , 10       ); //INIT 
+}
 void move_position_thumb_down(){
-   move_arm (   70   , 0        ,  0     ,166   ,  188       , 10       ); //position pouce en bas
+   move_arm (   0   , 0        ,  0     ,0   ,  188       , 10       ); //position pouce en bas
 }
 void move_position_fuck(){
-   move_arm (   70   , 0        ,  0     ,88   ,  0       , 10       ); //position fuck
+   move_arm (   0   , 0        ,  0     ,90   ,  0       , 10       ); //position fuck
 }
 void move_position_ily(){
-   move_arm (   70   , 0        ,  0     ,110   ,  0       , 10       ); //position ily
+   move_arm (   0   , 0        ,  0     ,56   ,  0       , 10       ); //position ily
 }
-void move_position_init(){
-   move_arm (   70   , 0        ,  0     ,166   ,  0       , 10       ); //INIT 
+
+void move_position_hors_carrousel(){
+  move_arm ( 157 ,   102 ,  272 ,  0 ,  171 , 1 );  //tourne hors du carrousel 
+}
+
+void move_position_avant_verre(){
+  move_arm (   192   , 93     ,  272  , -17   ,  171      , 1       );  //position avant verre
+}
+void move_position_verre(){
+  //move_arm ( 244 ,   58 ,  232 ,  171 ,  188 , 1 ); // position verre
+    move_arm ( 192 ,   39 ,  204 ,  0 ,  171 , 0 );   // position verre pour lacher
+  // move_position_verre_pour_lacher();
 }
 void move_position_1(){
   fumee_lumieres();//fumée lumières
-    move_arm ( 231 ,   73 ,  252 ,  175 ,  183 , 1 );  // POS1  
+    move_arm ( 178 ,   73 ,  252 ,  -6 ,  171 , 0 );  // POS1  
 }
 void move_position_2(){
   fumee_lumieres();//fumée lumières
-    move_arm ( 191 ,   194 ,  249 ,  61 ,  179 , 1 );  // POS2  
+    move_arm ( 135 ,   195 ,  246 ,  112 ,  164 , 1 );  // POS2  
 }
 void move_position_3(){
      fumee_lumieres();//fumée lumières
-    move_arm ( 51 ,   79 ,  269 ,  185 ,  183 , 1 );// POS3  
+    move_arm ( 0 ,   79 ,  269 ,  -20 ,  171 , 1 );// POS3  
 }
 //###########################
 //           Fonction signe ILY de la main
@@ -465,8 +469,66 @@ move_position_hors_carrousel();  //tourne hors du carrousel
 }
 
 
-
-
+/*pour régler les positions du bras en debug*/
+void reglage_position_bras() {
+  if (reglage_bras_current_position == 0) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      move_position_hors_carrousel();  //tourne hors du carrousel 
+      return;
+      }
+   if (reglage_bras_current_position == 1) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      move_position_avant_verre();  //position avant verre
+      return;
+      }      
+if (reglage_bras_current_position == 2) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      close_thumb();//ferme le pouce
+      move_position_verre(); // position verre
+      return;
+      }    
+if (reglage_bras_current_position == 3) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      close_hand(); //prend le verre
+      return;
+      } 
+if (reglage_bras_current_position == 4) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      move_position_avant_verre();  //position avant verre 
+      move_position_1(); // POS1  
+      return;
+      } 
+if (reglage_bras_current_position == 5) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      move_position_hors_carrousel();  //tourne hors du carrousel 
+      move_position_2(); // POS2
+      return;
+      }    
+if (reglage_bras_current_position == 6) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      move_position_hors_carrousel();  //tourne hors du carrousel 
+       move_position_3(); // POS3
+       return;
+      }   
+  if (reglage_bras_current_position == 7) { 
+      reglage_bras_current_position = reglage_bras_current_position +1;
+      move_position_hors_carrousel();  //tourne hors du carrousel 
+      move_position_avant_verre();  //position avant verre
+      move_position_verre(); // position verre
+      return;
+      }        
+  if (reglage_bras_current_position == 8) { 
+      reglage_bras_current_position = 0;
+      
+      open_hand_without_thumb();
+      move_position_avant_verre();  //position avant verre  
+      move_position_hors_carrousel();  //tourne hors du carrousel 
+      open_thumb() ;   //ouvre le pouce
+      move_position_init(); //INIT
+      open_hand(); //ouvre la main
+      return;
+      }        
+}
 
 
  
@@ -765,7 +827,7 @@ int init_position(){
                             // init poignet
                             motor_poignet.init_position();
                             //init position moteurs
-                            last_target_epaule_a_plat = 0 ;
+                            // last_target_epaule_a_plat = 0 ;
                             last_target_epaule_haut = 0 ;
                             last_target_coude = 0 ;
                             last_target_poignet = 0 ;
@@ -774,23 +836,23 @@ int init_position(){
                           // init epaule_a_plat
                           //on met la main dans la bonne position
                           //motor_poignet._debug_flag =true;
-                           move_arm (motor_epaule_a_plat.get_angle() , //motor_epaule_a_plat
-                                        0, //motor_epaule_haut
-                                        0, //motor_coude
-                                        166, //motor_poignet
-                                        0,//motor_poignet_haut
-                                        10);  //pEnable_PID
+                          //  move_arm (motor_epaule_a_plat.get_angle() , //motor_epaule_a_plat
+                          //               0, //motor_epaule_haut
+                          //               0, //motor_coude
+                          //               166, //motor_poignet
+                          //               0,//motor_poignet_haut
+                          //               10);  //pEnable_PID
                               // print_debug("angle poignet2: %f\n", motor_poignet.get_angle());
                             motor_epaule_a_plat.init_position();
                             //init position moteurs
                             last_target_epaule_a_plat = 0 ;
                             //  print_debug("angle poignet3: %f\n", motor_poignet.get_angle());
-                            move_arm (70, //motor_epaule_a_plat
-                                        0, //motor_epaule_haut
-                                        0, //motor_coude
-                                        166, //motor_poignet
-                                        0, //motor_poignet_haut
-                                        10); //pEnable_PID
+                            // move_arm (0, //motor_epaule_a_plat
+                            //             0, //motor_epaule_haut
+                            //             0, //motor_coude
+                            //             166, //motor_poignet
+                            //             0, //motor_poignet_haut
+                            //             10); //pEnable_PID
                               // print_debug("angle poignet4: %f\n", motor_poignet.get_angle());
                             //ouvre la main
                             open_hand();
@@ -861,10 +923,14 @@ cmde == 123 position2
 cmde == 124 position3 
 cmde == 125 lache_le_verre 
 
+cmde == 126 reglage_position_bras : pour régler les positions du bras en debug, on parcours toutes les positions
+
 cmde == 150 sert le cocktail 
           (n°destinataire = 4 (bras), n° emetteur , cmde=150, n° bouteille, temps dose,n° bouteille, temps dose,n° bouteille, temps dose)
           bouteilles = 1..16
           19 : fin du cocktail, lache le verre et retour à l'init 
+
+
 //déclenchement des commandes
 cmde = 200 -> appelle la fonction run pour executer toutes les commandes de la mailbox
 cmde = 201 -> envoi run sur les autres noeuds -> send_buffer (mail->data_1,DEVICE_ID,200,0,0,0,0,0,0);  
@@ -934,7 +1000,9 @@ void run_bras()
       if (mail->cmde == 123 && init_position_done ==1 ){fumee_lumiere_on = 0 ;position2(); }
       if (mail->cmde == 124 && init_position_done ==1 ){fumee_lumiere_on = 0 ;position3(); }
       if (mail->cmde == 125 && init_position_done ==1 ){lache_le_verre(); }
-                
+      /*pour régler les positions du bras en debug*/
+      if (mail->cmde == 126 && init_position_done ==1 ){reglage_position_bras(); } 
+
       /* cmde == 150 sert le cocktail 
                 (n°destinataire = 4 (bras), n° emetteur , cmde=150, n° bouteille, temps dose,n° bouteille, temps dose,n° bouteille, temps dose)
                 bouteilles = 1..18
@@ -1074,5 +1142,4 @@ void init_all(){
 
   //motor_poignet._debug_flag = true  ;
 }
-
 

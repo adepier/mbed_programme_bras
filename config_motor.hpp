@@ -70,8 +70,8 @@ pin_encoder counter2_1(PA_7,2,encoder2 ); //epaule_haut
 pin_encoder counter2_2(PB_2,1,encoder2 ); //epaule_haut
 pin_encoder counter3_1(PB_1,1,encoder3 ); //coude
 pin_encoder counter3_2(PB_15,2,encoder3 );//coude
-pin_encoder counter4_1(PB_13,2,encoder4 ); //poignet
-pin_encoder counter4_2(PB_14,1,encoder4 ); //poignet
+pin_encoder counter4_1(PB_13,1,encoder4 ); //poignet
+pin_encoder counter4_2(PB_14,2,encoder4 ); //poignet
 pin_encoder counter5_1(PB_10,1,encoder5 ); //poignet_haut
 pin_encoder counter5_2(PB_4,2,encoder5 );  //poignet_haut
 // CAN
@@ -160,8 +160,8 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
                                 coef_Ki = 0, //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 18.33 ,//20rpm ratio : 1/600 11PPR nb tic par degres = 18.33 
-                                true /*reverse rotation*/ 
-                              , 10                                    //_coef_accel                                 
+                                false /*reverse rotation*/ 
+                              , 100                                    //_coef_accel                                 
                                 );
 
 //poignet haut 
