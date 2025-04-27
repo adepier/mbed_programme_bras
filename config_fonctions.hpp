@@ -86,13 +86,14 @@ motor_poignet_haut._coef_accel  = pCoef_accel;
   event_flag.wait_all(flags_stop ); // attend que les moteurs terminent
 
 print_debug("fin move \n" ); 
-
 print_debug("motor_epaule_a_plat : target %f angle %f err: %f\n", motor_epaule_a_plat._target , motor_epaule_a_plat.get_angle(),motor_epaule_a_plat._target - motor_epaule_a_plat.get_angle());
 print_debug("motor_epaule_haut   : target %f angle %f err: %f\n", motor_epaule_haut._target , motor_epaule_haut.get_angle(),motor_epaule_haut._target - motor_epaule_haut.get_angle());
 print_debug("motor_coude         : target %f angle %f err: %f\n", motor_coude._target , motor_coude.get_angle(),motor_coude._target - motor_coude.get_angle());
 print_debug("motor_poignet       : target %f angle %f err: %f\n", motor_poignet._target , motor_poignet.get_angle(),motor_poignet._target - motor_poignet.get_angle());
 print_debug("motor_poignet_haut  : target %f angle %f err: %f\n", motor_poignet_haut._target , motor_poignet_haut.get_angle(),motor_poignet_haut._target - motor_poignet_haut.get_angle());
- 
+
+print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (motor_epaule_a_plat.get_angle())  , (int)  round (motor_epaule_haut.get_angle())  ,  (int)  round (motor_coude.get_angle())  , (int)  round (motor_poignet.get_angle())  ,  (int) round (motor_poignet_haut.get_angle() ));
+
 }
 /*envoi les message CAN facilement!*/
  void send_buffer(int dest, int d1,int d2,int d3,int d4,int d5,int d6,int d7,int d8) {
@@ -237,28 +238,28 @@ void move_position_ily(){
 }
 
 void move_position_hors_carrousel(){
-  move_arm ( 157 ,   102 ,  272 ,  0 ,  171 , 1 );  //tourne hors du carrousel 
+  move_arm ( 157 ,   83 ,  272 ,  -4 ,  170 , 10 );  //tourne hors du carrousel 
 }
 
 void move_position_avant_verre(){
-  move_arm (   192   , 93     ,  272  , -17   ,  171      , 1       );  //position avant verre
+  move_arm (   192   , 81     ,  272  , -8   ,  170      , 10       );  //position avant verre
 }
 void move_position_verre(){
   //move_arm ( 244 ,   58 ,  232 ,  171 ,  188 , 1 ); // position verre
-    move_arm ( 192 ,   39 ,  204 ,  0 ,  171 , 0 );   // position verre pour lacher
+    move_arm ( 193 ,   45 ,  218 ,  8 ,  170 , 10 );   // position verre pour lacher
   // move_position_verre_pour_lacher();
 }
 void move_position_1(){
   fumee_lumieres();//fumée lumières
-    move_arm ( 178 ,   73 ,  252 ,  -6 ,  171 , 0 );  // POS1  
+    move_arm ( 180 ,   80 ,  259 ,  4 ,  170 , 10 );  // POS1  
 }
 void move_position_2(){
   fumee_lumieres();//fumée lumières
-    move_arm ( 135 ,   195 ,  246 ,  112 ,  164 , 1 );  // POS2  
+    move_arm ( 135 ,   198 ,  254 ,  117 ,  170 , 10 );  // POS2  
 }
 void move_position_3(){
      fumee_lumieres();//fumée lumières
-    move_arm ( 0 ,   79 ,  269 ,  -20 ,  171 , 1 );// POS3  
+    move_arm ( 1,   81 ,  270 ,  -4 ,  170 , 10 );// POS3  
 }
 //###########################
 //           Fonction signe ILY de la main
@@ -381,152 +382,186 @@ void init_vers_verre(){
    // | ep plat | ep haut | coude | poig | poig haut | flag_enable_PID
    //on verifie que le poignet haut est bon
 
-    while (end_stop.read() == 0 ) {
-    move_arm ((int) motor_epaule_a_plat.get_angle() +5,
-              (int) motor_epaule_haut.get_angle() +5,
-              (int) motor_coude.get_angle() +5,
-              (int) motor_poignet.get_angle() +5,
-              (int) motor_poignet_haut.get_angle() +5,
-              (int) 10);  
+  //   while (end_stop.read() == 0 ) {
+  //   move_arm ((int) motor_epaule_a_plat.get_angle() +5,
+  //             (int) motor_epaule_haut.get_angle() +5,
+  //             (int) motor_coude.get_angle() +5,
+  //             (int) motor_poignet.get_angle() +5,
+  //             (int) motor_poignet_haut.get_angle() +5,
+  //             (int) 10);  
               
-  }
+  // }
   // init motor_poignet_haut
-  motor_poignet_haut.init_position(); 
-  last_target_poignet_haut = 0 ;
-open_hand();
-move_position_init(); //INIT au cas ou on  a bougé
-fumee_lumieres();//fumée lumières
-
-move_position_hors_carrousel();  //tourne hors du carrousel  
-move_position_avant_verre();  //position avant verre
-close_thumb();//ferme le pouce
-move_position_verre(); // position verre
-close_hand(); //prend le verre
-
-          current_position=1;
+  // motor_poignet_haut.init_position(); 
+  // last_target_poignet_haut = 0 ;
+  open_hand();
+  move_position_init(); //INIT au cas ou on  a bougé
+  fumee_lumieres();//fumée lumières
+  move_position_hors_carrousel();  //tourne hors du carrousel  
+  move_position_avant_verre();  //position avant verre
+  close_thumb();//ferme le pouce
+  move_position_verre(); // position verre
+  close_hand(); //prend le verre
+  current_position=1;
 }
 void verre_vers_init(){ 
 //move_position_verre(); // position verre
-move_position_verre();
- open_hand_without_thumb();
-move_position_avant_verre();  //position avant verre  
-move_position_hors_carrousel();  //tourne hors du carrousel 
- open_thumb() ;   //ouvre le pouce
- fumee_lumieres();//fumée lumières
-
- move_position_init(); //INIT
- open_hand(); //ouvre la main
+  move_position_verre();
+  open_hand_without_thumb();
+  move_position_avant_verre();  //position avant verre 
+  open_thumb() ;   //ouvre le pouce   
+  move_position_hors_carrousel();  //tourne hors du carrousel 
+  fumee_lumieres();//fumée lumières
+  move_position_init(); //INIT
+  open_hand(); //ouvre la main
   current_position=0;  
 } 
 void verre_vers_pos1(){
-move_position_verre(); // position verre
-move_position_avant_verre();  //position avant verre 
-move_position_1(); // POS1  
-   current_position=2;
+  move_position_verre(); // position verre
+  move_position_avant_verre();  //position avant verre 
+  move_position_1(); // POS1  
+  current_position=2;
 }
 void verre_vers_pos2(){
-move_position_verre(); // position verre
-move_position_avant_verre();  //position avant verre
-move_position_hors_carrousel();  //tourne hors du carrousel 
-   move_position_2(); // POS2
- current_position=3; //
+  move_position_verre(); // position verre
+  move_position_avant_verre();  //position avant verre
+  move_position_hors_carrousel();  //tourne hors du carrousel 
+  move_position_2(); // POS2
+  current_position=3; //
 }
 void verre_vers_pos3(){
-move_position_verre(); // position verre
-move_position_avant_verre();  //position avant verre
- 
-   move_position_3(); // POS3
-   current_position=4; //
+  move_position_verre(); // position verre
+  move_position_avant_verre();  //position avant verre
+  move_position_3(); // POS3
+  current_position=4; //
 }
 void pos23_vers_verre(){
-move_position_hors_carrousel();  //tourne hors du carrousel 
-move_position_avant_verre();  //position avant verre
-move_position_verre(); // position verre
+  move_position_hors_carrousel();  //tourne hors du carrousel 
+  move_position_avant_verre();  //position avant verre
+  move_position_verre(); // position verre
   current_position=1;
 }
 void pos1_vers_verre(){
-move_position_1();  
-move_position_avant_verre();  //position avant verre
-move_position_verre(); // position verre
+  move_position_1();  
+  move_position_avant_verre();  //position avant verre
+  move_position_verre(); // position verre
   current_position=1;
 }
 void pos13_vers_pos2(){
-move_position_hors_carrousel();  //tourne hors du carrousel 
-   move_position_2(); // POS2
-   current_position=3;
+  move_position_hors_carrousel();  //tourne hors du carrousel 
+  move_position_2(); // POS2
+  current_position=3;
 }
 void pos12_vers_pos3(){
-move_position_hors_carrousel();  //tourne hors du carrousel 
-move_position_hors_carrousel();  //tourne hors du carrousel 
- move_position_3(); // POS3
-   current_position=4; //
+  move_position_hors_carrousel();  //tourne hors du carrousel 
+  move_position_hors_carrousel();  //tourne hors du carrousel 
+  move_position_3(); // POS3
+  current_position=4; //
 }
 
 void pos23_vers_pos1(){
-move_position_hors_carrousel();  //tourne hors du carrousel 
+  move_position_hors_carrousel();  //tourne hors du carrousel 
   move_position_1(); // POS1  
-   current_position=2;
+  current_position=2;
 }
 
 
 /*pour régler les positions du bras en debug*/
 void reglage_position_bras() {
   if (reglage_bras_current_position == 0) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      move_position_hors_carrousel();  //tourne hors du carrousel 
-      return;
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_hors_carrousel\n" );
+        move_position_hors_carrousel();  //tourne hors du carrousel 
+        return;
       }
-   if (reglage_bras_current_position == 1) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      move_position_avant_verre();  //position avant verre
-      return;
-      }      
-if (reglage_bras_current_position == 2) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      close_thumb();//ferme le pouce
-      move_position_verre(); // position verre
-      return;
-      }    
-if (reglage_bras_current_position == 3) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      close_hand(); //prend le verre
-      return;
-      } 
-if (reglage_bras_current_position == 4) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      move_position_avant_verre();  //position avant verre 
-      move_position_1(); // POS1  
-      return;
-      } 
-if (reglage_bras_current_position == 5) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      move_position_hors_carrousel();  //tourne hors du carrousel 
-      move_position_2(); // POS2
-      return;
-      }    
-if (reglage_bras_current_position == 6) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      move_position_hors_carrousel();  //tourne hors du carrousel 
-       move_position_3(); // POS3
-       return;
-      }   
-  if (reglage_bras_current_position == 7) { 
-      reglage_bras_current_position = reglage_bras_current_position +1;
-      move_position_hors_carrousel();  //tourne hors du carrousel 
-      move_position_avant_verre();  //position avant verre
-      move_position_verre(); // position verre
-      return;
-      }        
-  if (reglage_bras_current_position == 8) { 
-      reglage_bras_current_position = 0;
+  if (reglage_bras_current_position == 1) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_avant_verre\n" );
+        move_position_avant_verre();  //position avant verre
+        return;
+    }      
+  if (reglage_bras_current_position == 2) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        close_thumb();//ferme le pouce
+        print_debug("move_position_verre\n" );
+        move_position_verre(); // position verre
+        return;
+        }    
+  if (reglage_bras_current_position == 3) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("close_hand\n" );
+        close_hand(); //prend le verre
+        return;
+        } 
+  if (reglage_bras_current_position == 4) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_avant_verre\n" );
+        move_position_avant_verre();  //position avant verre 
       
-      open_hand_without_thumb();
-      move_position_avant_verre();  //position avant verre  
-      move_position_hors_carrousel();  //tourne hors du carrousel 
-      open_thumb() ;   //ouvre le pouce
-      move_position_init(); //INIT
-      open_hand(); //ouvre la main
-      return;
+        return;
+        } 
+  if (reglage_bras_current_position == 5) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_1\n" );
+        move_position_1(); // POS1  
+        return;
+        }     
+
+  if (reglage_bras_current_position == 6) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_hors_carrousel\n" );
+        move_position_hors_carrousel();  //tourne hors du carrousel 
+        return;
+      }    
+  if (reglage_bras_current_position == 7) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_2\n" );
+        move_position_2(); // POS2
+        return;
+    }      
+  if (reglage_bras_current_position == 8) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_hors_carrousel\n" );
+        move_position_hors_carrousel();  //tourne hors du carrousel 
+        return;
+        }   
+  if (reglage_bras_current_position == 9) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_3\n" );
+        move_position_3(); // POS3
+        return;
+    }         
+  if (reglage_bras_current_position == 10) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_hors_carrousel\n" );
+        move_position_hors_carrousel();  //tourne hors du carrousel 
+        return;
+        }   
+  if (reglage_bras_current_position == 11) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_avant_verre\n" );
+        move_position_avant_verre();  //position avant verre
+        return;
+        }      
+  if (reglage_bras_current_position == 12) { 
+        reglage_bras_current_position = reglage_bras_current_position +1;
+        print_debug("move_position_verre\n" );
+        move_position_verre(); // position verre
+        return;
+        }                   
+  if (reglage_bras_current_position == 13) { 
+        reglage_bras_current_position = 0;
+        open_hand_without_thumb();
+        print_debug("move_position_avant_verre\n" );
+        move_position_avant_verre();  //position avant verre  
+        print_debug("open_thumb\n" );
+        open_thumb() ;   //ouvre le pouce
+        print_debug("move_position_hors_carrousel\n" );
+        move_position_hors_carrousel();  //tourne hors du carrousel 
+        print_debug("move_position_init\n" );
+        move_position_init(); //INIT
+        open_hand(); //ouvre la main
+        return;
       }        
 }
 
@@ -1110,6 +1145,7 @@ void init_all(){
   // init epaule_a_plat
   motor_poignet_haut.init(); 
   // init poignet
+  motor_poignet._count_min = -30;
   motor_poignet.init();
 // init epaule_a_plat
   motor_epaule_a_plat.init();

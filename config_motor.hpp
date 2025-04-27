@@ -106,7 +106,7 @@ mbed_hall_driven_motor motor_epaule_a_plat(encoder1.count ,           //compteur
                               coef_Kd = 0,                            //
                               nb_tic_per_deg = 21.65  ,               // 
                               true                                    ///*reverse rotation*/ 
-                              , 1                                    //_coef_accel
+                              , 1                                    //_coef_accel 
 );
 //epaule haut
 mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,               //count_2_pin
@@ -124,7 +124,7 @@ mbed_hall_driven_motor motor_epaule_haut(encoder2.count ,               //count_
                               coef_Kd = 0,                   //
                               nb_tic_per_deg = 26.04 , //6.5rpm ratio : 1/625 15PPR nb tic par degres = 26.04 
                               false /*reverse rotation*/ 
-                              , 10                                    //_coef_accel                              
+                              , 10                                    //_coef_accel                  
 );
 //coude
 mbed_hall_driven_motor motor_coude( encoder3.count ,                        //count_2_pin
@@ -143,7 +143,7 @@ mbed_hall_driven_motor motor_coude( encoder3.count ,                        //co
                               nb_tic_per_deg = 21.65  ,
                                 // end_stop_type  = 1 ,
                                 false /*reverse rotation*/ 
-                              , 10                                    //_coef_accel                                 
+                              , 10                            //_coef_accel                            
 );
 //poignet
 mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //count_2_pin
@@ -161,7 +161,7 @@ mbed_hall_driven_motor motor_poignet(encoder4.count ,                         //
                                 coef_Kd = 0,  //
                                 nb_tic_per_deg = 18.33 ,//20rpm ratio : 1/600 11PPR nb tic par degres = 18.33 
                                 false /*reverse rotation*/ 
-                              , 100                                    //_coef_accel                                 
+                              , 100                                    //_coef_accel                  
                                 );
 
 //poignet haut 
