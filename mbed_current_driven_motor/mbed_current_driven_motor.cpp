@@ -20,7 +20,7 @@ mbed_current_driven_motor::mbed_current_driven_motor(INA3221 &current,
                         string motor_name, 
                         int32_t flag_start,
                         int32_t flag_stop,
-                        int current_limit,
+                        float current_limit,
                         int nominal_speed  )
     : _current(&current),
       _pwm(&pwm)
@@ -39,6 +39,9 @@ mbed_current_driven_motor::mbed_current_driven_motor(INA3221 &current,
   // définit la valeur par défaut
   _debug_flag = false;
   _nominal_speed=nominal_speed;
+  timer.start();
+  derniere_mesure_ms = std::chrono::duration_cast<std::chrono::microseconds>(timer.elapsed_time()).count();
+
 }
 
 int mbed_current_driven_motor::get_position() {//0 = ouvert; 1= fermé //2=non initialisé
@@ -66,55 +69,75 @@ void mbed_current_driven_motor::motor_open(){
   //on ouvre
   _pwm->setPWM(_pin_IN1,0,_nominal_speed); //borneIN1 
   _pwm->setPWM(_pin_IN2,0,0); //borneIN2 
+  // if (_debug_flag){ printf("ouvre  %s\n", _motor_name.c_str());}  
 }
 void mbed_current_driven_motor::motor_close(){
   //on ferme
   _pwm->setPWM(_pin_IN1,0,0); //borneIN1 
   _pwm->setPWM(_pin_IN2,0,_nominal_speed); //borneIN2 
+  // if (_debug_flag){printf("ferme  %s\n", _motor_name.c_str());}   
 }
 void mbed_current_driven_motor::motor_stop(){
   //on stop 
     _pwm->setPWM(_pin_IN1,0,0); //borneIN1 
     _pwm->setPWM(_pin_IN2,0,0); //borneIN2
+    // if (_debug_flag){printf("stop  %s\n", _motor_name.c_str());}  
 }
 
 //********************** methodes privées
 
+bool mbed_current_driven_motor::get_endstop() {
+
+   //s'il n'y a pas eu de mouvement depuis 500ms, on remet la courant a 0
+   int now = std::chrono::duration_cast<std::chrono::microseconds>(timer.elapsed_time()).count();
+   if ( (now - derniere_mesure_ms) > std::chrono::duration_cast<std::chrono::microseconds>(500ms).count() ) {
+     for (int i = 0; i < 10; i++) {
+       current[i] = 0;
+     }
+     index = 0;
+   }
+   current[index] = _current->GetCurrent(_current_sensor_chanel) * 1000; //en mA
+   derniere_mesure_ms = now;
+  //  si le courant moyenné est supérieur à la limite, on est en buté
+    
+     float average_current = 0.0f;
+     for (int i = 0; i < 10; i++) {
+      average_current += current[i];
+     }
+     average_current /= 10.0f; 
+     if (average_current > _current_limit)
+      {
+        if (_debug_flag)  { printf("endstop %s average_current : %f _current_limit: %f\n ", _motor_name.c_str(),average_current,_current_limit);}
+        return true; // on est en butée
+      }
+      else
+      {
+        if (_debug_flag) { printf("pas endstop %s average_current : %f _current_limit: %f\n ", _motor_name.c_str(),average_current,_current_limit);}
+        return false; // on n'est pas en butée
+      } 
+
+}
+
+
 void mbed_current_driven_motor::run_to_open()
-{
-int i = 0;
-while ( i < 10)
-   { 
-         motor_open();//on ouvre
-        //  if faut le voir 10 fois de suite pour considérer que c'est ouvert!
-         if (_current->GetCurrent(_current_sensor_chanel) * 1000 > _current_limit)
-         {
-           i = i + 1;
-         }
-         else
-         {
-           i = 0;
-         }
+{ 
+  motor_open();//on ouvre 
+  //on attend un peu pour que le moteur démarre
+  ThisThread::sleep_for(chrono::milliseconds(500));
+while ( get_endstop() == false) {  
    }
    //on stop 
    motor_stop();
+   
 }
 
 void mbed_current_driven_motor::run_to_close_and_stop()
-{
-int i = 0;
-while ( i < 10)
-   {  
-         motor_close(); 
-        //  if faut le voir 10 fois de suite pour considérer que c'est fermé!
-         if (_current->GetCurrent(_current_sensor_chanel) * 1000 > _current_limit)
-         {
-           i = i + 1;
-         }
-         else
-         {
-           i = 0;
-         }
+{ 
+   motor_close(); 
+   //on attend un peu pour que le moteur démarre
+   ThisThread::sleep_for(chrono::milliseconds(500));
+while ( get_endstop() == false)
+   {      
    }
    //on stop 
      motor_stop();
@@ -126,24 +149,13 @@ while ( i < 10)
 //pour le pouce, il ya des fin de course qui coupe le courant, donc on
 //fait marcher le moteur jusqu'a qu'il n'y ait plus de consommation
 void mbed_current_driven_motor::run_open_to_endstop()
-{
-int i = 0;
+{ 
 //on met en route jusqu'a la butée
           motor_open();//on ouvre
-         ThisThread::sleep_for(chrono::milliseconds(1000));
-while ( i < 10)
-   { 
-
-        //  if (_debug_flag) { printf("%f\n", (_current->GetCurrent(_current_sensor_chanel) * 1000)); }
-        //  if faut le voir 10 fois de suite pour considérer que c'est ouvert!
-         if ((_current->GetCurrent(_current_sensor_chanel) * 1000) < (_current_limit ))
-         {
-           i = i + 1;
-         }
-         else
-         {
-           i = 0;
-         }
+          //on attend un peu pour que le moteur démarre
+         ThisThread::sleep_for(chrono::milliseconds(500));
+while ( get_endstop() == true)
+   {  
    }
    //on stop 
      motor_stop();
@@ -151,25 +163,13 @@ while ( i < 10)
 //pour le pouce, il ya des fin de course qui coupe le courant, donc on
 //fait marcher le moteur jusqu'a qu'il n'y ait plus de consommation
 void mbed_current_driven_motor::run_close_to_endstop()
-{
-int i = 0;
-
+{ 
         // //on met en route jusqu'a la butée
         motor_close();
-          ThisThread::sleep_for(chrono::milliseconds(1000));
-while ( i < 10)
+        //on attend un peu pour que le moteur démarre
+        ThisThread::sleep_for(chrono::milliseconds(500));
+while (  get_endstop() == true)
    { 
-        
-        //  if (_debug_flag) { printf("%f\n", (_current->GetCurrent(_current_sensor_chanel) * 1000)); }
-        //  if faut le voir 10 fois de suite pour considérer que c'est ouvert!
-         if ((_current->GetCurrent(_current_sensor_chanel) * 1000) < (_current_limit ))
-         {
-           i = i + 1;
-         }
-         else
-         {
-           i = 0;
-         }
    }
    //on stop 
      motor_stop();

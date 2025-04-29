@@ -109,11 +109,19 @@ print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (m
     CANMessage msg_to_send(dest,  buffer, 8); 
     print_debug("envoi :id: \t %i data: \t %i \t %i \t %i \t %i \t %i \t %i \t %i \t %i \n", msg_to_send.id, msg_to_send.data[0], msg_to_send.data[1], msg_to_send.data[2], msg_to_send.data[3], msg_to_send.data[4], msg_to_send.data[5], msg_to_send.data[6], msg_to_send.data[7]);
      //essaye d'envoyer
-    for( int i = 0; i <= 3; i++) 
-    {if(can.write(msg_to_send)==0){  print_debug("error write %i\n", i ); 
-              // très important! il faut attendre un peu avant de renvoyer le message!
-              ThisThread::sleep_for(chrono::milliseconds(500ms));
-                }  else {break;};}
+    for( int i = 0; i <= 15; i++) 
+          { 
+            if(can.write(msg_to_send)==0){  
+                    print_debug("error write %i\n", i ); 
+                    // très important! il faut attendre un peu avant de renvoyer le message!
+                    ThisThread::sleep_for(chrono::milliseconds(500ms));
+                    print_debug("on retente envoi :id: \t %i data: \t %i \t %i \t %i \t %i \t %i \t %i \t %i \t %i \n", msg_to_send.id, msg_to_send.data[0], msg_to_send.data[1], msg_to_send.data[2], msg_to_send.data[3], msg_to_send.data[4], msg_to_send.data[5], msg_to_send.data[6], msg_to_send.data[7]);
+                      }  
+            else {print_debug("envoi OK %i\n", i ); 
+                 i = 16; } //on sort de la boucle si on a bien envoyé le message
+                  
+          }
+          ThisThread::sleep_for(chrono::milliseconds(500ms));
         
 }
 //###########################
@@ -123,6 +131,7 @@ print_debug("move_arm ( %i ,   %i ,  %i ,  %i ,  %i , 0 ); \n ",  (int) round (m
 void open_hand()
 {
   //0 = ouvert; 1= fermé
+    // doigt_5._debug_flag=true; //debug doigt
    doigt_1.set_target_to_open() ;// on ouvre le doigt
    doigt_2.set_target_to_open() ;// on ouvre le doigt
    doigt_3.set_target_to_open() ;// on ouvre le doigt

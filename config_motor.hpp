@@ -192,11 +192,11 @@ mbed_current_driven_motor doigt_5 (current1,
                                     10, //pin_IN1
                                     11, //pin_IN2
                                     3, //current_sensor_chanel
-                                    "doigt_5" ,//motor_name
+                                    "doigt_5_petit doigt" ,//motor_name
                                     FLAG_START_DOIGT_5, //flag_start
                                     FLAG_STOP_DOIGT_5 ,//flag_stop
-                                    100 //current_limit
-                                    ,2000 //nominal_speed
+                                    15 //current_limit
+                                    ,2500 //nominal_speed
                                     );
 
 //annulaire 
@@ -205,24 +205,24 @@ mbed_current_driven_motor doigt_4 (current1,
                                     9, //pin_IN1
                                     8, //pin_IN2
                                     2, //current_sensor_chanel
-                                    "doigt_4" ,//motor_name
+                                    "doigt_4_annulaire" ,//motor_name
                                     FLAG_START_DOIGT_4, //flag_start
                                     FLAG_STOP_DOIGT_4 ,//flag_stop
-                                    150 //current_limit
-                                    ,2000 //nominal_speed
+                                    15 //current_limit
+                                    ,2500 //nominal_speed
                                     );
 
-//annulaire 
+//majeur 
 mbed_current_driven_motor doigt_3 (current1,
                                     pwm1,
                                     7, //pin_IN1
                                     6, //pin_IN2
                                     1, //current_sensor_chanel
-                                    "doigt_3" ,//motor_name
+                                    "doigt_3_majeur" ,//motor_name
                                     FLAG_START_DOIGT_3, //flag_start
                                     FLAG_STOP_DOIGT_3 ,//flag_stop
-                                    150 //current_limit
-                                    ,2000 //nominal_speed
+                                    15 //current_limit
+                                    ,2500 //nominal_speed
                                     );
 //index 
 mbed_current_driven_motor doigt_2 (current,
@@ -230,11 +230,11 @@ mbed_current_driven_motor doigt_2 (current,
                                     4, //pin_IN1
                                     5, //pin_IN2
                                     1, //current_sensor_chanel
-                                    "doigt_2" ,//motor_name
+                                    "doigt_2_index" ,//motor_name
                                     FLAG_START_DOIGT_2, //flag_start
                                     FLAG_STOP_DOIGT_2 ,//flag_stop
-                                    100 //current_limit
-                                    ,2000 //nominal_speed
+                                    15 //current_limit
+                                    ,2500 //nominal_speed
                                     );                                    
 //pouce 
 mbed_current_driven_motor doigt_1 (current,
@@ -242,11 +242,11 @@ mbed_current_driven_motor doigt_1 (current,
                                     2, //pin_IN1
                                     3, //pin_IN2
                                     2, //current_sensor_chanel
-                                    "doigt_1" ,//motor_name
+                                    "doigt_1_pouce" ,//motor_name
                                     FLAG_START_DOIGT_1, //flag_start
                                     FLAG_STOP_DOIGT_1 ,//flag_stop
-                                    100 //current_limit
-                                    ,2000 //nominal_speed
+                                    15 //current_limit
+                                    ,2500 //nominal_speed
                                     );                                     
 //pouce bas
 mbed_current_driven_motor doigt_0 (current,
@@ -254,10 +254,10 @@ mbed_current_driven_motor doigt_0 (current,
                                     0, //pin_IN1
                                     1, //pin_IN2
                                     3, //current_sensor_chanel
-                                    "doigt_0" ,//motor_name
+                                    "doigt_0_pouce bas" ,//motor_name
                                     FLAG_START_DOIGT_0, //flag_start
                                     FLAG_STOP_DOIGT_0 ,//flag_stop
-                                    10, //current_limit
+                                    0.8, //current_limit
                                     4095 //nominal_speed
                                     );    
  
